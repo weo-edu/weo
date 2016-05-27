@@ -19,15 +19,19 @@ test: node_modules
 dev:
 	@${BIN}/unv dev
 
-build:
-	@${BIN}/unv build --base a.weo.io
+build-staging:
+	NODE_ENV=staging ${BIN}/unv build --base //d13gu65ha1vakg.cloudfront.net --server src/server/lambda.js
 
 validate: node_modules
 	@standard
 
+deploy-staging: build-staging deploy-assets deploy-function
+
+deploy-function:
+	apex deploy
+
 deploy-assets:
-	aws s3 sync assets s3://a.weo.io --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
-	aws s3 sync assets s3://builds.weo.io/`git rev-parse HEAD`
+	aws s3 sync assets s3://assets.weo.io --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers --cache-control="public, max-age=31536000"
 
 all: validate test
 

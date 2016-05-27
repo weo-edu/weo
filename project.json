@@ -2,7 +2,7 @@
 {
   "name": "weo",
   "description": "Weo frontend.",
-  "memory": 128,
+  "memory": 320,
   "timeout": 5,
   "role": "arn:aws:iam::744125426781:role/lambda_function",
   "environment": {}

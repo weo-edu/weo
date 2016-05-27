@@ -1,19 +1,27 @@
 /**
+ * Modules
+ */
+
+require('envitro')(require('../../../package.json'))
+
+import optstack, {env} from 'opt-stack'
+
+/**
  * Config
  */
 
-const config = {
-  apiServer: 'http://76.95.33.101:1337/',
-  avatarServer: 'http://76.95.33.101:1337/avatar/',
-  imageResize: 'http://images.weo.io',
-  text: {
-    site_name: 'Teach better, together.',
-    call_to_action: 'Sign Up Today!',
-    title: 'Your Assignments Simplified | WEO',
-    tagline: 'Your Assignments Simplified',
-    description: 'Weo is a place to create and discover activities for your classroom that can be assigned to your students with a simple click.'
-  }
+const config = optstack(env(), {
+  apiServer: String,
+  avatarServer: String,
+  imageResize: String
+})
+
+if (process.env.NODE_ENV === 'production') {
+  config.favicon = require('lib/favicon/favicon.ico')
+} else {
+  config.favicon = require('lib/favicon/favicon-dev.ico')
 }
+
 
 /**
  * Exports

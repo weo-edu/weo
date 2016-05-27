@@ -32,14 +32,14 @@ function render (opts) {
 
     const stop = subscribe(state => {
       try {
-        const html = render(<App state={state} />, {
+        const html = render(<App state={state.app} />, {
           uiTheme,
           currentUrl: state.app.url
         })
 
         if (state.app.ready) {
           stop()
-          resolve(html)
+          resolve({html, state})
         }
       } catch (err) {
         reject(err)
