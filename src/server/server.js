@@ -6,6 +6,8 @@ import 'regenerator-runtime/runtime'
 import render from './render'
 import page from './page'
 
+Error.stackTraceLimit = 100
+
 /**
  * Handle requests
  */

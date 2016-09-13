@@ -60,6 +60,7 @@
     "@f/values": "^1.2.0",
     "@f/xargs": "^1.0.0",
     "@flox/fork": "^0.1.5",
+    "@google/cloud-debug": "^0.8.4",
     "@weo-edu/grades": "^0.1.6",
     "@weo-edu/schema": "github:weo-edu/schema",
     "@weo-edu/subjects": "^0.1.9",
