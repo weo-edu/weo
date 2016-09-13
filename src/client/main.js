@@ -11,7 +11,7 @@ import fastclick from 'fastclick'
 import theme from 'lib/theme'
 import reducer from 'reducer'
 import vdux from 'vdux/dom'
-import jss from './jss'
+// import jss from './jss'
 
 /**
  * Pre-rendered constants
@@ -31,7 +31,7 @@ const {subscribe, render, replaceReducer, dispatch, getState} = vdux({
   prerendered
 })
 
-jss.attach()
+// jss.attach()
 window.dispatch = dispatch
 setupStylePrefixer(window.navigator.userAgent)
 
@@ -62,10 +62,10 @@ if (module.hot) {
   module.hot.unaccepted(() => window.location.reload(true))
   module.hot.accept(['components/Boot', 'reducer'], (...args) => {
     try {
-      jss.detach()
+      // jss.detach()
       require('components/Boot')
       replaceReducer(require('reducer').default)
-      jss.attach()
+      // jss.attach()
       app(getState(), true)
     } catch (err) {
       console.log('hot update err', err)

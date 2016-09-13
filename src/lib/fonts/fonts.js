@@ -2,7 +2,7 @@
  * Imports
  */
 
-import css from 'jss-simple'
+// import css from 'jss-simple'
 
 const cloudFS = require('cloud-fs')
 

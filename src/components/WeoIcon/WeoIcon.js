@@ -4,7 +4,7 @@
 
 import element from 'vdux/element'
 import {Icon} from 'vdux-ui'
-import css from 'jss-simple'
+// import css from 'jss-simple'
 
 const cloudFS = require('cloud-fs')
 const woff = cloudFS.url('./weo-icons.woff')

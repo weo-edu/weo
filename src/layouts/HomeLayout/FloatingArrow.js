@@ -2,7 +2,7 @@
  * Imports
  */
 
-import css from 'jss-simple'
+// import css from 'jss-simple'
 import {Icon} from 'vdux-ui'
 import element from 'vdux/element'
 import {scrollTo} from 'middleware/scroll'
@@ -22,6 +22,7 @@ function render () {
  * Styles
  */
 
+const arrow = ''
 // const {arrow} = css({
 //   arrow: {
 //     test: function () {},

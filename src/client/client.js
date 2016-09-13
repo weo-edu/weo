@@ -2,8 +2,7 @@
  * Imports
  */
 
-import g from '@google/cloud-debug'
-import jss from './jss'
+// import jss from './jss'
 import 'regenerator-runtime/runtime'
 import promise from 'es6-promise'
 import favicon from 'lib/favicon'
