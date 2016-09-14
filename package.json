@@ -125,23 +125,15 @@
     "vdux-ui": "^1.2.5",
     "virtex-dom": "^0.3.12",
     "virtex-element": "^0.3.6",
-    "weo-redux-logger": "^2.6.1"
+    "weo-redux-logger": "^2.6.1",
+    "babel-plugin-jss-simple": "^0.2.3",
+    "browserify-hmr": "github:ashaffer/browserify-hmr",
+    "vdux-transform-hmr": "^1.0.4"
   },
   "devDependencies": {
     "ava": "^0.10.0",
-    "babel-plugin-jss-simple": "^0.2.3",
-    "babel-plugin-transform-react-jsx": "^6.8.0",
-    "babel-plugin-transform-regenerator": "^6.9.0",
-    "babel-plugin-transform-runtime": "^6.9.0",
-    "babel-preset-es2015": "^6.9.0",
-    "babel-preset-stage-2": "^6.3.13",
-    "babel-runtime": "^6.9.2",
-    "babelify": "^7.2.0",
-    "browserify": "^13.0.0",
-    "browserify-hmr": "github:ashaffer/browserify-hmr",
     "tap-dev-tool": "^1.3.0",
-    "tape": "^4.2.0",
-    "vdux-transform-hmr": "^1.0.4"
+    "tape": "^4.2.0"
   },
   "unv": {
     "modules": "src/",
