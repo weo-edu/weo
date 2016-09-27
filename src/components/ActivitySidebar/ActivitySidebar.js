@@ -237,7 +237,7 @@ const ScoreRow = summon(({activity, question}) => ({
     }
 
     function normalize (str = '') {
-      return str.replace(/[^0-9]/g, '')
+      return str.replace(/[^0-9\.]/g, '')
     }
   }
 })

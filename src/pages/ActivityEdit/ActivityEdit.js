@@ -106,7 +106,7 @@ function initialState ({props, local, path}) {
  */
 
 function render ({props, local, state}) {
-  const {debouncedSave, selectedObject, selectObject, save, currentUser, ...rest} = props
+  const {debouncedSave, selectedObject, selectObject, save, currentUser, setSpeaking, speakingId, speechRate} = props
   const defaultPoints = getProp('preferences.max_points', currentUser)
   const {editing, editedActivity} = state
   const {attachments} = editedActivity._object[0]
@@ -149,9 +149,11 @@ function render ({props, local, state}) {
                       speechEnabled={editedActivity.textToSpeech}
                       hidden={state.dragging === object._id}
                       isSelected={selectedObject === object._id}
+                      setSpeaking={setSpeaking}
+                      speechRate={speechRate}
+                      speakingId={speakingId}
                       pos={i}
-                      idx={object.objectType === 'question' ? idx++ : null}
-                      {...rest} />
+                      idx={object.objectType === 'question' ? idx++ : null} />
                   </Block>), attachments)
               }
             </Block>
@@ -383,7 +385,9 @@ function mergeAttachments (edited, saved) {
 }
 
 function mergeAttachment (edited, saved) {
-  if (deepEqual(edited, saved)) return edited
+  if (deepEqual(edited, saved)) {
+    return edited
+  }
 
   if (media.indexOf(edited.objectType) !== -1) {
     return {

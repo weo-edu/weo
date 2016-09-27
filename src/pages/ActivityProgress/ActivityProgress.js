@@ -26,7 +26,8 @@ function render ({props}) {
   } = props
   const sort = prefs.shareStudentSort || {property: 'name.givenName', dir: 1}
 
-  const val = Object.keys(activity.instances.total[0].actors).filter(k => activity.instances.total[0].actors[k].status === 5)
+  const actors = (activity.instances.total[0] || {}).actors || {}
+  const val = Object.keys(actors).filter(k => actors[k].status === 5)
   const instanceList = combineInstancesAndStudents(activity, students, instances)
     .sort(activitySort(sort))
 

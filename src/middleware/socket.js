@@ -41,8 +41,11 @@ function middleware ({dispatch, getState}) {
       }
       case unsubscribe.type: {
         const {url, params, path} = action.payload
-        subs[path] = subs[path].filter(sub => !(sub.url === url && equal(sub.params, params)))
-        if (subs[path].length === 0) delete subs[path]
+
+        if (subs.hasOwnProperty(path)) {
+          subs[path] = subs[path].filter(sub => !(sub.url === url && equal(sub.params, params)))
+          if (subs[path].length === 0) delete subs[path]
+        }
 
         return route(url, 'delete', params)
       }

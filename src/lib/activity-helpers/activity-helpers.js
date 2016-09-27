@@ -83,7 +83,7 @@ function activitySort (sort) {
     : val => (val || '').toString().toUpperCase()
 
   return (a, b) => {
-    if(!sort) return
+    if (!sort) return
     const prop1 = normalize(getProp(prop, a))
     const prop2 = normalize(getProp(prop, b).toString())
 
