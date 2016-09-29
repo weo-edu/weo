@@ -69,7 +69,9 @@ function DropdownToggle ({props}) {
     <Flex {...rest} align='center'>
       <Avatar actor={currentUser} />
       <Flex align='start center' mx hide={userType === 'teacher'}>
-        {displayName}
+        <Block maxWidth={125} ellipsis>
+          {displayName}
+        </Block>
       </Flex>
     </Flex>
   )

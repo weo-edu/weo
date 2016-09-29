@@ -101,7 +101,7 @@ function render ({props, local, state}) {
                   speakingId={speakingId}
                   answerable={answerable}
                   responses={responses}
-                  answer={state.answer}
+                  answer={answerable ? state.answer : object.response}
                   overview={overview || (showPollResults && object.poll)}
                   editable={editable}
                   submit={answer => [

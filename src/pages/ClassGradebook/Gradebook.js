@@ -98,7 +98,7 @@ function render ({props, local, state}) {
       ...map(score =>
         score.percent === '-'
           ? ''
-          : asPercent ? score.percent : score.points,
+          : displayPercent ? score.percent : score.points,
         usersData[i].scores
       )
     ], studentList)
@@ -117,7 +117,7 @@ function render ({props, local, state}) {
         user.displayName,
         score.percent === '-'
           ? ''
-          : asPercent ? score.percent : score.points
+          : displayPercent ? score.percent : score.points
       ]
     }, studentList)
 
