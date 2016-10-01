@@ -59,7 +59,7 @@ export default summon(props => ({
     creatingClass: {
       url: '/group/',
       method: 'POST',
-      invalidates: ['/user/classes', '/user'],
+      invalidates: '/user/classes',
       body
     }
   }),
@@ -71,8 +71,7 @@ export default summon(props => ({
       body: {
         to: [classId],
         ...rest
-      },
-      invalidates: 'activity_feed'
+      }
     }
   }),
   copyActivity: activityId => ({

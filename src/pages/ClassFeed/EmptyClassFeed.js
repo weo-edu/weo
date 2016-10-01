@@ -28,8 +28,8 @@ function render({props}) {
       <Block my fs='m' lighter>
         This is your class Activity Feed
       </Block>
-      <Button busy={copyingTemplate.loading} fs='s' lighter py my boxShadow='z2' relative>
-        <Block align='center center' onClick={() => createIntro()}>
+      <Button busy={copyingTemplate.loading} onClick={() => createIntro()} fs='s' lighter py my boxShadow='z2' relative>
+        <Block align='center center'>
           Assign an Intro Activity
           <Tooltip message='Assign a tutorial Activity to teach your students the basics of Weo.' align='center center' tooltipProps={{whiteSpace: 'normal', w: '200'}}>
             <Icon name='info' ml='s' fs='s'/>

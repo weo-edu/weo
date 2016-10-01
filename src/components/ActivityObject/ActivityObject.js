@@ -41,7 +41,7 @@ const ActivityObject = wrap(CSSContainer, ({editable}) => editable
   : {}
 )({
   render({props}) {
-    const {object, open, editing, editable, onEdit, hover, ...rest} = props
+    const {object, open, editing, editable, onEdit, hover, opening, ...rest} = props
     const Obj = typeMap[object.objectType]
     const editableProps = {
       onClick: () => open(object._id),
@@ -52,6 +52,7 @@ const ActivityObject = wrap(CSSContainer, ({editable}) => editable
 
     return (
       <Block
+        opacity={opening ? .5 : 1}
         pageBreakInside='avoid'
         printProps={{p: 16}}
         bgColor='white'

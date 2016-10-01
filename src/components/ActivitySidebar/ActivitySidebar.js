@@ -21,7 +21,7 @@ import moment from 'moment'
  */
 
 function render ({props}) {
-  const {activity, showScores, canGrade, canSetMax, isStudent, isRedo, selectObject, selectedObject, hasInstanceNav} = props
+  const {activity, showScores, setMax, canGrade, canSetMax, isStudent, isRedo, selectObject, selectedObject, hasInstanceNav} = props
   const {actor, publishedAt, at = {}, _object, status, published} = activity
   const isInstance = activity.shareType === 'shareInstance'
   let count = 0
@@ -73,6 +73,7 @@ function render ({props}) {
             questions.map((q, i) => <ScoreRow
               num={i + 1}
               question={q}
+              setMax={setMax}
               isRedo={isRedo}
               activity={activity}
               canGrade={canGrade}
@@ -130,30 +131,20 @@ const ScoreRow = summon(({activity, question}) => ({
         scaled
       }
     }
-  }),
-  setMax: max => ({
-    settingMax: {
-      url: `/share/${activity._id}/max_points/${question._id}`,
-      method: 'PUT',
-      body: {
-        max
-      }
-    }
   })
 }))({
   initialState ({props}) {
     return {
-      debouncedSetPoints: debounceAction(props.setPoints, 500),
-      debouncedSetMax: debounceAction(props.setMax, 500)
+      debouncedSetPoints: debounceAction(props.setPoints, 500)
     }
   },
 
   render ({props, state}) {
     const {
       question, selectObject, isSelected, showScore, canGrade, isRedo,
-      canSetMax, num, activity, isStudent, showIncorrect
+      canSetMax, num, activity, isStudent, showIncorrect, setMax
     } = props
-    const {debouncedSetPoints, debouncedSetMax} = state
+    const {debouncedSetPoints} = state
     const {points} = question
     const {scaled, max} = points
     const curPoints = scaled === undefined || !showScore
@@ -210,7 +201,7 @@ const ScoreRow = summon(({activity, question}) => ({
               <Text bgColor='transparent' color='black'>/</Text>
               <Input
                 {...inputProps}
-                onInput={setMax}
+                onInput={trySetMax}
                 disabled={!canSetMax}
                 color='text'
                 defaultValue={max} />
@@ -227,13 +218,13 @@ const ScoreRow = summon(({activity, question}) => ({
       yield debouncedSetPoints(points / max)
     }
 
-    function * setMax (e) {
+    function * trySetMax (e) {
       e.target.value = normalize(e.target.value)
 
       const max = Number(e.target.value)
 
       if (isNaN(max)) return
-      yield debouncedSetMax(max)
+      yield setMax(question._id, max)
     }
 
     function normalize (str = '') {

@@ -28,6 +28,7 @@ function render ({props, state, local, children}) {
       <Block bg='transparent' pt='s' px onClick={e => e.stopPropagation()} hide={numClasses < 8}>
         <LineInput type='search' onInput={local(setFilter)} placeholder='Filter classes…' />
       </Block>
+      <Block>
       {
         !loading &&
         value.items
@@ -40,6 +41,7 @@ function render ({props, state, local, children}) {
           ? <AddClassItem Modal={JoinClassModal} text='Join Class' />
           : <AddClassItem Modal={CreateClassModal} text='New Class' />
       }
+      </Block>
     </Dropdown>
   )
 }

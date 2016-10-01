@@ -61,20 +61,36 @@ function initialState ({props, local, path}) {
     mergeSaved: local(mergeSaved),
     setDragging: local(setDragging),
     clearDragging: local(clearDragging),
+    setMax: (qid, max) => (dispatch, getState) => {
+      const state = lookup(getState().ui, path)
+      const idx = findIndex(state.editedActivity._object[0].attachments, ({_id}) => _id === qid)
+
+      if (idx === -1) return
+
+      const obj = state.editedActivity._object[0].attachments[idx]
+
+      dispatch(state.changeObject({
+        ...obj,
+        points: {
+          ...(obj.points || {}),
+          max
+        }
+      }))
+    },
     toggleEdit: id => (dispatch, getState) => {
       const state = lookup(getState().ui, path)
       const parentState = lookup(getState().ui, path.slice(0, path.lastIndexOf('.')))
 
       if (state.editing && state.dirty) {
-        cancelSave()
-        dispatch(local(clearDirty)())
-        return dispatch(props.save(state.editedActivity))
-          .then(() => dispatch(state.open(id)))
+        dispatch(local(openNext)(id))
+        return dispatch(state.save(id))
       } else if (!(parentState.saving && parentState.saving.loading)) {
         dispatch(state.open(id))
+      } else {
+        dispatch(local(openNext)(id))
       }
     },
-    save: () => (dispatch, getState) => {
+    save: id => (dispatch, getState) => {
       // XXX Hack until we find a good solution to avoid
       // creating new event handlers whenever anything changes
       const state = lookup(getState().ui, path)
@@ -106,7 +122,7 @@ function initialState ({props, local, path}) {
  */
 
 function render ({props, local, state}) {
-  const {debouncedSave, selectedObject, selectObject, save, currentUser, setSpeaking, speakingId, speechRate} = props
+  const {debouncedSave, selectedObject, selectObject, save, saving = {}, currentUser, setSpeaking, speakingId, speechRate} = props
   const defaultPoints = getProp('preferences.max_points', currentUser)
   const {editing, editedActivity} = state
   const {attachments} = editedActivity._object[0]
@@ -139,6 +155,8 @@ function render ({props, local, state}) {
                       editable
                       showAnswers
                       object={object}
+                      saving={state.openNext !== undefined && state.editing === object._id && saving.loading}
+                      opening={state.openNext === object._id && saving.loading}
                       open={state.toggleEdit}
                       selectObject={selectObject}
                       remove={state.removeObject}
@@ -164,7 +182,7 @@ function render ({props, local, state}) {
           </Block>
         </Block>
         <Block w={200} relative fixed={{top: 53}} float='right'>
-          <ActivitySidebar canSetMax activity={editedActivity} selectObject={selectObject} selectedObject={selectedObject} />
+          <ActivitySidebar canSetMax setMax={state.setMax} activity={editedActivity} selectObject={selectObject} selectedObject={selectedObject} />
         </Block>
         <Block w={200} />
       </Block>
@@ -256,6 +274,7 @@ const setDragging = createAction('<ActivityEditor/>: set dragging')
 const clearDragging = createAction('<ActivityEditor/>: clear dragging')
 const clearDirty = createAction('<ActivityEditor/>: clear dirty')
 const setMouseDown = createAction('<ActivityEditor/>: set mouse down', e => e.target)
+const openNext = createAction('<ActivityEditor/>: open next')
 
 /**
  * Reducer
@@ -276,9 +295,17 @@ const reducer = handleActions({
     ...state,
     dirty: false
   }),
+  [openNext]: (state, id) => ({
+    ...state,
+    openNext: id
+  }),
   [mergeSaved]: (state, activity) => ({
     ...state,
     synced: true,
+    openNext: undefined,
+    editing: state.openNext !== undefined
+      ? state.openNext
+      : state.editing,
     numSaves: state.numSaves + 1,
     editedActivity: {
       ...state.editedActivity,

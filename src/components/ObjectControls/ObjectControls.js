@@ -12,7 +12,7 @@ import element from 'vdux/element'
  */
 
 function render ({props, children}) {
-  const {object, remove, open, insert, pos} = props
+  const {object, remove, open, insert, pos, saving} = props
 
   return (
     <Block p m={-24} mt={24} borderTop='1px solid grey_light' bgColor='off_white' align='space-between center'>
@@ -31,7 +31,7 @@ function render ({props, children}) {
           </Btn>
         </Tooltip>
         <Tooltip message='Done'>
-          <Btn onClick={() => open(null)} h={32}>
+          <Btn onClick={() => open(null)} h={32} busy={saving} darkSpinner>
             <Icon fs='s' name='check_circle' color='text' />
           </Btn>
         </Tooltip>

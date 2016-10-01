@@ -52,7 +52,7 @@ function render ({props}) {
               <MarkdownHelper mt={8} menuProps={markdownMenuProps} />
             </Block>
           </Block>
-          <Block class='choice-container' align='start' column={isMultipleChoice} onKeypress={{enter: [type === 'choice' && attach('choice'), e => focusLast(e.target)]}}>
+          <Block class='choice-container' align='start' column={isMultipleChoice} onKeypress={{enter: [type === 'choice' && insert, e => focusNext(e.target)]}}>
             {
               map((att, i) => <QuestionAttachment
                   focusPrevious={focusPrevious}
@@ -141,7 +141,15 @@ function render ({props}) {
     </Block>
   )
 
-  function attach (type, poll, removeAll) {
+  function insert (e) {
+    const p = findParent(e.target)
+    const inputs = [].slice.call(p.querySelectorAll('input[type="text"]'))
+    const idx = inputs.indexOf(e.target)
+
+    return attach('choice', undefined, false, idx + 1)()
+  }
+
+  function attach (type, poll, removeAll, idx) {
     return function * () {
       const id = yield generateObjectId()
 
@@ -158,12 +166,14 @@ function render ({props}) {
         correctAnswer
       }
 
+      const newAtts = removeAll ? [] : attachments.slice()
+      if (idx === undefined || idx === -1) idx = attachments.length
+      newAtts.splice(idx, 0, newObj)
+
       yield onEdit({
         ...object,
         poll: poll === undefined ? object.poll : poll,
-        attachments: removeAll
-          ? [newObj]
-          : attachments.concat(newObj)
+        attachments: newAtts
       })
     }
   }
@@ -181,8 +191,22 @@ function focusPrevious (node) {
   const inputs = [].slice.call(p.querySelectorAll('input[type="text"]'))
   if (inputs.length) {
     const idx = inputs.indexOf(node)
-    setTimeout(() => inputs[idx - 1].focus())
+    const focusIdx = idx === 0 ? 1 : idx - 1
+
+    setTimeout(() => inputs[focusIdx] && inputs[focusIdx].focus(), 50)
   }
+}
+
+function focusNext (node) {
+  setTimeout(() => {
+    const p = findParent(node)
+    const inputs = [].slice.call(p.querySelectorAll('input[type="text"]'))
+    if (inputs.length) {
+      const idx = inputs.indexOf(node)
+      const focusIdx = idx === 0 ? 1 : idx + 1
+      inputs[focusIdx].focus()
+    }
+  }, 50)
 }
 
 function focusLast (node) {
@@ -192,7 +216,7 @@ function focusLast (node) {
   setTimeout(() => {
     const inputs = [].slice.call(p.querySelectorAll('input[type="text"]'))
     if (inputs.length) {
-      inputs[inputs.length -1].focus()
+      inputs[inputs.length - 1].focus()
     }
   }, 30)
 }

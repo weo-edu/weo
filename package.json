@@ -23,7 +23,7 @@
     "@f/create-element": "^1.0.1",
     "@f/crop-image": "^1.0.0",
     "@f/debounce": "^1.0.4",
-    "@f/deep-equal": "^1.0.1",
+    "@f/deep-equal": "^1.0.2",
     "@f/domready": "^1.0.1",
     "@f/element-rect": "^1.0.0",
     "@f/filter": "^1.1.1",
