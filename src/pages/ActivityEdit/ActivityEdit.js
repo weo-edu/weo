@@ -144,8 +144,8 @@ function render ({props, local, state}) {
               {
                 map((object, i) => (
                   <Block
-                    draggable
                     key={object._id}
+                    draggable={editing !== object._id}
                     onDragOver={onDragOver(object._id)}
                     onDragEnd={state.clearDragging}
                     onMouseDown={local(setMouseDown)}
@@ -202,18 +202,13 @@ function render ({props, local, state}) {
 
   function onDragOver (id) {
     return e => {
-      if (e._rawEvent.dataTransfer.types.indexOf('weo_attachment') === -1) return
+      const types = [].slice.call(e._rawEvent.dataTransfer.types)
+      if (types.indexOf('weo_attachment') === -1) return
       e.preventDefault()
 
       if (id === state.dragging || !state.dragging) return
 
       return state.moveObject({src: state.dragging, target: id})
-    }
-  }
-
-  function beforeUnload () {
-    if (state.dirty) {
-      return 'test'
     }
   }
 }

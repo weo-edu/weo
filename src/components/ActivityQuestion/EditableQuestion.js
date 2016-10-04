@@ -4,12 +4,12 @@
 
 import QuestionAttachment from 'components/QuestionAttachment'
 import QuestionComments from 'components/QuestionComments'
-import {Button, Toggle} from 'vdux-containers'
 import ObjectControls from 'components/ObjectControls'
 import MarkdownHelper from 'components/MarkdownHelper'
 import {generateObjectId} from 'middleware/objectId'
 import LineTextarea from 'components/LineTextarea'
 import QuestionTypeMenu from './QuestionTypeMenu'
+import {Button, Toggle} from 'vdux-containers'
 import handleActions from '@f/handle-actions'
 import createAction from '@f/create-action'
 import {Block, Badge, Icon} from 'vdux-ui'

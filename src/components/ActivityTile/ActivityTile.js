@@ -62,25 +62,39 @@ const Activity = wrap(CSSContainer)({
 
     return (
       <Flex column cursor='pointer' pb onClick={() => setUrl(`/activity/${_id}`)}>
-        <ActivityCardActions hide={!(actions && hover)} spread liked={locallyLiked} localLike={local(localLike)} {...actions} activity={activity} user={user} absolute wide z='1' />
+        {
+          actions && hover && <ActivityCardActions spread liked={locallyLiked} localLike={local(localLike)} {...actions} activity={activity} user={user} absolute wide z='1' />
+        }
         <Figure key='img' {...image} thumb={true} opacity={hover && .88} />
         <Block textAlign='center' m='m'>
           <Text my='s' fs='s' display='block' fw='200'>{displayName}</Text>
           <Text fs='xxs' wordBreak='break-word'>{description}</Text>
         </Block>
         <Flex align='center center' color='grey_medium' fs='xxs' maxHeight='14px'>
-          <Flex align='center center' hide={!likes}>
-            <Icon name='favorite' fs='xs'/>
-            <Text mr='4' ml='2'>{likes}</Text>
-          </Flex>
-          <Flex align='center center' hide={!repinCount}>
-            <WeoIcon name='pin' fs='14' mb='-2'/>
-            <Text mr='4' ml='2'>{repinCount}</Text>
-          </Flex>
-          <Flex align='center center' hide={!replies.canonicalTotal.items}>
-            <Icon name='mode_comment' fs='xs' mb='-2'/>
-            <Text mr='4' ml='2'>{replies.canonicalTotal.items}</Text>
-          </Flex>
+          {
+            !!likes && (
+              <Flex align='center center'>
+                <Icon name='favorite' fs='xs'  />
+                <Text mr='4' ml='2'>{likes}</Text>
+              </Flex>
+            )
+          }
+          {
+            !!repinCount && (
+              <Flex align='center center'>
+                <WeoIcon name='pin' fs='14' mb='-2' />
+                <Text mr='4' ml='2'>{repinCount}</Text>
+              </Flex>
+            )
+          }
+          {
+            !!replies.canonicalTotal.items && (
+              <Flex align='center center'>
+                <Icon name='mode_comment' fs='xs' mb='-2' />
+                <Text mr='4' ml='2'>{replies.canonicalTotal.items}</Text>
+              </Flex>
+            )
+          }
         </Flex>
       </Flex>
     )

@@ -63,9 +63,10 @@ const ActivityObject = wrap(CSSContainer, ({editable}) => editable
         {...rest}>
         <Obj key={object._id} {...props} />
         {
-          editable && (editing || hover) &&
+          editable && (!editing && hover) &&
             <Icon
               absolute={{top: 0, left: 0}}
+
               color='grey_medium'
               name='drag_handle'
               textAlign='center'

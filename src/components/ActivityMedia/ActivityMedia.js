@@ -49,15 +49,19 @@ function LinkObject ({props}) {
 
   return (
     <Block align='start center' bgColor='#fbfbfb' border='1px solid rgba(52, 52, 52, 0.08)' h={120} overflow='hidden' {...rest}>
-      <Link {...linkProps} minWidth={118} tall relative hide={!image.url} bgColor='white' borderRight='1px solid rgba(grey_light, .5)'>
-        <Block
-          tag='img'
-          maxWidth='100%'
-          maxHeight='100%'
-          absolute={{top: 0, right: 0, bottom: 0, left: 0}}
-          m='auto'
-          src={image.url} />
-      </Link>
+      {
+        image.url && (
+          <Link {...linkProps} minWidth={118} tall relative bgColor='white' borderRight='1px solid rgba(grey_light, .5)'>
+            <Block
+              tag='img'
+              maxWidth='100%'
+              maxHeight='100%'
+              absolute={{top: 0, right: 0, bottom: 0, left: 0}}
+              m='auto'
+              src={image.url} />
+          </Link>
+        )
+      }
       <Block flex p minWidth={0}>
         <Block column mb fs='xxs' ellipsis>
           <Link maxWidth='100%' color='blue' fs='s' fw={200} ellipsis {...linkProps}>
@@ -98,6 +102,7 @@ const Video = {
               height={height}
               hidden={true}
               width={width}
+              thumbFirst
               url={url}
               mx='auto' />
             <Icon
@@ -200,7 +205,7 @@ function Image ({props}) {
 
   return (
     <Block textAlign={justify} {...rest}>
-      <Figure {...image} w={image.width * (zoom || 1)} display='inline-block' />
+      <Figure {...image} w={image.width * (zoom || 1)} display='inline-block' thumbFirst />
     </Block>
   )
 }

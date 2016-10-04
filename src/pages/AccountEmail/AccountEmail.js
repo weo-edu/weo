@@ -16,12 +16,13 @@ function render ({props}) {
   const {currentUser, togglePref} = props
   const rowProps = {
     hoverProps: {bgColor: 'rgba(blue_light, .06)'},
-    activeProps: {bgColor: 'rgba(blue_light, .1)', uiProps: {squished: true}},
+    activeProps: {bgColor: 'rgba(blue_light, .1)', uiProps: {squished: true, toggleProps: {mr: 54}}},
     borderBottom: '1px solid grey_light',
     pointer: true,
     fw: 'lighter',
     p: 'l',
     fs: 's',
+    uiProps: {toggleProps: {mr: 54}}
   }
 
   return (

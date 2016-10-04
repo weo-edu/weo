@@ -45,11 +45,15 @@ function render ({props}) {
         }
         <Block bg='grey'>
           <Flex wrap h={158} bgColor='off_white' borderColor='rgba(75,82,87,0.03)' borderBottom borderTop pointer onClick={() => setUrl(url)} hoverProps={{opacity: 0.92}}>
-            <Text hide={images.length} p fs='xxs'>
-              <Text fw='bolder'>{displayName}</Text>
-              <Text px='xs'>by</Text>
-              <Text color='blue'>{owner.displayName}</Text>
-            </Text>
+            {
+              !images.length && (
+                <Text p fs='xxs'>
+                  <Text fw='bolder'>{displayName}</Text>
+                  <Text px='xs'>by</Text>
+                  <Text color='blue'>{owner.displayName}</Text>
+                </Text>
+              )
+            }
             {
               images.map(img => <BgImg flex='50%' maxWidth='100%' img={img} thumb />)
             }

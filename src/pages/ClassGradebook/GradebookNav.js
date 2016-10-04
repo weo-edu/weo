@@ -2,7 +2,7 @@
  * Imports
  */
 
-import {Dropdown, Button, MenuItem, Tooltip} from 'vdux-containers'
+import {Dropdown, Button, MenuItem, Tooltip, Toggle} from 'vdux-containers'
 import {Block, Icon} from 'vdux-ui'
 import summon from 'vdux-summon'
 import element from 'vdux/element'
@@ -27,15 +27,14 @@ function render ({props}) {
   return (
     <Block align='space-between center' relative mb>
       <Block align='start stretch'>
-        <Dropdown btn={<DropButton />} z='3' left w='160px' fs='xxs'>
-          <MenuItem onClick={togglePref} py>
-            Display as {asPercent ? ' Point Totals' : ' Percentages'}
-          </MenuItem>
-          <MenuItem py align='start center' onClick={exportAll}>
+        <Block align='start center'>
+          <Button px mr='s' bgColor='blue' onClick={exportAll}>
             Export to CSV
-            <Icon name='file_download' fs='xs' ml='s' />
-          </MenuItem>
-        </Dropdown>
+              <Icon name='file_download' fs='xs' ml='s' />
+          </Button>
+          <Toggle onClick={togglePref} checked={asPercent}
+          label='Display as Percentages' />
+        </Block>
         <Tooltip
           message='Student scores will only show up after you return their Activities to them'
           tooltipProps={{whiteSpace: 'wrap'}}
@@ -64,16 +63,6 @@ function render ({props}) {
   function togglePref () {
     return setPref('gradebook.displayPercent', !asPercent)
   }
-}
-
-function DropButton () {
-  return (
-    <Button bgColor='green' h={32}>
-      <Icon name='settings' fs='xs' mr='s' />
-      Settings
-      <Icon name='arrow_drop_down' fs='s' ml='s' mr='-12px' />
-    </Button>
-  )
 }
 
 /**
