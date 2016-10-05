@@ -122,10 +122,16 @@ const focusProps = {
  * <ScoreRow/>
  */
 
-const ScoreRow = summon(({activity, question}) => ({
-  setPoints: scaled => ({
+const ScoreRow = summon(() => ({
+  // Note: These arguments *must* be passed into this function and
+  // not taken from props, because we are going to store this
+  // function in state. Which means that if/when the instance
+  // changes, we need to be passing a new activityId, which
+  // will not happen properly if this function takes its arguments
+  // from the initial props and gets stored in state.
+  setPoints: (activityId, questionId, scaled) => ({
     settingPoints: {
-      url: `/instance/${activity._id}/score/${question._id}`,
+      url: `/instance/${activityId}/score/${questionId}`,
       method: 'PUT',
       body: {
         scaled
@@ -215,7 +221,7 @@ const ScoreRow = summon(({activity, question}) => ({
       e.target.value = normalize(e.target.value)
       const points = Number(e.target.value)
       if (isNaN(points)) return
-      yield debouncedSetPoints(points / max)
+      yield debouncedSetPoints(activity._id, question._id, points / max)
     }
 
     function * trySetMax (e) {
