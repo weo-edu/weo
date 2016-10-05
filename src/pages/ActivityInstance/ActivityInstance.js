@@ -39,9 +39,7 @@ function render ({props, local, state}) {
   const commentsShown = state.commentsId
 
   const {loaded, error, value} = activities
-
-  if(!loaded) return <span />
-  const comments = value.items
+  const comments = loaded ? value.items : []
 
   const isTurnedIn = status === statusMap.turnedIn || status === statusMap.graded
   const hideInstance = hideOnTurnIn && isStudent && isTurnedIn

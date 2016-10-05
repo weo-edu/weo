@@ -112,6 +112,9 @@ button {
 }
 
 @media print {
+  html {
+    height: auto;
+  }
   body {
     background: #FFF;
   }
@@ -120,6 +123,9 @@ button {
   }
   .modal .app {
     display: none !important;
+  }
+  .app {
+    padding-bottom: 0 !important;
   }
 }
 

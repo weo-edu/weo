@@ -2,16 +2,16 @@
  * Imports
  */
 
+import {statusMap, totalScore, totalPoints} from 'lib/activity-helpers'
 import {getOverviewQuestions} from 'lib/activity-helpers'
 import CommoncoreBadge from 'components/CommoncoreBadge'
 import ActivityObject from 'components/ActivityObject'
 import ActivityHeader from 'components/ActivityHeader'
-import {statusMap} from 'lib/activity-helpers'
 import {setUrl} from 'redux-effects-location'
 import handleActions from '@f/handle-actions'
 import createAction from '@f/create-action'
+import {Block, Text} from 'vdux-ui'
 import element from 'vdux/element'
-import {Block} from 'vdux-ui'
 import sleep from '@f/sleep'
 import map from '@f/map'
 
@@ -63,6 +63,7 @@ function render ({props, state}) {
     ? attachments
     : attachments.slice(0, state.limit)
 
+  const isInstance = activity.shareType === 'shareInstance'
   const showPollResults = activity.status >= statusMap.turnedIn
   const overviewQuestions = instances && showPollResults
     ? getOverviewQuestions(attachments, instances)
@@ -70,6 +71,18 @@ function render ({props, state}) {
 
   return (
     <Block>
+      {
+        isInstance &&
+        <Block fs='m' px='l' hide printProps={{display: 'block'}}>
+          <Text bold>
+            {activity.actor.displayName}
+          </Text>
+          <Text ml italic>
+            Score:&nbsp;
+            {totalScore(activity)} / {totalPoints(activity)}
+          </Text>
+        </Block>
+      }
       <ActivityHeader
         activity={activity}
         clickableTags={clickableTags} />

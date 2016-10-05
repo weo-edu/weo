@@ -14,7 +14,9 @@ import {Block} from 'vdux-ui'
  */
 
 function onCreate ({props, local}) {
-  return loadImages(props, local(imageLoaded))
+  if (props.url) {
+    return loadImages(props, local(imageLoaded))
+  }
 }
 
 /**
@@ -50,7 +52,7 @@ function render ({props, state}) {
 function onUpdate (prev, next) {
   if (getUrl(prev.props.url, prev.props.thumb) !== getUrl(next.props.url, next.props.thumb)) {
     if (next.props.url) {
-      return loadImages(next.props, local(imageLoaded))
+      return loadImages(next.props, next.local(imageLoaded))
     }
   }
 }

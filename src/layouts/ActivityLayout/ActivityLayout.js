@@ -35,7 +35,7 @@ function initialState ({local}) {
 
 function render ({props, children, local, state}) {
   return (
-    <Block class='app' pb='60vh'>
+    <Block class='app' pb='60vh' printProps={{pb: 0}}>
       { internal(props, children, local, state) }
     </Block>
   )
