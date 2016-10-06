@@ -143,8 +143,8 @@ function IncorrectX () {
 }
 
 function onUpdate (prev, next) {
-  if(!prev.props.activity) return
-  if (prev.props.activity._id !== next.props.activity._id) {
+  if (!prev.props.activityId) return
+  if (prev.props.activityId !== next.props.activityId) {
     return next.local(setAnswer)(next.props.object.response)
   }
 }
