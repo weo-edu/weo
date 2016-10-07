@@ -43,8 +43,8 @@ function render ({props, state, local}) {
       {
         state.open
           ? menu
-          : <Button onClick={local(toggle)} pointer circle={55} boxShadow='card'>
-              <Icon name='add' color='white' />
+          : <Button onClick={local(toggle)} pointer circle={55} boxShadow='card' icon='add' bgColor='blue' fs='m'>
+
             </Button>
       }
     </Block>

@@ -99,7 +99,7 @@
     "moment": "^2.13.0",
     "oauth-facebook": "^0.1.4",
     "oauth-google": "^0.1.4",
-    "oauth-popup": "^0.1.4",
+    "oauth-popup": "^0.1.5",
     "oauth-url": "^0.1.6",
     "objectid-browser": "github:weo-edu/ObjectId.js",
     "overlaps": "^1.0.0",

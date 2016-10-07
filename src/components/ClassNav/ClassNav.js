@@ -25,22 +25,24 @@ function render ({props, state, local, children}) {
 
   return (
     <Dropdown btn={<div>{children}</div>} bg='white' color='black' maxHeight={350} overflow='auto' mt='-6' w='200' left>
-      <Block bg='transparent' pt='s' px onClick={e => e.stopPropagation()} hide={numClasses < 8}>
-        <LineInput type='search' onInput={local(setFilter)} placeholder='Filter classes…' />
-      </Block>
       <Block>
-      {
-        !loading &&
-        value.items
-          .filter(search(state.filter))
-          .map(cls => <ClassItem cls={cls} isStudent={isStudent} />)
-      }
-      <Divider hide={!numClasses} />
-      {
-        isStudent
-          ? <AddClassItem Modal={JoinClassModal} text='Join Class' />
-          : <AddClassItem Modal={CreateClassModal} text='New Class' />
-      }
+        <Block bg='transparent' pt='s' px onClick={e => e.stopPropagation()} hide={numClasses < 8}>
+          <LineInput type='search' onInput={local(setFilter)} placeholder='Filter classes…' />
+        </Block>
+        <Block>
+        {
+          !loading &&
+          value.items
+            .filter(search(state.filter))
+            .map(cls => <ClassItem cls={cls} isStudent={isStudent} />)
+        }
+        <Divider hide={!numClasses} />
+        {
+          isStudent
+            ? <AddClassItem Modal={JoinClassModal} text='Join Class' />
+            : <AddClassItem Modal={CreateClassModal} text='New Class' />
+        }
+        </Block>
       </Block>
     </Dropdown>
   )

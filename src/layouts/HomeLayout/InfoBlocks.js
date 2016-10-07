@@ -48,7 +48,7 @@ function infoItem (info, i) {
       <Flex column align='center center' flex='50%' px='l' textAlign='center'>
         <Image src={info.icon} m='12px' />
         <Text uppercase fs='m' fw='bolder' my='m'>{info.title}</Text>
-        <Text fs='s' fw='100' lh='30px'>{info.description}</Text>
+        <Text fs='s' fw='200' lh='30px'>{info.description}</Text>
       </Flex>
     </Flex>
   )

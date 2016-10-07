@@ -33,7 +33,7 @@ function render ({props}) {
       }
       <Block
         fs='s'
-        fw='100'
+        fw='200'
         lh='1.5em'
         class='markdown'
         innerHTML={object.content} />

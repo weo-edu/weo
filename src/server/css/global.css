@@ -163,6 +163,10 @@ button {
   background-color: #F9F9F9;
 }
 
+.katex-mathml {
+  display: none;
+}
+
 .markdown {
   text-align: left;
   font-weight: lighter;

@@ -245,7 +245,7 @@ const ScoreRow = summon(() => ({
 
 function getColor (activity, question, canGrade, isStudent, isRedo) {
   const {status} = activity
-  const {points, poll, response} = question
+  const {points, poll, response = []} = question
 
   if(canGrade) {
     return poll

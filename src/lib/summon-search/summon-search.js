@@ -10,7 +10,7 @@ import summon from 'vdux-summon'
 
 function summonSearch (type, key) {
   return summon(({query}) => ({
-    [key]: `/search/${type}?query=${query}&maxResults=12`,
+    [key]: `/search/${type}?query=${encodeURIComponent(query)}&maxResults=12`,
     more: pageToken => ({
       [key]: {
         params: pageToken && {

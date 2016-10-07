@@ -22,7 +22,7 @@ function render ({props}) {
     <Flex align='start center'>
       <Avatar link mr='s' thumb actor={actor} />
       <Box flex ellipsis lh='18px'>
-        <Flex column align='space-around'>
+        <Flex column align='space-around' h={18 * 2}>
           <Link flex='0%' hoverProps={{underline: true}} bold href={`/${actor.username}`}>
             {actor.displayName}
           </Link>

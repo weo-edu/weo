@@ -124,6 +124,14 @@ function internal (props, children, local, state) {
   }
 
   function escapeUrl () {
+    if (value.channels[0] === 'user!' + value.actor.id + '.drafts') {
+      return '/activities/drafts'
+    }
+
+    if (value.channels[0] === 'user!' + value.actor.id + '.trash') {
+      return '/activities/trash'
+    }
+
     return value.contexts[0].descriptor.id !== 'public'
       ? '/class/' + value.contexts[0].descriptor.id
       : value.actor.id === currentUser._id

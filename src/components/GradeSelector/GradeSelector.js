@@ -48,7 +48,7 @@ function render ({props, state, local}) {
 
 function item (grade, selected, toggle)  {
   return (
-    <Flex align='start center' flex='20%' w='33%' whiteSpace='nowrap' pl='s'>
+    <Flex align='start center' flex='20%' w='33%' maxWidth='33%' whiteSpace='nowrap' pl='s'>
       <Checkbox label={grade} checked={selected} mr onChange={toggle} />
     </Flex>
   )

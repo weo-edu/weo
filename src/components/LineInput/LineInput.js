@@ -38,7 +38,8 @@ const inputProps = {
   color: '#666',
   fs: 'inherit',
   outline: 0,
-  bgColor: 'transparent'
+  bgColor: 'transparent',
+  appearance: 'none'
 }
 
 /**
