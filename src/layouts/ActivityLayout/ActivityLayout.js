@@ -183,7 +183,10 @@ const reducer = handleActions({
  */
 
 export default summon(({userId, activityId}) => ({
-  activity: `/share/${activityId}`,
+  activity: {
+    url: `/share/${activityId}`,
+    subscribe: 'refresh_activity'
+  },
   instance: {
     url: userId
       ? `/share/${activityId}/instance/${userId}`

@@ -6,11 +6,13 @@ import CommoncoreBadge from 'components/CommoncoreBadge'
 import ActivitySidebar from 'components/ActivitySidebar'
 import ActivityObject from 'components/ActivityObject'
 import ActivityHeader from 'components/ActivityHeader'
+import {Toast, Block, Icon, Card, Text} from 'vdux-ui'
+import {showToast, hideToast} from 'reducer/toast'
+import summon, {invalidate} from 'vdux-summon'
 import {setUrl} from 'redux-effects-location'
 import AttachmentMenu from './AttachmentMenu'
 import handleActions from '@f/handle-actions'
 import createAction from '@f/create-action'
-import {Block, Icon, Card} from 'vdux-ui'
 import {Button} from 'vdux-containers'
 import {lookup} from 'redux-ephemeral'
 import findIndex from '@f/find-index'
@@ -18,7 +20,6 @@ import deepEqual from '@f/deep-equal'
 import element from 'vdux/element'
 import debounce from '@f/debounce'
 import getProp from '@f/get-prop'
-import summon from 'vdux-summon'
 import index from '@f/index'
 import map from '@f/map'
 
@@ -105,6 +106,14 @@ function initialState ({props, local, path}) {
       dispatch(local(beginSave)())
 
       return dispatch(props.save(state.editedActivity))
+        .then(null, err => {
+          dispatch(local(saveFailed)())
+          dispatch(state.debouncedSave())
+
+          if (err && err.value && err.value.name === 'VersionError') {
+            dispatch(invalidate('refresh_activity'))
+          }
+        })
     },
     debouncedSave: () => (dispatch, getState) => {
       if (!debouncedSave) {
@@ -238,6 +247,22 @@ function onUpdate (prev, next) {
     actions.push(next.state.debouncedSave(next.state.editedActivity))
   }
 
+  if (saving.error && !(prev.props.saving || {}).error) {
+    actions.push(showToast(
+      <Toast key='a' bg='red' color='white' align='center center' w={520}>
+        <Block align='center center'>
+          <Icon name='error' fs='m' mr />
+          <Text fw='bolder' mr>SAVE FAILED:</Text>
+          <Text fw='lighter'>Please check your internet connection or refresh your page.</Text>
+        </Block>
+      </Toast>
+    ))
+  }
+
+  if (!saving.error && (prev.props.saving || {}).error) {
+    actions.push(hideToast())
+  }
+
   return actions
 }
 
@@ -245,11 +270,16 @@ function onUpdate (prev, next) {
  * onRemove
  */
 
-function onRemove ({props, state}) {
+function * onRemove ({props, state}) {
+  const {saving = {}} = props
   window.onbeforeunload = null
 
   if (state.dirty) {
-    return props.save(state.editedActivity)
+    yield props.save(state.editedActivity)
+  }
+
+  if (saving.error) {
+    yield hideToast()
   }
 }
 
@@ -260,6 +290,7 @@ function onRemove ({props, state}) {
 const open = createAction('<ActivityEditor/>: open')
 const change = createAction('<ActivityEditor/>: change')
 const beginSave = createAction('<ActivityEditor/>: begin save')
+const saveFailed = createAction('<ActivityEditor/>: save failed')
 const changeObject = createAction('<ActivityEditor/>: change object')
 const removeObject = createAction('<ActivityEditor/>: remove object')
 const insertObject = createAction('<ActivityEditor/>: insert object')
@@ -285,6 +316,11 @@ const reducer = handleActions({
   [beginSave]: state => ({
     ...state,
     synced: false
+  }),
+  [saveFailed]: state => ({
+    ...state,
+    synced: true,
+    dirty: true
   }),
   [clearDirty]: state => ({
     ...state,
