@@ -79,7 +79,7 @@ const ActivityHeader = wrap(CSSContainer, {
   }
 })({
   render ({props}) {
-    const {activity, showSettings, exportActivity, total, ...rest} = props
+    const {activity, showSettings, exportActivity, total, allowExport, ...rest} = props
     const btn = <Icon fs='xs' pointer absolute='top 0px right 0px' hide={!showSettings} name='info_outline' absolute top={-16} right={-8} />
 
     return (
@@ -96,7 +96,7 @@ const ActivityHeader = wrap(CSSContainer, {
             Points: {total}
           </Block>
           <Block align='center center'>
-            <Button pill px py='s' fs='xxs' bgColor='grey_medium' onClick={() =>exportActivity(activity)}>
+            <Button hide={!allowExport} pill px py='s' fs='xxs' bgColor='grey_medium' onClick={() =>exportActivity(activity)}>
               Export to CSV
             </Button>
             <Button px py='s' ml='s' fs='xxs' pill onClick={() => setUrl(`/activity/${activity._id}`)}>

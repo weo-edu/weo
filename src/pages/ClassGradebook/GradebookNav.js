@@ -12,7 +12,7 @@ import element from 'vdux/element'
  */
 
 function render ({props}) {
-  const {page, numPages, asPercent, exportAll, next, prev, setPref, hasData} = props
+  const {page, numPages, asPercent, exportAll, next, prev, setPref, hasData, allowExport} = props
   const navProps = {
     hoverProps: {highlight: 0.02},
     focusProps: {highlight: 0.02},
@@ -28,7 +28,7 @@ function render ({props}) {
     <Block align='space-between center' relative mb>
       <Block align='start stretch'>
         <Block align='start center'>
-          <Button px mr='s' bgColor='blue' onClick={exportAll}>
+          <Button hide={!allowExport} px mr='s' bgColor='blue' onClick={exportAll}>
             Export to CSV
               <Icon name='file_download' fs='xs' ml='s' />
           </Button>

@@ -8,7 +8,17 @@ import * as katex from 'lib/katex'
 
 const cloudFS = require('cloud-fs')
 const client = cloudFS.url('./scripts/weo.js')
+const image = cloudFS.url('./simple1200x620.png')
+
 const apiStatic = process.env.API_STATIC
+
+const og = {
+  title: 'Your assignments Simplified | WEO',
+  image,
+  site_name: 'Weo',
+  type: 'website',
+  description: 'Create and share educational activities with colleagues and students.'
+}
 
 /**
  * Page
@@ -20,7 +30,19 @@ function page ({html, state, title}) {
       <html>
         <head>
           <base href='/' />
-          <meta name='google' content='notranslate' />
+
+          <!-- Meta -->
+          <meta name='google' value='notranslate' />
+          <meta name='description' content='${og.description}' />
+          <meta name='fragment' content='!' />
+          <meta name='pinterest' content='nohover' />
+
+          <!-- Open Graph -->
+          <meta property ='og:site_name' content='${og.site_name}' />
+          <meta property='og:description' content='${og.description}' />
+          <meta property='og:image' content='${og.image}' />
+          <meta property='og:title' content='${og.title}' />
+          <meta property='og:type' content='${og.type}' />
 
           <title>${title || 'Weo'}</title>
           ${

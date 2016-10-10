@@ -62,13 +62,14 @@ function render ({props, local, state}) {
   const numPages = Math.ceil(activityList.length / pageSize)
   const studentList = students.sort(cmp)
   const usersData = map(user => getUsersData(user._id, activityList, totals), studentList)
+  const allowExport = currentUser.userType === 'teacher'
 
   return (
     <Block w='col_main' mx='auto' my='l' relative>
-      <GradebookNav setPref={setPref} next={local(next, numPages)} prev={local(prev, numPages)} exportAll={exportAll} asPercent={displayPercent} page={page} numPages={numPages} hasData={hasData}/>
+      <GradebookNav setPref={setPref} next={local(next, numPages)} prev={local(prev, numPages)} exportAll={exportAll} asPercent={displayPercent} page={page} numPages={numPages} hasData={hasData} allowExport={allowExport} />
       <Block boxShadow='card' overflow='auto' relative bg='linear-gradient(to bottom, grey 0px, grey 55px, off_white 55px)'>
         <Table overflow='auto'>
-          <GradebookHeader setPref={setPref} activities={curArr(activityList)} exportActivity={exportActivity} totals={totals} sort={sort}/>
+          <GradebookHeader setPref={setPref} activities={curArr(activityList)} exportActivity={exportActivity} totals={totals} sort={sort} allowExport={allowExport} />
           {
             map((student, i) => <GradebookRow
               data={usersData[i]}
@@ -77,6 +78,7 @@ function render ({props, local, state}) {
               student={student}
               odd={i%2}
               page={page}
+              allowExport={allowExport}
               currentUser={currentUser}
               last={studentList.length === (i+1)} />, studentList)
           }
