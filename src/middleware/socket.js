@@ -55,7 +55,7 @@ function middleware ({dispatch, getState}) {
     }
   }
 
-  function route (url, method, body) {
+  function route (url = '', method, body) {
     const parsed = parse(url)
     const newUrl = format({
       ...parsed,

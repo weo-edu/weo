@@ -38,6 +38,7 @@ function ClassItem ({props}) {
       hoverProps={{highlight: 0.03}}
       label={cls.displayName}
       bgColor='white'
+      capitalize
       pointer
       p/>
   )

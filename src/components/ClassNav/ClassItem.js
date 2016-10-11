@@ -19,7 +19,7 @@ function render ({props}) {
 
   return (
     <MenuItem px='0' py='0' capitalize color='text_color' align='start stretch' {...props}>
-      <Link py flex align='start center' href={`/class/${_id}`}>
+      <Link py flex align='start center' href={`/class/${_id}`} ellipsis>
         <Text circle='25' lh='25px' mx bg='green' color='white' textAlign='center'>
           {displayName[0]}
         </Text>
@@ -36,7 +36,7 @@ function render ({props}) {
         opacity={0.7}
         color='text'
         fs='xs'
-        px
+        pr
         />
     </MenuItem>
   )

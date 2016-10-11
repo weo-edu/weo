@@ -27,7 +27,7 @@ function render ({props, children}) {
       borderLeft='3px solid transparent'
       hoverProps={{color: 'text'}}
       currentProps={{borderLeftColor: 'blue', highlight: 0.05, color: 'text'}}>
-      <Block flex align='start center'>
+      <Block flex align='start center' ellipsis>
         {children}
       </Block>
       <Icon

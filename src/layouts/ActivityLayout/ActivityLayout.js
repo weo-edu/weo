@@ -7,6 +7,7 @@ import {back, setUrl} from 'redux-effects-location'
 import handleActions from '@f/handle-actions'
 import PageTitle from 'components/PageTitle'
 import createAction from '@f/create-action'
+import Redirect from 'components/Redirect'
 import FourOhFour from 'pages/FourOhFour'
 import {openModal} from 'reducer/modal'
 import {invalidate} from 'vdux-summon'
@@ -15,6 +16,7 @@ import element from 'vdux/element'
 import summon from 'vdux-summon'
 import {Block} from 'vdux-ui'
 import live from 'lib/live'
+import find from '@f/find'
 import Nav from  './Nav'
 
 /**
@@ -52,21 +54,29 @@ function * onUpdate (prev, next) {
 }
 
 function internal (props, children, local, state) {
-  const {activity, students, instances, settingStatus, redirect, currentUser, userId, instance, setStatus, isEdit, intent} = props
+  const {activity, students, instances, settingStatus, redirect, currentUser, activityId, userId, setStatus, isEdit, intent} = props
   const {value, loaded, error} = activity
   const isInstance = !!userId
 
-  if (error || students.error ||  (isInstance && instance.error)) {
+  if (error || students.error) {
     return <FourOhFour />
   }
 
-  if (!loaded || !students.loaded || !instances.loaded || (isInstance && !instance.value)) {
+  if (!loaded || !students.loaded || !instances.loaded) {
     return ''
   }
 
   if (instances.value.items.length < students.value.items.length) {
     return ''
   }
+
+  if (isInstance && currentUser.userType === 'student' && userId !== currentUser._id) {
+    return <Redirect to={`/activity/${activityId}`} />
+  }
+
+  const instance = userId
+    ? find(instances.value.items, inst => inst.actor.id === userId)
+    : null
 
   const classId = value.contexts[0].descriptor.id
   const {shareType, discussion} = value
@@ -87,8 +97,8 @@ function internal (props, children, local, state) {
     redirect || <Nav activity={value} isInstance={isInstance} savingIndicator={state.savingIndicator} user={currentUser} isPublic={isPublic} isEdit={isEdit} back={backBtn} exit={exit} isOwner={isOwner} intent={intent} {...nav} />,
     <PageTitle title={`${value.displayName}`} />,
     maybeOver({
+      instance,
       activity: value,
-      instance: instance.value,
       students: students.value.items, classId,
       instances: instances.value.items,
       savingIndicator: state.savingIndicator,
@@ -186,12 +196,6 @@ export default summon(({userId, activityId}) => ({
   activity: {
     url: `/share/${activityId}`,
     subscribe: 'refresh_activity'
-  },
-  instance: {
-    url: userId
-      ? `/share/${activityId}/instance/${userId}`
-      : null,
-    clear: false
   }
 }))(summon(({activity, activityId}) => ({
   setStatus: (id, status) => ({
@@ -219,12 +223,6 @@ export default summon(({userId, activityId}) => ({
     url: '/share',
     params: {
       id: activityId
-    }
-  },
-  instance: {
-    url: '/share',
-    params: {
-      id: instance.value && instance.value._id
     }
   },
   instances: {
