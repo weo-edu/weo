@@ -113,13 +113,16 @@ button {
 
 @media print {
   html {
-    height: auto;
+    height: initial;
   }
   body {
     background: #FFF;
   }
   body.modal {
     overflow: auto !important;
+  }
+  .vui-overlay {
+    position: relative !important;
   }
   .modal .app {
     display: none !important;

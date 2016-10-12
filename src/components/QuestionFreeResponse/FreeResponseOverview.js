@@ -12,7 +12,9 @@ import map from '@f/map'
  */
 
 function render ({props}) {
-  const {question: {responses}} = props
+  const {question = {}} = props
+  const {responses = []} = question
+
   return (
     <Block wide>
       { map(responder => <Response responder={responder} />, responses) }
