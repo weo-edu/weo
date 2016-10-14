@@ -1,0 +1,5 @@
+{
+  "name": "apple-touch-icons",
+  "main": "apple-touch-icons.js",
+  "browser": "apple-touch-icons.js"
+}
