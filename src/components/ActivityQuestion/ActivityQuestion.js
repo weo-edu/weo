@@ -52,7 +52,7 @@ function render ({props, local, state}) {
   const type = getProp('0.objectType', attachments)
 
   return (
-    <Block fw='lighter' relative class='question' onClick={() => selectObject(object._id)} {...rest}>
+    <Block fw='lighter' relative class='question' onClick={!overview && (() => selectObject(object._id))} {...rest}>
       <Block id={object._id} />
       {
         !poll && comments && (!isStudent || commentList.length > 0) &&

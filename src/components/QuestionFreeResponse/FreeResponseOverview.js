@@ -12,8 +12,18 @@ import map from '@f/map'
  */
 
 function render ({props}) {
-  const {question = {}} = props
-  const {responses = []} = question
+  const {responses = []} = props
+
+  if(!responses.length) {
+    return (
+      <Block
+        border='1px solid grey_light'
+        textAlign='center'
+        bgColor='off_white'
+        wide
+        p='l'>No Responses Yet</Block>
+    )
+  }
 
   return (
     <Block wide>

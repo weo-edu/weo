@@ -3,7 +3,7 @@
  */
 
 import ClassActivityBadge from 'components/ClassActivityBadge'
-import {Button, Dropdown, MenuItem} from 'vdux-containers'
+import {Button, Dropdown, MenuItem, Tooltip} from 'vdux-containers'
 import ActivityLinkModal from 'modals/ActivityLinkModal'
 import {Block, Flex, Icon} from 'vdux-ui'
 import RedoModal from 'modals/RedoModal'
@@ -30,18 +30,20 @@ function render ({props}) {
   return (
     <Flex align='space-between center' mb>
       <Block align='start center'>
-        <Button busy={loading} disabled={disabled} text='Return' h={32} onClick={() => doAction('returned')} />
+        <Tooltip message={disabled && 'Select Students To Enable'}>
+          <Button busy={loading} disabled={disabled} text='Return' h={32} onClick={() => doAction('returned')} />
+        </Tooltip>
         <Block mx>
-        <Dropdown disabled={disabled} btn={<Button disabled={disabled} icon='more_vert' {...iconProps} />} left w={120}>
-          <MenuItem align='start center' onClick={() => doAction('redo')}>
-            <Icon name='redo' mr fs='xs' />
-            Redo
-          </MenuItem>
-          <MenuItem align='start center' onClick={() => doAction('turned_in')}>
-            <Icon name='file_download' mr fs='xs'/>
-            Collect
-          </MenuItem>
-        </Dropdown>
+          <Dropdown disabled={disabled} btn={<Button disabled={disabled} icon='more_vert' {...iconProps} />} left w={120}>
+            <MenuItem align='start center' onClick={() => doAction('redo')}>
+              <Icon name='redo' mr fs='xs' />
+              Redo
+            </MenuItem>
+            <MenuItem align='start center' onClick={() => doAction('turned_in')}>
+              <Icon name='file_download' mr fs='xs'/>
+              Collect
+            </MenuItem>
+          </Dropdown>
         </Block>
         <Button icon='link' onClick={() => openModal(() => <ActivityLinkModal activity={activity}/>)} {...iconProps} />
       </Block>

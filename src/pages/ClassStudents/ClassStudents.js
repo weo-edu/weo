@@ -8,10 +8,10 @@ import ClassActivityRow from 'components/ClassActivityRow'
 import EmptyClassStudents from './EmptyClassStudents'
 import AddStudentModal from 'modals/AddStudentModal'
 import PrintLoginModal from 'modals/PrintLoginModal'
+import {Button, form, Tooltip} from 'vdux-containers'
 import {Icon, Flex, Block, Checkbox} from 'vdux-ui'
 import PasswordModal from 'modals/PasswordModal'
 import PageTitle from 'components/PageTitle'
-import {Button, form} from 'vdux-containers'
 import Loading from 'components/Loading'
 import StudentGrid from './StudentGrid'
 import {openModal} from 'reducer/modal'
@@ -71,15 +71,21 @@ function StudentMenu ({props}) {
       <Button bgColor='green' {...btnProps} onClick={() => openModal(() => <InviteStudentsModal group={group} />)}>
         <Icon name='send' mr='s' fs='s'/>Invite Students
       </Button>
-      <Button disabled={!count} bgColor='white' {...btnProps} hoverProps={{highlight: 0.02}} focusProps={{highlight: 0.02}} color='text' onClick={() => openModal(() => <PasswordModal user={users} group={group} />)}>
-        <Icon name='lock' mr='s' fs='s'/>Reset Password
-      </Button>
-      <Button disabled={!count} bgColor='white' {...btnProps} hoverProps={{highlight: 0.02}} focusProps={{highlight: 0.02}} color='text' onClick={() => openModal(() => <PrintLoginModal user={users} />)}>
-        <Icon name='print' mr='s' fs='s'/>Print Login Info
-      </Button>
-      <Button disabled={!count} bgColor='red' color='white' {...btnProps} onClick={() => openModal(() => <RemoveFromClassModal user={users} group={group} />)}>
-        <Icon name='delete' mr='s' fs='s'/>Remove from Class
-      </Button>
+      <Tooltip message={!count && 'Select Students to Enable'}>
+        <Button disabled={!count} bgColor='white' {...btnProps} hoverProps={{highlight: 0.02}} focusProps={{highlight: 0.02}} color='text' onClick={() => openModal(() => <PasswordModal user={users} group={group} />)}>
+          <Icon name='lock' mr='s' fs='s'/>Reset Password
+        </Button>
+      </Tooltip>
+      <Tooltip message={!count && 'Select Students to Enable'}>
+        <Button disabled={!count} bgColor='white' {...btnProps} hoverProps={{highlight: 0.02}} focusProps={{highlight: 0.02}} color='text' onClick={() => openModal(() => <PrintLoginModal user={users} />)}>
+          <Icon name='print' mr='s' fs='s'/>Print Login Info
+        </Button>
+      </Tooltip>
+      <Tooltip message={!count && 'Select Students to Enable'}>
+        <Button disabled={!count} bgColor='red' color='white' {...btnProps} onClick={() => openModal(() => <RemoveFromClassModal user={users} group={group} />)}>
+          <Icon name='delete' mr='s' fs='s'/>Remove from Class
+        </Button>
+      </Tooltip>
       <Flex flex align='end center'>
         <Block color='blue' align='center center' hide={!count}>
           {count} selected
