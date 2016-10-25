@@ -21,8 +21,8 @@ function render ({props, local, state}) {
   const isTeacher = currentUser.userType === 'teacher'
 
   return (
-    <Block align='center start'>
-      <Block align='end start'>
+    <Block align='center start' printProps={{display: 'block'}}>
+      <Block align='end start' printProps={{display: 'block'}}>
         <Card w={756} mb='l' mr relative printProps={{mb: 0, boxShadow: '0 0 0'}}>
           <Block absolute right top m={8} align='start center' printProps={{hide: true}}>
             <ShareDropdown activity={activity} btn={() => <DDButton icon='share' mr='s'  />} />
