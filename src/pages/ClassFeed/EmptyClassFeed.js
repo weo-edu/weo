@@ -4,6 +4,7 @@
 
 import CreateActivityModal from 'modals/CreateActivityModal'
 import {Block, Button, Tooltip} from 'vdux-containers'
+import EmptyState from 'components/EmptyState'
 import {setUrl} from 'redux-effects-location'
 import {openModal} from 'reducer/modal'
 import element from 'vdux/element'
@@ -22,6 +23,14 @@ const introId = process.env.SHARE_INTRO_ID
 
 function render({props}) {
   const {currentUser, copyTemplate, copyingTemplate = {}} = props
+
+  if(currentUser.userType === 'student')
+    return (
+      <EmptyState icon='assignment' color='green' m='auto' wide>
+        Your teacher hasn't assigned anything yet.  Check back here for future Activities.
+      </EmptyState>
+    )
+
   return(
     <Block p textAlign='center'>
       <Icon name='assignment' fs='xxl' color='green'/>
