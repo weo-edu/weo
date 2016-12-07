@@ -1,6 +1,6 @@
 {
   "name": "weo",
-  "description": "Weo frontend",
+  "description": "Weo frontend ",
   "repository": "git://github.com/weo-edu/weo.git",
   "version": "0.1.0",
   "main": "lib/index.js",

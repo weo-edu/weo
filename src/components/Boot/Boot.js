@@ -157,14 +157,14 @@ export default component({
 
     * oauthLogin ({actions}, provider, params = {}, cb) {
       const data = yield beginOAuthFlow(provider)
-      const {value} = yield fetch(`${apiServer}/auth/${provider}`, {
+      const {value} = yield fetch(`${apiServer}/auth/login/${provider}`, {
         method: 'PUT',
         body: {
           ...data,
           ...params
         }
       })
-      yield actions.postLogin(value.token)
+      yield actions.postLogin(value)
     },
 
     * oauthCreate ({actions}, provider, params = {}) {
@@ -176,7 +176,7 @@ export default component({
           ...params
         }
       })
-      yield actions.postLogin(value.token)
+      yield actions.postLogin(value)
     },
 
     generateObjectId: wrapEffect(generateObjectIdEffect),
