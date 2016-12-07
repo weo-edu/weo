@@ -2,12 +2,9 @@
  * Imports
  */
 
-import {setUrl} from 'redux-effects-location'
-import handleActions from '@f/handle-actions'
-import createAction from '@f/create-action'
 import {imageLoaded} from 'vdux-containers'
+import {component, element} from 'vdux'
 import resize from 'lib/resize-image'
-import element from 'vdux/element'
 import {Avatar} from 'vdux-ui'
 import theme from 'lib/theme'
 
@@ -18,48 +15,27 @@ import theme from 'lib/theme'
 const {AVATAR_SERVER} = process.env
 
 /**
- * getProps - Get the avatarUpdates count
- * from the global state atom
+ * <Avatar/>
  */
 
-function getProps (props, {avatarUpdates = 0}) {
-  props.avatarUpdates = avatarUpdates
-  return props
-}
+export default imageLoaded(({actor, thumb, avatarUpdates}) => avatarUrl(actor, thumb, avatarUpdates))(component({
+  render ({props, state, context, actions}) {
+    const {actor, thumb, link, isLoaded} = props
 
-/**
- * Avatar component
- */
+    return <Avatar
+      hidden={!isLoaded}
+      bgColor='grey_light'
+      onClick={link && context.setUrl(`/${actor.username}`)}
+      src={avatarUrl(state.loadFailed ? 'default' : actor, thumb, context.avatarUpdates)}
+      onError={actions.loadFailed}
+      pointer={link}
+      {...props} />
+  },
 
-function render ({props, state, local}) {
-  const {actor, circle, thumb, size, link, isLoaded, avatarUpdates} = props
-
-  return <Avatar
-    hidden={!isLoaded}
-    bgColor='grey_light'
-    onClick={() => (link && setUrl(`/${actor.username}`))}
-    src={avatarUrl(state.loadFailed ? 'default' : actor, thumb, avatarUpdates)}
-    onError={local(loadFailed)}
-    pointer={link}
-    {...props} />
-}
-
-/**
- * Actions
- */
-
-const loadFailed = createAction('<Avatar/>: Image load failed')
-
-/**
- * Reducer
- */
-
-const reducer = handleActions({
-  [loadFailed]: state => ({
-    ...state,
-    loadFailed: true
-  })
-})
+  reducer: {
+    loadFailed: () => ({loadFailed: true})
+  }
+}))
 
 /**
  * Helpers
@@ -71,13 +47,3 @@ function avatarUrl (actor, thumb, avatarUpdates) {
 
   return thumb ? resize(url, avatarScale['s']) : url
 }
-
-/**
- * Exports
- */
-
-export default imageLoaded(({actor, thumb, avatarUpdates}) => avatarUrl(actor, thumb, avatarUpdates))({
-  getProps,
-  render,
-  reducer
-})

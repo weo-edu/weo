@@ -3,38 +3,40 @@
  */
 
 import WeoIcon from 'components/WeoIcon'
+import {component, element} from 'vdux'
 import {Icon, Block} from 'vdux-ui'
-import element from 'vdux/element'
 
 /**
  * <ObjectIcon/>
  */
 
-function render ({props}) {
-  const {object, ...rest} = props
-  const {displayName, status} = object
-  const {color, icon, type} = map[displayName || status] || {}
-  const iconProps = {
-    circle: 24,
-    fs: 14,
-    bgColor: color,
-    color: 'white',
-    name: icon,
-    align: 'center center',
-    ...rest
-  }
+export default component({
+  render ({props}) {
+    const {object, ...rest} = props
+    const {displayName, status} = object
+    const {color, icon, type} = map[displayName || status] || {}
+    const iconProps = {
+      circle: 24,
+      fs: 14,
+      bgColor: color,
+      color: 'white',
+      name: icon,
+      align: 'center center',
+      ...rest
+    }
 
-  switch (type) {
-    case 'weo-icon':
-      return <WeoIcon {...iconProps} />
-    case 'text':
-      return <Block {...iconProps}>{icon}</Block>
-    case 'color':
-      return <Block {...iconProps} bgColor={object.content} borderWidth={0} />
-    default:
-      return <Icon {...iconProps} />
+    switch (type) {
+      case 'weo-icon':
+        return <WeoIcon {...iconProps} />
+      case 'text':
+        return <Block {...iconProps}>{icon}</Block>
+      case 'color':
+        return <Block {...iconProps} bgColor={object.content} borderWidth={0} />
+      default:
+        return <Icon {...iconProps} />
+    }
   }
-}
+})
 
 /**
  * Icon map
@@ -102,12 +104,4 @@ const map = {
     color: 'green',
     icon: 'done'
   }
-}
-
-/**
- * Exports
- */
-
-export default {
-  render
 }

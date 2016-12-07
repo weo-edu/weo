@@ -25,8 +25,8 @@ const green_medium = '#8BD2A8'
 const green_light = '#ACDEC1'
 
 const grey = '#4B5257'
-const grey_medium =  '#B1B7BC'
-const grey_light =  '#DCDEE2'
+const grey_medium = '#B1B7BC'
+const grey_light = '#DCDEE2'
 
 const off_white = '#F9F9F9'
 const white = '#FFF'

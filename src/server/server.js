@@ -3,19 +3,31 @@
  */
 
 import 'regenerator-runtime/runtime'
-import render from './render'
+import Boot from 'components/Boot'
+import vdux from 'vdux/string'
+import {element} from 'vdux'
 import page from './page'
 
 /**
- * Handle requests
+ * Render to string
  */
 
-function handler (event) {
-  return render(event).then(page)
+function render (opts) {
+  return vdux(() => <Boot req={opts} />, {awaitReady: true})
+    .then(page, handleError)
+}
+
+/**
+ * Helpers
+ */
+
+function handleError (err) {
+  console.log('caught err', err)
+  throw err
 }
 
 /**
  * Exports
  */
 
-export default handler
+export default render

@@ -4,35 +4,36 @@
 
 import OutlineButton from 'components/OutlineButton'
 import SignUpModal from 'modals/SignUpModal'
-import {openModal} from 'reducer/modal'
+import {component, element} from 'vdux'
 import PinModal from 'modals/PinModal'
-import element from 'vdux/element'
 
 /**
  * <PinButton/>
  */
 
-function render ({props}) {
-  const {text, user, activity, onClick = [], onPin, ...rest} = props
-  const action = () => openModal(() =>
-    user
-      ? <PinModal onPin={onPin} activity={activity} />
-      : <SignUpModal />)
-  return (
-    <OutlineButton
-      onClick={[].concat(onClick, action)}
-      color='blue'
-      weoIcon='pin'
-      {...rest}>
-      {text}
-    </OutlineButton>
-  )
-}
+export default component({
+  render ({props, actions}) {
+    const {text, onClick = [], ...rest} = props
 
-/**
- * Exports
- */
+    return (
+      <OutlineButton
+        onClick={[].concat(onClick, actions.openModal)}
+        color='blue'
+        weoIcon='pin'
+        {...rest}>
+        {text}
+      </OutlineButton>
+    )
+  },
 
-export default {
-  render
-}
+  controller: {
+    * openModal ({props, context}) {
+      const {user, onPin, activity} = props
+
+      yield context.openModal(() =>
+            user
+              ? <PinModal user={user} onPin={onPin} activity={activity} />
+              : <SignUpModal />)
+    }
+  }
+})

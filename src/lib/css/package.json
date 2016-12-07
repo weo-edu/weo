@@ -1,0 +1,5 @@
+{
+  "name": "css",
+  "main": "css.js",
+  "browser": "css.js"
+}

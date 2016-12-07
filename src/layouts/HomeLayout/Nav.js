@@ -4,7 +4,7 @@
 
 import {CSSContainer, Flex, Block, Text} from 'vdux-containers'
 import HomeOwl from 'components/HomeOwl'
-import element from 'vdux/element'
+import {component, element} from 'vdux'
 
 /**
  * Menu
@@ -18,21 +18,23 @@ const links = {
 }
 
 /**
- * Render
+ * <Nav/>
  */
 
-function render () {
-  return (
-    <Flex align='start center' flex color='white' py={2} id='home-nav'>
-      <HomeOwl mr='m' />
-      {
-        Object
-          .keys(links)
-          .map(item)
-      }
-    </Flex>
-  )
-}
+export default component({
+  render () {
+    return (
+      <Flex align='start center' flex color='white' py={2} id='home-nav'>
+        <HomeOwl mr='m' />
+        {
+          Object
+            .keys(links)
+            .map(item)
+        }
+      </Flex>
+    )
+  }
+})
 
 function item (text) {
   return (
@@ -42,12 +44,4 @@ function item (text) {
       </Text>
     </CSSContainer>
   )
-}
-
-/**
- * Exports
- */
-
-export default {
-  render
 }

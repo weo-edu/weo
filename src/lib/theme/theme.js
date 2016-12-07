@@ -49,7 +49,7 @@ const theme = {
   avatarScale: {
     s: 32,
     m: 75,
-    l: 175,
+    l: 175
   },
   spinnerAnimation: {
     light: 'pulse .8s ease infinite',

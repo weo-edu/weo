@@ -3,36 +3,11 @@
  */
 
 import OutlineButton from 'components/OutlineButton'
-import {setUrl} from 'redux-effects-location'
-import element from 'vdux/element'
+import {component, element} from 'vdux'
 import summon from 'vdux-summon'
 
 /**
  * <EditButton/>
- */
-
-function render ({props}) {
-  const {onClick = [], text, activity, copy, copyActivity, intent, ...rest} = props
-  const action = () => setUrl(`/activity/${activity._id}/edit`)
-  return (
-    <OutlineButton
-      onClick={[].concat(onClick, handleClick)}
-      color='grey_medium'
-      icon='edit'
-      {...rest}>
-      {text}
-    </OutlineButton>
-  )
-
-  function * handleClick () {
-    let act = activity
-    if (copy) act = yield copyActivity()
-    yield setUrl(`/activity/${act._id}/edit${intent ? '/' + intent : ''}`)
-  }
-}
-
-/**
- * Exports
  */
 
 export default summon(({activity}) => ({
@@ -42,6 +17,29 @@ export default summon(({activity}) => ({
       method: 'POST'
     }
   })
-}))({
-  render
-})
+}))(component({
+  render ({props, actions}) {
+    const {onClick = [], text, ...rest} = props
+
+    return (
+      <OutlineButton
+        onClick={[].concat(onClick, actions.handleClick)}
+        color='grey_medium'
+        icon='edit'
+        {...rest}>
+        {text}
+      </OutlineButton>
+    )
+  },
+
+  controller: {
+    * handleClick ({context, props}) {
+      const {activity, copy, intent, copyActivity} = props
+      const act = copy
+        ? yield copyActivity()
+        : activity
+
+      yield context.setUrl(`/activity/${act._id}/edit${intent ? '/' + intent : ''}`)
+    }
+  }
+}))

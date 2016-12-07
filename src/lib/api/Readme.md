@@ -1,6 +1,0 @@
-# api
-
-API interface
-
-## Usage
-

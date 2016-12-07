@@ -4,27 +4,40 @@
 
 import NewMenuItem from 'components/NewMenuItem'
 import {Checkbox} from 'vdux-containers'
+import {component, element} from 'vdux'
 import validate from 'lib/validate'
-import element from 'vdux/element'
 import {Block} from 'vdux-ui'
 import map from '@f/map'
 
 /**
- * ClassSelect
+ * <ClassSelect/>
  */
 
-function render ({props}) {
-  const {classes, selected, loading, createClass, ...rest} = props
+export default component({
+  render ({props}) {
+    const {classes, selected, loading, createClass, ...rest} = props
 
-  return (
-    <Block overflowY='auto' {...rest}>
-      {
-        map(cls => <ClassItem cls={cls} selected={selected.indexOf(cls._id) !== -1} />, classes)
-      }
-      <NewMenuItem key='newMenuItem' loading={loading} onSubmit={createClass} validate={validate.group} type='Class' />
-    </Block>
-  )
-}
+    return (
+      <Block overflowY='auto' {...rest}>
+        {
+          map(cls => <ClassItem cls={cls} selected={selected.indexOf(cls._id) !== -1} />, classes)
+        }
+        <NewMenuItem key='newMenuItem' loading={loading} onSubmit={createClass} validate={validate.group} type='Class' />
+      </Block>
+    )
+  }
+})
+
+/**
+ * Constants
+ */
+
+const checkProps = {circle: 25, fs: 'xs', ml: 8, mr: 10}
+const hoverProps = {highlight: 0.03}
+
+/**
+ * <ClassItem/>
+ */
 
 function ClassItem ({props}) {
   const {cls, selected} = props
@@ -34,20 +47,12 @@ function ClassItem ({props}) {
       name='selected[]'
       value={cls._id}
       checked={selected}
-      checkProps={{circle: 25, fs: 'xs', ml: 8, mr: 10}}
-      hoverProps={{highlight: 0.03}}
+      checkProps={checkProps}
+      hoverProps={hoverProps}
       label={cls.displayName}
       bgColor='white'
       capitalize
       pointer
-      p/>
+      p />
   )
-}
-
-/**
- * Exports
- */
-
-export default {
-  render
 }

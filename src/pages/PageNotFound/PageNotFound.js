@@ -2,22 +2,16 @@
  * Imports
  */
 
-import element from 'vdux/element'
+import {component, element} from 'vdux'
 
 /**
- * pageNotFound
+ * <PageNotFound/>
  */
 
-function render ({props}) {
-  return (
-    <div>404: Not found</div>
-  )
-}
-
-/**
- * Exports
- */
-
-export default {
-  render
-}
+export default component({
+  render ({props}) {
+    return (
+      <div>404: Not found</div>
+    )
+  }
+})

@@ -2,9 +2,7 @@
  * Imports
  */
 
-import {openModal, closeModal} from 'reducer/modal'
 import applyClasses from '@f/apply-classes'
-import {urlDidUpdate} from 'reducer/url'
 
 /**
  * Apply classes to the body when modals are opened
@@ -12,21 +10,17 @@ import {urlDidUpdate} from 'reducer/url'
 
 function middleware ({dispatch, getState}) {
   return next => action => {
-    switch (action.type) {
-      case openModal.type:
-        applyClasses({modal: true}, document.body)
-        break
-      case closeModal.type:
-        applyClasses({modal: false}, document.body)
-        break
-      case urlDidUpdate.type:
-        if (getState().app.modal) {
-          dispatch(closeModal())
-        }
-        break
+    const prevState = getState()
+    const result = next(action)
+    const nextState = getState()
+
+    if (!prevState.modal && nextState.modal) {
+      applyClasses({modal: true}, document.body)
+    } else if (prevState.modal && !nextState.modal) {
+      applyClasses({modal: false}, document.body)
     }
 
-    return next(action)
+    return result
   }
 }
 

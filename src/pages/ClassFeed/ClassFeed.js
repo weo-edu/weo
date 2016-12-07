@@ -8,32 +8,12 @@ import summonChannels from 'lib/summon-channels'
 import EmptyClassFeed from './EmptyClassFeed'
 import PageTitle from 'components/PageTitle'
 import RowFeed from 'components/RowFeed'
-import element from 'vdux/element'
+import {component, element} from 'vdux'
 import {Block} from 'vdux-ui'
 import live from 'lib/live'
 
 /**
  * <ClassFeed/> Page
- */
-
-function render ({props}) {
-  const {activities, group, currentUser} = props
-  const Item = currentUser.userType === 'student'
-    ? ActivityRowStudent
-    : ClassActivityRow
-
-  return (
-    <Block maxWidth='714px' my py mx='auto' relative>
-      <PageTitle title={`${group.displayName} | Feed`} />
-      {
-        <RowFeed {...props} item={Item} emptyState={<EmptyClassFeed currentUser={currentUser}/>} />
-      }
-    </Block>
-  )
-}
-
-/**
- * Exports
  */
 
 export default summonChannels(({group}) => `group!${group._id}.board`)(
@@ -44,6 +24,20 @@ export default summonChannels(({group}) => `group!${group._id}.board`)(
         channel: `group!${group._id}.board`
       }
     }
-  }))({
-  render
-}))
+  }))(component({
+    render ({props}) {
+      const {group, currentUser} = props
+      const Item = currentUser.userType === 'student'
+        ? ActivityRowStudent
+        : ClassActivityRow
+
+      return (
+        <Block maxWidth='714px' my py mx='auto' relative>
+          <PageTitle title={`${group.displayName} | Feed`} />
+          {
+            <RowFeed {...props} item={Item} emptyState={<EmptyClassFeed currentUser={currentUser} />} />
+        }
+        </Block>
+    )
+    }
+  })))

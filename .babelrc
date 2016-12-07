@@ -11,14 +11,13 @@
       "presets": ["es2015", "stage-2"],
       "plugins": [
         ["vdux-transform", {
-          "hoc": ["summon", "summonPrefs", "summonChannels", "form"],
+          "hoc": ["summon", "summonPrefs", "summonSearch", "summonChannels", "form", "live"],
           "transforms": [
             {
               "transform": "vdux-transform-hmr"
             }
           ]
-        }],
-        "jss-simple"
+        }]
       ]
     },
     "development-minimal": {

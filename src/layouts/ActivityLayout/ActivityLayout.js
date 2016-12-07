@@ -3,207 +3,26 @@
  */
 
 import DiscardDraftModal from 'modals/DiscardDraftModal'
-import {back, setUrl} from 'redux-effects-location'
-import handleActions from '@f/handle-actions'
 import PageTitle from 'components/PageTitle'
-import createAction from '@f/create-action'
 import Redirect from 'components/Redirect'
 import FourOhFour from 'pages/FourOhFour'
-import {openModal} from 'reducer/modal'
-import {invalidate} from 'vdux-summon'
+import {component, element} from 'vdux'
 import maybeOver from '@f/maybe-over'
-import element from 'vdux/element'
 import summon from 'vdux-summon'
 import {Block} from 'vdux-ui'
 import index from '@f/index'
 import live from 'lib/live'
 import find from '@f/find'
-import Nav from  './Nav'
+import Nav from './Nav'
 
 /**
- * initialState
+ * Constants
  */
 
-function initialState ({local}) {
-  return {
-    selectObject: local(selectObject),
-    setIndicator: local(setIndicator),
-    setSpeaking: local(setSpeaking)
-  }
-}
+const printProps = {pb: 0}
 
 /**
- * Activity Layout
- */
-
-function render ({props, children, local, state}) {
-  return (
-    <Block class='app' pb='60vh' printProps={{pb: 0}}>
-      { internal(props, children, local, state) }
-    </Block>
-  )
-}
-
-function * onUpdate (prev, next) {
-  const {activity, instances, students, getInstance, gettingInstance} = next.props
-  if (!gettingInstance && instances.value && students.value) {
-    const studentMap = index(student => student._id, students.value.items)
-    const insts = instances.value.items.filter(inst => studentMap[inst.actor.id])
-
-    if (insts.length < students.value.items.length) {
-      const filtered = students.value.items.filter(({_id}) => instances.value.items.every(inst => inst.actor.id !== _id))
-      yield filtered.map(student => getInstance(student._id))
-    }
-  }
-}
-
-function internal (props, children, local, state) {
-  const {activity, students, instances, settingStatus, redirect, currentUser, activityId, userId, setStatus, isEdit, intent} = props
-  const {value, loaded, error} = activity
-  const isInstance = !!userId
-
-  if (error || students.error) {
-    return <FourOhFour />
-  }
-
-  if (!loaded || !students.loaded || !instances.loaded) {
-    return ''
-  }
-
-  // Make sure we're only looking at instances of students who are
-  // currently enrolled in the class
-  const studentMap = index(student => student._id, students.value.items)
-  const filteredInstances = instances.value.items.filter(inst => studentMap[inst.actor.id])
-
-  if (filteredInstances.length < students.value.items.length) {
-    return ''
-  }
-
-  if (isInstance && currentUser.userType === 'student' && userId !== currentUser._id) {
-    return <Redirect to={`/activity/${activityId}`} />
-  }
-
-  const instance = userId
-    ? find(filteredInstances, inst => inst.actor.id === userId)
-    : null
-
-  const classId = value.contexts[0].descriptor.id
-  const {shareType, discussion} = value
-  const isPublic = classId === 'public'
-  const isClass = !isInstance && !isPublic
-  const isOwner = currentUser._id === value.actor.id
-
-  const nav = currentUser.userType === 'student'
-    ? {instance: discussion, discussion}
-    : {
-      progress: isClass,
-      overview: isClass,
-      preview: !isInstance,
-      discussion: (isClass && discussion) || isPublic
-    }
-
-  if (userId && !instance) {
-    debugger
-  }
-
-  return [
-    redirect || <Nav activity={value} isInstance={isInstance} savingIndicator={state.savingIndicator} user={currentUser} isPublic={isPublic} isEdit={isEdit} back={backBtn} exit={exit} isOwner={isOwner} intent={intent} {...nav} />,
-    <PageTitle title={`${value.displayName}`} />,
-    maybeOver({
-      instance,
-      activity: value,
-      students: students.value.items,
-      classId,
-      instances: filteredInstances,
-      savingIndicator: state.savingIndicator,
-      setIndicator: state.setIndicator,
-      selectObject: state.selectObject,
-      selectedObject: state.selectedObject,
-      setSpeaking: state.setSpeaking,
-      speakingId: state.speakingId,
-      speechRate: currentUser.preferences.speech_speed || 1,
-      setStatus,
-      settingStatus
-    }, children)
-  ]
-
-  function backBtn () {
-    const {canExit} = props
-
-    if (intent === 'new') {
-      return openModal(() => <DiscardDraftModal onAccept={() =>canExit ? back() : setUrl('/feed')} activity={value} />)
-    } else {
-      return canExit ? back() : setUrl(escapeUrl())
-    }
-  }
-
-  function exit () {
-    const {canExit, exitDepth} = props
-
-    if (canExit) {
-      return exitDepth === 2 ? [back(), back()] : back()
-    } else {
-      return setUrl(escapeUrl())
-    }
-  }
-
-  function escapeUrl () {
-    if (value.channels[0] === 'user!' + value.actor.id + '.drafts') {
-      return '/activities/drafts'
-    }
-
-    if (value.channels[0] === 'user!' + value.actor.id + '.trash') {
-      return '/activities/trash'
-    }
-
-    return value.contexts[0].descriptor.id !== 'public'
-      ? '/class/' + value.contexts[0].descriptor.id
-      : value.actor.id === currentUser._id
-        ? '/activities/' + value.contexts[1].descriptor.id
-        : `/${value.actor.username}/board/${value.contexts[1].descriptor.id}/activities`
-  }
-}
-
-/**
- * Actions
- */
-
-const setSpeaking = createAction('<ActivityLayout/>: set speaking')
-const setSpeechText = createAction('<ActivityLayout/>: set speech text')
-const setPlayState = createAction('<ActivityLayout/>: set play state')
-
-const setIndicator = createAction('<ActivityLayout/>: set indicator')
-const selectObject = createAction('<ActivityLayout/>: select object')
-
-/**
- * Reducer
- */
-
-const reducer = handleActions({
-  [setSpeaking]: (state, speakingId) => ({
-    ...state,
-    speakingId
-  }),
-  [setPlayState]: (state, playState) => ({
-    ...state,
-    playState
-  }),
-  [setSpeechText]: (state, speechText) => ({
-    ...state,
-    speechText
-  }),
-  [setIndicator]: (state, savingIndicator) => ({
-    ...state,
-    savingIndicator
-  }),
-  [selectObject]: (state, selectedObject) => ({
-    ...state,
-    selectedObject
-  })
-})
-
-/**
- * Exports
+ * <ActivityLayout/>
  */
 
 export default summon(({userId, activityId}) => ({
@@ -249,9 +68,157 @@ export default summon(({userId, activityId}) => ({
       channel: `share!${activity.value.contexts[0].descriptor.id}`
     }
   }
-}))({
-  initialState,
-  render,
-  reducer,
-  onUpdate
-})))
+}))(component({
+  render (model) {
+    return (
+      <Block class='app' pb='60vh' printProps={printProps}>
+        { internal(model) }
+      </Block>
+    )
+  },
+
+  * onUpdate (prev, next) {
+    const {instances, students, getInstance, gettingInstance, userId} = next.props
+
+    if (!gettingInstance && instances.value && students.value) {
+      const studentMap = index(student => student._id, students.value.items)
+      const insts = instances.value.items.filter(inst => studentMap[inst.actor.id])
+
+      if (insts.length < students.value.items.length) {
+        const filtered = students.value.items.filter(({_id}) => instances.value.items.every(inst => inst.actor.id !== _id))
+        yield filtered.map(student => getInstance(student._id))
+      } else if (userId && !instances.value.items.some(inst => inst.actor.id === userId)) {
+        yield getInstance(userId)
+      }
+    }
+  },
+
+  controller: {
+    * backBtn ({props, actions, context}) {
+      const {intent, canExit, activity} = props
+
+      if (intent === 'new') {
+        yield context.openModal(() => <DiscardDraftModal onAccept={actions.discardDraftAccept} activity={activity.value} />)
+      } else {
+        yield canExit ? context.back() : context.setUrl(escapeUrl(props))
+      }
+    },
+
+    * discardDraftAccept ({props, actions, context}) {
+      yield props.canExit ? context.back() : context.setUrl('/')
+    },
+
+    * exit ({props, actions, context}, action, stay) {
+      const {activity, canExit, exitDepth} = props
+
+      if (action === 'pin' && stay) {
+        yield context.setUrl(`/activity/${activity.value._id}/preview`, true)
+      } else if (canExit) {
+        yield exitDepth === 2 ? [context.back(), context.back()] : context.back()
+      } else {
+        yield context.setUrl(escapeUrl(props))
+      }
+    }
+  },
+
+  reducer: {
+    setSpeaking: (state, speakingId) => ({speakingId}),
+    setPlayState: (state, playState) => ({playState}),
+    setSpeechText: (state, speechText) => ({speechText}),
+    setIndicator: (state, savingIndicator) => ({savingIndicator}),
+    selectObject: (state, selectedObject) => ({selectedObject})
+  }
+}))))
+
+/**
+ * Internal rendering method
+ */
+
+function internal ({props, children, actions, context, state}) {
+  const {activity, students, instances, settingStatus, redirect, currentUser, activityId, userId, setStatus, isEdit, intent} = props
+  const {value, loaded, error} = activity
+  const isInstance = !!userId
+
+  if (error || students.error) {
+    return <FourOhFour />
+  }
+
+  if (!loaded || !students.loaded || !instances.loaded) {
+    return ''
+  }
+
+  // Make sure we're only looking at instances of students who are
+  // currently enrolled in the class
+  const studentMap = index(student => student._id, students.value.items)
+  const filteredInstances = instances.value.items.filter(inst => studentMap[inst.actor.id])
+
+  if (filteredInstances.length < students.value.items.length) {
+    return ''
+  }
+
+  if (isInstance && currentUser.userType === 'student' && userId !== currentUser._id) {
+    return <Redirect to={`/activity/${activityId}`} />
+  }
+
+  const instance = userId
+    ? find(filteredInstances, inst => inst.actor.id === userId)
+    : null
+
+  const classId = value.contexts[0].descriptor.id
+  const {discussion} = value
+  const isPublic = classId === 'public'
+  const isClass = !isInstance && !isPublic
+  const isOwner = currentUser._id === value.actor.id
+
+  const nav = currentUser.userType === 'student'
+    ? {instance: discussion, discussion}
+    : {
+      progress: isClass,
+      overview: isClass,
+      preview: !isInstance,
+      discussion: (isClass && discussion) || isPublic
+    }
+
+  return [
+    redirect || <Nav activity={value} isInstance={isInstance} savingIndicator={state.savingIndicator} user={currentUser} isPublic={isPublic} isEdit={isEdit} back={actions.backBtn} exit={actions.exit} isOwner={isOwner} intent={intent} {...nav} />,
+    <PageTitle title={`${value.displayName}`} />,
+    maybeOver({
+      instance,
+      activity: value,
+      students: students.value.items,
+      classId,
+      instances: filteredInstances,
+      savingIndicator: state.savingIndicator,
+      setIndicator: actions.setIndicator,
+      selectObject: actions.selectObject,
+      selectedObject: state.selectedObject,
+      setSpeaking: actions.setSpeaking,
+      speakingId: state.speakingId,
+      speechRate: (currentUser.preferences || {}).speech_speed || 1,
+      setStatus,
+      settingStatus
+    }, children)
+  ]
+}
+
+/**
+ * Helpers
+ */
+
+function escapeUrl ({activity, currentUser}) {
+  const {value} = activity
+
+  if (value.channels[0] === 'user!' + value.actor.id + '.drafts') {
+    return '/' + value.actor.username + '/boards/all'
+  }
+
+  if (value.channels[0] === 'user!' + value.actor.id + '.trash') {
+    return '/' + value.actor.username + '/boards/trash'
+  }
+
+  return value.contexts[0].descriptor.id !== 'public'
+    ? '/class/' + value.contexts[0].descriptor.id
+    : value.actor.id === currentUser._id
+      ? `/${value.actor.username}/boards/${value.contexts[1].descriptor.id}`
+      : '/class/all'
+}

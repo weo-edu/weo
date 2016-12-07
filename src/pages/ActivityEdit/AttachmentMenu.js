@@ -3,84 +3,67 @@
  */
 
 import {wrap, CSSContainer, Button} from 'vdux-containers'
-import {generateObjectId} from 'middleware/objectId'
-import handleActions from '@f/handle-actions'
-import createAction from '@f/create-action'
 import MediaModal from 'modals/MediaModal'
-import {openModal} from 'reducer/modal'
+import {component, element} from 'vdux'
 import {Icon, Block} from 'vdux-ui'
-import element from 'vdux/element'
-
-/**
- * initialState
- */
-
-function initialState ({props}) {
-  return {
-    open: props.startsOpen
-  }
-}
 
 /**
  * <AttachmentMenu/>
  */
 
-function render ({props, state, local}) {
-  const {attach, startsOpen, defaultPoints = 10} = props
+export default component({
+  initialState: ({props}) => ({
+    open: props.startsOpen
+  }),
 
-  const menu = [
-    <Close onClick={local(toggle)} absolute='top -10px right -10px' hide={startsOpen} />,
-    <AttachButton onClick={attachQuestion} icon='help' color='red' text='Question' hoverProps={{hover: true}} />,
-    <AttachButton onClick={attachMedia('video')} icon='videocam' color='yellow' text='Video' hoverProps={{hover: true}} />,
-    <AttachButton onClick={attachMedia('link')} icon='link' color='blue' text='Link' hoverProps={{hover: true}} />,
-    <AttachButton onClick={attachMedia('image')} icon='camera_alt' color='green' text='Image' hoverProps={{hover: true}} />,
-    <AttachButton onClick={attachMedia('document')} icon='insert_drive_file' color='red' text='Document' hoverProps={{hover: true}} />,
-    <AttachButton onClick={create('post')} icon='subject' color='text' text='Text' hoverProps={{hover: true}} />
-  ]
+  render ({props, state, actions}) {
+    const {startsOpen} = props
 
-  return (
-    <Block relative bgColor='grey_light' border='1px dashed grey_medium' wide mb='l' h={130} align='space-around center' px='l'>
-      {
-        state.open
-          ? menu
-          : <Button onClick={local(toggle)} pointer circle={55} boxShadow='card' icon='add' bgColor='blue' fs='m'>
+    const menu = [
+      <Close onClick={actions.toggle} absolute='top -10px right -10px' hide={startsOpen} />,
+      <AttachButton onClick={actions.attachQuestion} icon='help' color='red' text='Question' hoverProps={{hover: true}} />,
+      <AttachButton onClick={actions.attachMedia('video')} icon='videocam' color='yellow' text='Video' hoverProps={{hover: true}} />,
+      <AttachButton onClick={actions.attachMedia('link')} icon='link' color='blue' text='Link' hoverProps={{hover: true}} />,
+      <AttachButton onClick={actions.attachMedia('image')} icon='camera_alt' color='green' text='Image' hoverProps={{hover: true}} />,
+      <AttachButton onClick={actions.attachMedia('document')} icon='insert_drive_file' color='red' text='Document' hoverProps={{hover: true}} />,
+      <AttachButton onClick={actions.createAndAttach({objectType: 'post'})} icon='subject' color='text' text='Text' hoverProps={{hover: true}} />
+    ]
 
-            </Button>
-      }
-    </Block>
-  )
+    return (
+      <Block relative bgColor='grey_light' border='1px dashed grey_medium' wide mb='l' h={130} align='space-around center' px='l'>
+        {
+          state.open
+            ? menu
+            : <Button onClick={actions.toggle} pointer circle={55} boxShadow='card' icon='add' bgColor='blue' fs='m' />
+        }
+      </Block>
+    )
+  },
 
-  function attachMedia (type) {
-    return () => openModal(() => <MediaModal
-      onAccept={createAndAttach}
-      type={type} />)
-  }
+  controller: {
+    * attachMedia ({context, actions}, type) {
+      yield context.openModal(() => (
+        <MediaModal onAccept={actions.createAndAttach} type={type} />
+      ))
+    },
 
-  function create (type) {
-    const obj = type === 'question'
-      ? initQuestion()
-      : {objectType: type}
+    * createAndAttach ({props, actions, context}, object) {
+      const id = yield context.generateObjectId()
 
-    return () => createAndAttach(obj)
-  }
-
-  function * createAndAttach (object) {
-    const id = yield generateObjectId()
-    yield attach({
-      object:{
+      yield props.attach({
         ...object,
         _id: id
-      }
-    })
-    yield local(toggle)()
-  }
+      })
 
-  function * attachQuestion () {
-    const id1 = yield generateObjectId()
-    const id2 = yield generateObjectId()
+      yield actions.toggle()
+    },
 
-    yield attach({
-      object: {
+    * attachQuestion ({actions, context, props}) {
+      const {attach, defaultPoints = 10} = props
+      const id1 = yield context.generateObjectId()
+      const id2 = yield context.generateObjectId()
+
+      yield attach({
         _id: id1,
         objectType: 'question',
         points: {
@@ -91,12 +74,16 @@ function render ({props, state, local}) {
           objectType: 'choice',
           correctAnswer: [id2]
         }]
-      }
-    })
-    yield local(toggle)()
-  }
-}
+      })
 
+      yield actions.toggle()
+    }
+  },
+
+  reducer: {
+    toggle: state => ({open: !state.open})
+  }
+})
 
 /**
  * <Close/>
@@ -118,11 +105,13 @@ function Close ({props}) {
   )
 }
 
+/**
+ * <AttachButton/>
+ */
+
 const AttachButton = wrap(CSSContainer)({
   render ({props, children}) {
-    const {
-      attach, type, text, onClick, icon, color, hover
-    } = props
+    const {text, onClick, icon, color, hover} = props
 
     return (
       <Block
@@ -135,38 +124,9 @@ const AttachButton = wrap(CSSContainer)({
           color={color}
           name={icon}
           fs={42}
-          sq={50}/>
+          sq={50} />
         <Block fs='s' lighter>{text}</Block>
       </Block>
     )
   }
 })
-
-
-/**
- * Actions
- */
-
-const toggle = createAction('<ActivityEditor/>: toggle attachments')
-
-/**
- * Reducer
- */
-
-const reducer = handleActions({
-  [toggle]: state => ({
-    ...state,
-    open: !state.open
-   })
-})
-
-
-/**
- * Exports
- */
-
-export default {
-  initialState,
-  render,
-  reducer
-}

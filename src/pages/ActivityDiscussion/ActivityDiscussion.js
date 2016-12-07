@@ -5,9 +5,9 @@
 import summonChannels from 'lib/summon-channels'
 import Loading from 'components/Loading'
 import CommentForm from './CommentForm'
+import {component, element} from 'vdux'
 import Avatar from 'components/Avatar'
 import {Block, Card} from 'vdux-ui'
-import element from 'vdux/element'
 import getProp from '@f/get-prop'
 import moment from 'moment'
 import map from '@f/map'
@@ -16,29 +16,37 @@ import map from '@f/map'
  * <ActivityPreview/>
  */
 
-function render ({props}) {
-  const { currentUser, activities, activity, classId } = props
-  const {value, loading, loaded} = activities
+export default summonChannels(
+  ({activity}) => `share!${activity._id}.replies`
+)(component({
+  render ({props}) {
+    const { currentUser, activities, activity, classId } = props
+    const {value, loading, loaded} = activities
 
-  if(loading && !loaded) return <Loading show h={200} />
+    if (loading && !loaded) return <Loading show h={200} />
 
-  const comments = value.items.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+    const comments = value.items.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
 
-  return (
-    <Card w='col_main' mx='auto' mb='l'>
-      <Block p fs='l' lighter bg='grey' color='white'>
-        Discussion
-      </Block>
-      <Block p='xl' fs='s' lighter hide={comments.length}>
-        No one has made any comments yet. Be the first to share!
-      </Block>
-      {
-        map((comment, i) => <Comment i={i} comment={comment}/>, comments)
-      }
-      <CommentForm id={activity._id} currentUser={currentUser} classId={classId} />
-    </Card>
-  )
-}
+    return (
+      <Card w='col_main' mx='auto' mb='l'>
+        <Block p fs='l' lighter bg='grey' color='white'>
+          Discussion
+        </Block>
+        <Block p='xl' fs='s' lighter hide={comments.length}>
+          No one has made any comments yet. Be the first to share!
+        </Block>
+        {
+          map((comment, i) => <Comment i={i} comment={comment} />, comments)
+        }
+        <CommentForm id={activity._id} currentUser={currentUser} classId={classId} />
+      </Card>
+    )
+  }
+}))
+
+/**
+ * <Comment/>
+ */
 
 function Comment ({props}) {
   const {comment, i} = props
@@ -64,28 +72,22 @@ function Comment ({props}) {
   )
 }
 
+/**
+ * <Arrow/>
+ */
+
 function Arrow () {
   return (
     <span>
       <Block
         absolute={{top: 9, right: '100%'}}
         border='10px solid transparent'
-        borderRightColor='#CCC'/>
+        borderRightColor='#CCC' />
       <Block
         absolute={{top: 9, right: '100%'}}
         border='10px solid transparent'
         borderRightColor='off_white'
-        mr={-1}/>
+        mr={-1} />
     </span>
   )
 }
-
-/**
- * Exports
- */
-
-export default summonChannels(
-  ({activity}) => `share!${activity._id}.replies`
-)({
-  render
-})

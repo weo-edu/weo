@@ -1,0 +1,5 @@
+{
+  "name": "GetStarted",
+  "main": "GetStarted.js",
+  "browser": "GetStarted.js"
+}

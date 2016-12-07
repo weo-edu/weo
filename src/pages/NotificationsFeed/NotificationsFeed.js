@@ -7,49 +7,41 @@ import summonChannels from 'lib/summon-channels'
 import EmptyState from 'components/EmptyState'
 import PageTitle from 'components/PageTitle'
 import RowFeed from 'components/RowFeed'
-import element from 'vdux/element'
+import {component, element} from 'vdux'
 import {Block} from 'vdux-ui'
 
 /**
  * <NotificationsFeed/>
  */
 
-function onCreate({props}) {
-  return props.markRead()
-}
-
-function render ({props}) {
-  return (
-    <Block>
-      <PageTitle title='Notifications | Weo' />
-      <RowFeed
-        item={StreamActivity}
-        w='col_xl'
-        mt='l'
-        mx='auto'
-        {...props}
-        search={false}
-        emptyState={<EmptyState wide icon='cast' color='red_medium'>You have no notifications</EmptyState>}
-         />
-        }
-    </Block>
-  )
-}
-
-/**
- * Exports
- */
-
 export default summonChannels(
   ({currentUser}) => `user!${currentUser._id}.notifications`, {
     markRead: () => ({
-      markingRead:  {
+      markingRead: {
         url: '/user/notifications',
-        invalidates: '/user',
         method: 'DELETE'
       }
-  })
-})({
-  onCreate,
-  render
-})
+    })
+  })(component({
+    onCreate ({props}) {
+      return props.markRead()
+    },
+
+    render ({props}) {
+      return (
+        <Block>
+          <PageTitle title='Notifications | Weo' />
+          <RowFeed
+            item={StreamActivity}
+            w='col_xl'
+            mt='l'
+            mx='auto'
+            {...props}
+            search={false}
+            emptyState={<EmptyState wide icon='cast' color='red_medium'>You have no notifications</EmptyState>}
+           />
+          }
+        </Block>
+    )
+    }
+  }))

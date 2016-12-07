@@ -3,41 +3,61 @@
  */
 
 import BlockInput from 'components/BlockInput'
-import handleActions from '@f/handle-actions'
-import createAction from '@f/create-action'
+import {component, element} from 'vdux'
 import {Button} from 'vdux-containers'
 import Link from 'components/Link'
-import element from 'vdux/element'
 import summon from 'vdux-summon'
 import {Block} from 'vdux-ui'
 import Form from 'vdux-form'
+
 /**
  * <ForgotPassword/>
  */
 
-function render ({props, local, state}) {
-  const {sendReset} = props
-  const {success} = state
-  return (
-    <Block w='col_s' p='m' color='white' textAlign='center'>
-      {
-        success
-          ? <Block lighter fs='s'>
-              Reset request confirmed. Check your email.
-            </Block>
-          : <ForgotForm local={local} sendReset={sendReset} />
+export default summon(props => ({
+  sendReset: ({username}) => ({
+    sendingReset: {
+      url: '/user/forgot',
+      method: 'POST',
+      body: {
+        username
       }
-    </Block>
-  )
-}
+    }
+  })
+}))(component({
+  render ({props, actions, state}) {
+    const {sendReset} = props
+    const {success} = state
+
+    return (
+      <Block w='col_s' p='m' color='white' textAlign='center'>
+        {
+          success
+            ? <Block lighter fs='s'>
+                Reset request confirmed. Check your email.
+            </Block>
+            : <ForgotForm {...actions} sendReset={sendReset} />
+        }
+      </Block>
+    )
+  },
+
+  reducer: {
+    setSuccess: () => ({success: true})
+  }
+}))
+
+/**
+ * <ForgotForm/>
+ */
 
 function ForgotForm ({props}) {
-  const {sendReset, sendingReset = {}, local} = props
+  const {sendReset, sendingReset = {}, setSuccess} = props
   const {loading} = sendingReset
 
   return (
     <Block>
-      <Form onSubmit={sendReset} onSuccess={local(setSuccess)}>
+      <Form onSubmit={sendReset} onSuccess={setSuccess}>
         <BlockInput autofocus placeholder='EMAIL OR USERNAME' name='username' />
         <Button type='submit' busy={loading} wide bgColor='green' h={43} mt={10} lh='43px' fs={15}>
           Reset Password
@@ -51,35 +71,3 @@ function ForgotForm ({props}) {
     </Block>
   )
 }
-
-/**
- * Actions
- */
-
-const setSuccess = createAction('<ForgotPassword />: setSuccess')
-
-/**
- * Reducer
- */
-const reducer = handleActions({
-  [setSuccess]: state => ({...state, success: true })
-})
-
-/**
- * Exports
- */
-
-export default summon(props => ({
-  sendReset: ({username}) => ({
-    sendingReset: {
-      url: '/user/forgot',
-      method: 'POST',
-      body: {
-        username
-      }
-    }
-  })
-}))({
-  render,
-  reducer
-})

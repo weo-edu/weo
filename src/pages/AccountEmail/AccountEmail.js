@@ -2,9 +2,9 @@
  * Imports
  */
 
-import {Block, Flex, Card} from 'vdux-ui'
+import {component, element} from 'vdux'
 import {Toggle} from 'vdux-containers'
-import element from 'vdux/element'
+import {Block, Card} from 'vdux-ui'
 import getProp from '@f/get-prop'
 import summon from 'vdux-summon'
 
@@ -12,29 +12,46 @@ import summon from 'vdux-summon'
  * <AccountEmail/>
  */
 
-function render ({props}) {
-  const {currentUser, togglePref} = props
-  const rowProps = {
-    hoverProps: {bgColor: 'rgba(blue_light, .06)'},
-    activeProps: {bgColor: 'rgba(blue_light, .1)', uiProps: {squished: true, toggleProps: {mr: 54}}},
-    borderBottom: '1px solid grey_light',
-    pointer: true,
-    fw: 'lighter',
-    p: 'l',
-    fs: 's',
-    uiProps: {toggleProps: {mr: 54}}
-  }
-
-  return (
-    <Card>
-      <Block fs='m' color='blue' pt='l' pb px>
-        Email Notifications
-      </Block>
-      {
-        emailPrefs.map(({message, prop}, i) => <Toggle onChange={() => togglePref(prop)} checked={!getProp(prop, currentUser.preferences)} {...rowProps} label={message} tWidth='20' borderBottomWidth={(i+1) === emailPrefs.length ? 0 : 1}/>)
+export default summon(({currentUser}) => ({
+  togglePref: pref => ({
+    savingPreference: {
+      url: '/preference/' + encodeURIComponent(pref),
+      method: 'PUT',
+      body: {
+        value: !getProp(pref, currentUser.preferences)
       }
-    </Card>
-  )
+    }
+  })
+}))(component({
+  render ({props}) {
+    const {currentUser, togglePref} = props
+
+    return (
+      <Card>
+        <Block fs='m' color='blue' pt='l' pb px>
+          Email Notifications
+        </Block>
+        {
+          emailPrefs.map(({message, prop}, i) => <Toggle onChange={togglePref(prop)} checked={!getProp(prop, currentUser.preferences)} {...rowProps} label={message} tWidth='20' borderBottomWidth={(i + 1) === emailPrefs.length ? 0 : 1} />)
+        }
+      </Card>
+    )
+  }
+}))
+
+/**
+ * Constants
+ */
+
+const rowProps = {
+  hoverProps: {bgColor: 'rgba(blue_light, .06)'},
+  activeProps: {bgColor: 'rgba(blue_light, .1)', uiProps: {squished: true, toggleProps: {mr: 54}}},
+  borderBottom: '1px solid grey_light',
+  pointer: true,
+  fw: 'lighter',
+  p: 'l',
+  fs: 's',
+  uiProps: {toggleProps: {mr: 54}}
 }
 
 const emailPrefs = [
@@ -60,29 +77,10 @@ const emailPrefs = [
   },
   {
     message: 'Joins my class',
-    prop: 'email.disableJoinedClass',
+    prop: 'email.disableJoinedClass'
   },
   {
     message: 'Turns in an activity',
-    prop: 'email.disableTurnedIn',
+    prop: 'email.disableTurnedIn'
   }
 ]
-
-/**
- * Exports
- */
-
-export default summon(({currentUser}) => ({
-  togglePref: (pref) => ({
-    savingPreference:  {
-      url: '/preference/' + encodeURIComponent(pref),
-      invalidates: '/user',
-      method: 'PUT',
-      body: {
-        value: !getProp(pref, currentUser.preferences)
-      }
-    }
-  })
-}))({
-  render
-})

@@ -6,18 +6,22 @@ import ActivityRow from 'components/ActivityRow'
 import summonChannels from 'lib/summon-channels'
 import EmptyState from 'components/EmptyState'
 import RowFeed from 'components/RowFeed'
+import {component, element} from 'vdux'
 import {Block, Flex} from 'vdux-ui'
-import element from 'vdux/element'
 
 /**
  * <Trash/> page
  */
 
-function render ({props}) {
-  return (
-    <RowFeed {...props} item={ActivityRow} emptyState={<EmptyTrash />} />
-  )
-}
+export default summonChannels(
+  props => `user!${props.currentUser._id}.trash`, {}, 'updatedAt'
+)(component({
+  render ({props}) {
+    return (
+      <RowFeed {...props} item={ActivityRow} emptyState={<EmptyTrash />} />
+    )
+  }
+}))
 
 /**
  * <EmptyTrash/> - Trash empty state
@@ -30,13 +34,3 @@ function EmptyTrash () {
     </EmptyState>
   )
 }
-
-/**
- * Exports
- */
-
-export default summonChannels(
-  props => `user!${props.currentUser._id}.trash`, {}, 'updatedAt'
-)({
-  render
-})

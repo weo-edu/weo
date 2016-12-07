@@ -5,42 +5,13 @@
 import EmptyProfileFollowers from './EmptyProfileFollowers'
 import InfiniteScroll from 'components/InfiniteScroll'
 import UserTile from 'components/UserTile'
-import element from 'vdux/element'
+import {component, element} from 'vdux'
 import summon from 'vdux-summon'
 import {Grid} from 'vdux-ui'
 import map from '@f/map'
 
 /**
  * <ProfileFollowers/>
- */
-
-function render ({props}) {
-  const {followers, more, currentUser, user} = props
-  const {value, loaded, loading} = followers
-
-  return (
-    <InfiniteScroll loading={loading} more={() => value && more(value.nextPageToken)} w='calc(100% + 12px)'>
-      {
-        <Grid rowAlign='start'>
-          {
-            loaded && renderItems(currentUser, user, value.items)
-          }
-        </Grid>
-      }
-    </InfiniteScroll>
-  )
-}
-
-function renderItems(me, profUser, items) {
-  return (
-    items && items.length
-      ? map(user => <UserTile isCurrentUser={me._id === user._id} user={user} />, items)
-      : <EmptyProfileFollowers me={me} user={profUser} />
-  )
-}
-
-/**
- * Exports
  */
 
 export default summon(({user}) => ({
@@ -52,6 +23,33 @@ export default summon(({user}) => ({
       }
     }
   })
-}))({
-  render
-})
+}))(component({
+  render ({props}) {
+    const {followers, more, currentUser, user} = props
+    const {value, loaded, loading} = followers
+
+    return (
+      <InfiniteScroll loading={loading} more={value && more(value.nextPageToken)} w='calc(100% + 12px)'>
+        {
+          <Grid rowAlign='start'>
+            {
+              loaded && renderItems(currentUser, user, value.items)
+            }
+          </Grid>
+        }
+      </InfiniteScroll>
+    )
+  }
+}))
+
+/**
+ * Helpers
+ */
+
+function renderItems (me, profUser, items) {
+  return (
+    items && items.length
+      ? map(user => <UserTile isCurrentUser={me._id === user._id} user={user} />, items)
+      : <EmptyProfileFollowers me={me} user={profUser} />
+  )
+}

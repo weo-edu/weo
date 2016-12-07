@@ -5,54 +5,52 @@
 import ActivityCardActions from 'components/ActivityCardActions'
 import {Flex, Block, Card, Text, Icon} from 'vdux-ui'
 import {wrap, CSSContainer} from 'vdux-containers'
-import {setUrl} from 'redux-effects-location'
-import handleActions from '@f/handle-actions'
-import createAction from '@f/create-action'
+import {t, component, element} from 'vdux'
 import objectEqual from '@f/object-equal'
 import WeoIcon from 'components/WeoIcon'
 import Figure from 'components/Figure'
-import element from 'vdux/element'
 import ForkMeta from './ForkMeta'
 import Meta from './Meta'
 
 /**
- * Activity Tile
+ * <ActivityTile/>
  */
 
-function render ({props}) {
-  const {activity, showFork} = props
-  const {image, displayName, description} = activity
-  const TileMeta = showFork ? ForkMeta : Meta
+export default component({
+  propTypes: {
+    activity: t.Object,
+    showFork: t.maybe(t.Boolean),
+    user: t.maybe(t.Object)
+  },
 
-  return (
-    <Card w={230} relative my={8} mx={6}>
-      <Activity {...props} hoverProps={{hover: true}} />
-      <Block px={12} py={6} fs='xxs' borderTop='rgba(0, 0, 0, 0.04)' bgColor='#FCFCFC'>
-        <TileMeta activity={activity} />
-      </Block>
-    </Card>
-  )
-}
+  render ({props}) {
+    const {activity, showFork} = props
+    const TileMeta = showFork ? ForkMeta : Meta
 
-/**
- * Actions
- */
-
-const localLike = createAction('<ActivityTile/>: local like')
+    return (
+      <Card w={230} relative my={8} mx={6}>
+        <Activity {...props} />
+        <Block px={12} py={6} fs='xxs' borderTop='rgba(0, 0, 0, 0.04)' bgColor='#FCFCFC'>
+          <TileMeta activity={activity} />
+        </Block>
+      </Card>
+    )
+  }
+})
 
 /**
  * <Activity/> component
  */
 
-const Activity = wrap(CSSContainer)({
-  initialState () {
-    return {
-      locallyLiked: 0
-    }
+const Activity = wrap(CSSContainer, {
+  hoverProps: {hover: true}
+})(component({
+  initialState: {
+    locallyLiked: 0
   },
 
-  render ({props, local, state}) {
-    const {activity, user = {}, hover, actions} = props
+  render ({props, actions, state}) {
+    const {activity, user = {}, hover, options} = props
     const {
       image, displayName, description, _id,
       likers = {}, repinCount, replies
@@ -61,11 +59,11 @@ const Activity = wrap(CSSContainer)({
     const likes = likers.length + locallyLiked
 
     return (
-      <Flex column cursor='pointer' pb onClick={() => setUrl(`/activity/${_id}`)}>
+      <Flex column cursor='pointer' pb onClick={actions.goToActivity(_id)}>
         {
-          actions && hover && <ActivityCardActions spread liked={locallyLiked} localLike={local(localLike)} {...actions} activity={activity} user={user} absolute wide z='1' />
+          options && hover && <ActivityCardActions spread liked={locallyLiked} localLike={actions.localLike} {...options} activity={activity} user={user} absolute wide z='1' />
         }
-        <Figure key='img' {...image} thumb={true} opacity={hover && .88} />
+        <Figure key='img' {...image} thumb opacity={hover && 0.88} />
         <Block textAlign='center' m='m'>
           <Text my='s' fs='s' display='block' fw='200'>{displayName}</Text>
           <Text fs='xxs' wordBreak='break-word'>{description}</Text>
@@ -74,7 +72,7 @@ const Activity = wrap(CSSContainer)({
           {
             !!likes && (
               <Flex align='center center'>
-                <Icon name='favorite' fs='xs'  />
+                <Icon name='favorite' fs='xs' />
                 <Text mr='4' ml='2'>{likes}</Text>
               </Flex>
             )
@@ -100,35 +98,21 @@ const Activity = wrap(CSSContainer)({
     )
   },
 
-  /**
-   * Reducer
-   */
+  controller: {
+    * goToActivity ({context}, id) {
+      yield context.setUrl(`/activity/${id}`)
+    }
+  },
 
-  reducer: handleActions({
-    [localLike]: (state, inc) => ({
-      ...state,
-      locallyLiked: state.locallyLiked + inc
-    })
-  })
-})
+  reducer: {
+    localLike: (state, inc) => ({locallyLiked: state.locallyLiked + inc})
+  },
 
-/**
- * shouldUpdate
- */
+  shouldUpdate (prev, next) {
+    if (objectEqual(prev.props.options, next.props.options)) {
+      next.props.options = prev.props.options
+    }
 
-function shouldUpdate (prev, next) {
-  if (objectEqual(prev.props.actions, next.props.actions)) {
-    next.props.actions = prev.props.actions
+    return objectEqual(prev.props, next.props)
   }
-
-  return objectEqual(prev.props, next.props)
-}
-
-/**
- * Exports
- */
-
-export default {
-  render,
-  shouldUpdate
-}
+}))

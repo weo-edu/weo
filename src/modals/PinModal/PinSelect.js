@@ -2,58 +2,78 @@
  * Imports
  */
 
-
 import NewMenuItem from 'components/NewMenuItem'
 import {Block, Button} from 'vdux-containers'
-import handleActions from '@f/handle-actions'
-import createAction from '@f/create-action'
-import {closeModal} from 'reducer/modal'
 import WeoIcon from 'components/WeoIcon'
+import {component, element} from 'vdux'
+import flox, {fork} from '@flox/fork'
 import validate from 'lib/validate'
-import element from 'vdux/element'
-import {fork} from '@flox/fork'
 import map from '@f/map'
 
 /**
- * PinSelect
+ * <PinSelect/>
  */
 
-function render ({props, local, state}) {
-  const {boards, createBoard, onSelect, busy, ...rest} = props
+export default component({
+  render ({props, actions, context, state}) {
+    const {boards, busy, ...rest} = props
 
-  return (
-    <Block overflowY='auto' {...rest}>
-      {
-        map(board => <BoardItem busy={busy} board={board} onClick={() => selectBoard(board)} selected={state.selected === board._id} />, boards)
-      }
-      <NewMenuItem key='newMenuItem' validate={validate.board} onSubmit={handleSubmit} loading={busy} type='Board' />
-    </Block>
-  )
+    return (
+      <Block overflowY='auto' {...rest}>
+        {
+          map(board => <BoardItem busy={busy} board={board} onClick={actions.selectBoard(board)} selected={state.selected === board._id} />, boards)
+        }
+        <NewMenuItem key='newMenuItem' validate={validate.board} onSubmit={actions.handleSubmit} loading={busy} type='Board' />
+      </Block>
+    )
+  },
 
-  function * selectBoard(board) {
-    yield local(select, board._id)()
-    yield onSelect(board)
+  middleware: [
+    flox
+  ],
+
+  controller: {
+    * selectBoard ({actions, props}, board) {
+      yield actions.select(board._id)
+      yield props.onSelectBoard(board)
+    },
+
+    * handleSubmit ({props, actions}, board) {
+      const newBoard = yield props.createBoard(board)
+      yield fork(props.onSelectBoard(newBoard))
+    }
+  },
+
+  reducer: {
+    select: (state, selected) => ({selected})
   }
+})
 
-  function * handleSubmit (board) {
-    const newBoard = yield createBoard(board)
-    yield fork(onSelect(newBoard))
-  }
-}
+/**
+ * Constants
+ */
+
+const outerHover = {highlight: 0.03}
+const innerHover = {highlight: 0.01}
+
+/**
+ * <BoardItem/>
+ */
 
 function BoardItem ({props}) {
   const {onClick, board, busy, selected} = props
+
   return (
     <Block
-      hoverProps={{highlight: 0.03}}
+      hoverProps={outerHover}
       align='start center'
       bgColor='white'
       pointer={!busy}
       onClick={!busy && onClick}
       p>
       <Button
-        hoverProps={{highlight: 0.01}}
-        focusProps={{highlight: 0.01}}
+        hoverProps={innerHover}
+        focusProps={innerHover}
         border='1px solid blue'
         bgColor='white'
         color='blue'
@@ -66,30 +86,7 @@ function BoardItem ({props}) {
         mr>
         <WeoIcon fs='s' name='pin' />
       </Button>
-        {board.displayName}
+      {board.displayName}
     </Block>
   )
-}
-
-/**
- * Actions
- */
-
-const select = createAction('<PinSelect/>: select')
-
-/**
- * Reducer
- */
-
-const reducer = handleActions({
-  [select]: (state, selected) => ({...state, selected})
-})
-
-/**
- * Exports
- */
-
-export default {
-  render,
-  reducer
 }

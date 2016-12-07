@@ -4,11 +4,8 @@
 
 import {Modal, ModalBody, ModalFooter, ModalHeader, Grid, Text, Icon, Block} from 'vdux-ui'
 import {Button, CSSContainer, wrap} from 'vdux-containers'
-import handleActions from '@f/handle-actions'
-import createAction from '@f/create-action'
-import {closeModal} from 'reducer/modal'
+import {component, element} from 'vdux'
 import * as colors from 'lib/colors'
-import element from 'vdux/element'
 import summon from 'vdux-summon'
 import Form from 'vdux-form'
 
@@ -19,72 +16,67 @@ import Form from 'vdux-form'
 const {pickerColors, blue} = colors
 
 /**
- * initialState
- */
-
-function initialState ({props}) {
-  const {user} = props
-
-  return {
-    selected: user.color
-  }
-}
-
-/**
  * <ColorPickerModal/>
  */
 
-function render ({props, state, local}) {
-  const {updateColor, user, submitting = {}} = props
-  const {loading} = submitting
-  const {selected} = state
+export default summon(({user}) => ({
+  updateColor: color => ({
+    submitting: {
+      url: '/user',
+      method: 'PUT',
+      body: {
+        ...user,
+        color
+      }
+    }
+  })
+}))(component({
+  initialState: ({props}) => ({
+    selected: props.user.color
+  }),
 
-  return (
-    <Modal onDismiss={closeModal}>
-      <Form onSubmit={() => updateColor(selected)} onSuccess={closeModal}>
-        <ModalBody pb px={0}>
-          <ModalHeader>
-            Select a Color
-          </ModalHeader>
-          <Grid rowAlign='center'>
-            {
-              pickerColors.map(
-                color => <ColorBlock onClick={local(choose, color)} color={color} selected={color === selected} />)
-            }
-          </Grid>
-        </ModalBody>
-        <ModalFooter bg='grey'>
-          <Text fs='xxs'>
-            <Text pointer underline onClick={closeModal}>cancel</Text>
-             <Text mx>or</Text>
-          </Text>
-          <Button type='submit' busy={loading}>Update</Button>
-        </ModalFooter>
-      </Form>
-    </Modal>
-  )
-}
+  render ({props, state, actions, context}) {
+    const {updateColor, submitting = {}} = props
+    const {loading} = submitting
+    const {selected} = state
 
-/**
- * Actions
- */
+    return (
+      <Modal onDismiss={context.closeModal}>
+        <Form onSubmit={updateColor(selected)} onSuccess={context.closeModal}>
+          <ModalBody pb px={0}>
+            <ModalHeader>
+              Select a Color
+            </ModalHeader>
+            <Grid rowAlign='center'>
+              {
+                pickerColors.map(
+                  color => <ColorBlock onClick={actions.choose(color)} color={color} selected={color === selected} />)
+              }
+            </Grid>
+          </ModalBody>
+          <ModalFooter bg='grey'>
+            <Text fs='xxs'>
+              <Text pointer underline onClick={context.closeModal}>cancel</Text>
+              <Text mx>or</Text>
+            </Text>
+            <Button type='submit' busy={loading}>Update</Button>
+          </ModalFooter>
+        </Form>
+      </Modal>
+    )
+  },
 
-const choose = createAction('<ColorPickerModal/>: select color')
-
-/**
- * Reducer
- */
-
-const reducer = handleActions({
-  [choose]: (state, selected) => ({...state, selected})
-})
+  reducer: {
+    choose: (state, selected) => ({selected})
+  }
+}))
 
 /**
  * <ColorBlock/> component
  */
 
-const ColorBlock = wrap(CSSContainer, {hoverProps: {hovered: true}})({
-  render({props}) {
+const ColorBlock = wrap(CSSContainer, {hoverProps: {hovered: true}})(component({
+  render ({props}) {
     const {color, hovered, selected, ...rest} = props
 
     return (
@@ -116,25 +108,4 @@ const ColorBlock = wrap(CSSContainer, {hoverProps: {hovered: true}})({
       </Block>
     )
   }
-})
-
-/**
- * Exports
- */
-
-export default summon(({user}) => ({
-  updateColor: color => ({
-    submitting: {
-      url: '/user',
-      method: 'PUT',
-      body: {
-        ...user,
-        color
-      }
-    }
-  })
-}))({
-  initialState,
-  render,
-  reducer
-})
+}))

@@ -2,10 +2,16 @@
  * Imports
  */
 
+import fetch from 'redux-effects-fetch'
 import mime from 'browserify-mime'
 import _upload from '@f/s3-upload'
-import {post} from 'lib/api/req'
 import noop from '@f/noop'
+
+/**
+ * Constants
+ */
+
+const apiServer = process.env.API_SERVER
 
 /**
  * Actions
@@ -45,7 +51,7 @@ function middleware ({dispatch}) {
 function * doUploadFile ({file, progress = noop}, dispatch) {
   try {
     const {type} = file
-    const {value: S3} = yield post('/s3/upload')
+    const {value: S3} = yield fetch(`${apiServer}/s3/upload`, {method: 'POST'})
 
     return yield upload({
       file,
@@ -74,7 +80,9 @@ function ext (file) {
   if (mimeExt) return '.' + mimeExt
   if (!file.name) return ''
 
-  return file.name.lastIndexOf('.') > 0
+  const idx = file.name.lastIndexOf('.')
+
+  return idx > 0
     ? file.name.slice(idx - 1)
     : '._' + file.name
 }

@@ -1,5 +1,0 @@
-{
-  "name": "api",
-  "main": "api.js",
-  "browser": "api.js"
-}

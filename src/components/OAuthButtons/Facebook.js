@@ -2,29 +2,27 @@
  * Imports
  */
 
+import {component, element} from 'vdux'
 import {Button} from 'vdux-containers'
 import {IconButton} from 'vdux-ui'
-import element from 'vdux/element'
+
+/**
+ * Assets
+ */
 
 const cloudFS = require('cloud-fs')
 const fbIcon = cloudFS.url('./fbIcon.png')
 
 /**
- * Facebook OAuth Button
+ * <FacebookOauthButton/>
  */
 
-function render ({props, children}) {
-  return (
-    <Button ui={IconButton} fs='12px' img={fbIcon} iconSize='18px' pl='8px' bgColor='facebook_blue' {...props}>
-      {children}
-    </Button>
-  )
-}
-
-/**
- * Exports
- */
-
-export default {
-  render
-}
+export default component({
+  render ({props, children}) {
+    return (
+      <Button ui={IconButton} fs='12px' img={fbIcon} iconSize='18px' pl='8px' bgColor='facebook_blue' {...props}>
+        {children}
+      </Button>
+    )
+  }
+})

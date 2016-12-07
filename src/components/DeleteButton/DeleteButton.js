@@ -4,32 +4,31 @@
 
 import DeleteActivityModal from 'modals/DeleteActivityModal'
 import OutlineButton from 'components/OutlineButton'
-import {openModal} from 'reducer/modal'
-import element from 'vdux/element'
+import {component, element} from 'vdux'
 
 /**
  * <DeleteButton/>
  */
 
-function render ({props}) {
-  const {text, user, activity, onDelete, onClick = [], ...rest} = props
-  const action = () => openModal(() => <DeleteActivityModal onDelete={onDelete} activity={activity} />)
+export default component({
+  render ({props, actions}) {
+    const {text, onClick = [], ...rest} = props
 
-  return (
-    <OutlineButton
-      onClick={[].concat(onClick, action)}
-      color='grey_medium'
-      icon='delete'
-      {...rest}>
-      {text}
-    </OutlineButton>
-  )
-}
+    return (
+      <OutlineButton
+        onClick={[].concat(onClick, actions.openDeleteModal)}
+        color='grey_medium'
+        icon='delete'
+        {...rest}>
+        {text}
+      </OutlineButton>
+    )
+  },
 
-/**
- * Exports
- */
-
-export default {
-  render
-}
+  controller: {
+    * openDeleteModal ({context, props}) {
+      const {onDelete, activity} = props
+      yield context.openModal(() => <DeleteActivityModal onDelete={onDelete} activity={activity} />)
+    }
+  }
+})

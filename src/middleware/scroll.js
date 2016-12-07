@@ -29,7 +29,7 @@ function middleware () {
 
 function scrollToElement ({element, duration, easing, offsetX = 0, offsetY = 0}) {
   element = asElement(element)
-  easing =  typeof easing === 'string'
+  easing = typeof easing === 'string'
     ? easingUtil[easing]
     : easing
 
@@ -50,7 +50,7 @@ function scrollToElement ({element, duration, easing, offsetX = 0, offsetY = 0})
 }
 
 function asElement (element) {
-  return 'string' === typeof element
+  return typeof element === 'string'
     ? document.querySelector(element)
     : element
 }

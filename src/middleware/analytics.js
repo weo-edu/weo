@@ -7,10 +7,16 @@ import segment from 'lib/segment'
 import prep from 'track-prep'
 
 /**
+ * Constants
+ */
+
+const writeKey = process.env.SEGMENT_IO_KEY
+
+/**
  * Analytics middleware
  */
 
-function analytics (writeKey) {
+function analytics () {
   segment(writeKey)
 
   const config = {
@@ -21,16 +27,16 @@ function analytics (writeKey) {
   }
 
   function hasIntercom (user) {
-    return !! (user._id && user.userType === 'teacher')
+    return !!(user._id && user.userType === 'teacher')
   }
 
-  return api => next => action => {
+  return next => action => {
     switch (action.type) {
       case identify.type: {
         const user = action.payload || {}
 
-        if ('undefined' !== typeof Intercom && !hasIntercom(user)) {
-          Intercom('shutdown')
+        if (typeof Intercom !== 'undefined' && !hasIntercom(user)) {
+          window.Intercom('shutdown')
           window.analytics._integrations.Intercom.booted = false
         }
 

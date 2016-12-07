@@ -3,8 +3,12 @@
  */
 
 import {Block, Flex, Icon, Text, Image} from 'vdux-ui'
-import element from 'vdux/element'
+import {component, element} from 'vdux'
 import map from '@f/map'
+
+/**
+ * Assets
+ */
 
 const cloudFS = require('cloud-fs')
 const lauren = cloudFS.url('./files/testimonials/lahey.jpg')
@@ -12,24 +16,24 @@ const jon = cloudFS.url('./files/testimonials/jon.png')
 const ari = cloudFS.url('./files/testimonials/ari.jpg')
 
 /**
- * Home Layout
+ * <Testimonials/>
  */
 
-function render ({props, children}) {
-  const {action} = props
+export default component({
+  render ({props, children}) {
+    return (
+      <Block maxWidth='1100' p='50px 12px' m='50px auto 0' relative>
+        <Block absolute top right left h='1' maxWidth='600' bg='grey_light' m='auto' />
+        <Icon name='favorite' color='red' fs='66' absolute top='-33' right left m='0 auto' w='132' bg='white' textAlign='center' />
+        <Flex mt='50'>
+          { map(testimonial, people) }
+        </Flex>
+      </Block>
+    )
+  }
+})
 
-  return (
-    <Block maxWidth='1100' p='50px 12px' m='50px auto 0' relative>
-      <Block absolute top right left h='1' maxWidth='600' bg='grey_light' m='auto'/>
-      <Icon name='favorite' color='red' fs='66' absolute top='-33' right left m='0 auto' w='132' bg='white' textAlign='center'/>
-      <Flex mt='50'>
-        { map(testimonial, people) }
-      </Flex>
-    </Block>
-  )
-}
-
-function testimonial(person) {
+function testimonial (person) {
   return (
     <Flex column textAlign='center' px='l'>
       <Image src={person.image} circle='150' boxShadow='card' display='block' m='12px auto' border='3px solid white' />
@@ -38,7 +42,6 @@ function testimonial(person) {
       <Text uppercase color='blue' fw='lighter'>{person.school}</Text>
     </Flex>
   )
-
 }
 
 const people = [
@@ -61,13 +64,3 @@ const people = [
     school: 'NEA Community Learning Center'
   }
 ]
-
-
-
-/**
- * Exports
- */
-
-export default {
-  render
-}

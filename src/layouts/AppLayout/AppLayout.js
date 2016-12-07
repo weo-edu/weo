@@ -2,7 +2,7 @@
  * Imports
  */
 
-import element from 'vdux/element'
+import {component, element} from 'vdux'
 import {Block} from 'vdux-ui'
 import Nav from './Nav'
 
@@ -10,19 +10,13 @@ import Nav from './Nav'
  * App
  */
 
-function render ({props, children}) {
-  return (
-    <Block class='app'>
-      <Nav {...props} />
-      {children}
-    </Block>
-  )
-}
-
-/**
- * Exports
- */
-
-export default {
-  render
-}
+export default component({
+  render ({props, children}) {
+    return (
+      <Block class='app'>
+        <Nav {...props} />
+        {children}
+      </Block>
+    )
+  }
+})

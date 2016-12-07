@@ -6,33 +6,37 @@ import QuestionOverview from './QuestionOverview'
 import summonChannels from 'lib/summon-channels'
 import {totalPoints} from 'lib/activity-helpers'
 import FourOhFour from 'pages/FourOhFour'
+import {component, element} from 'vdux'
 import Loading from 'pages/Loading'
 import Histogram from './Histogram'
-import {Block, Flex} from 'vdux-ui'
-import element from 'vdux/element'
 import getProp from '@f/get-prop'
+import {Block} from 'vdux-ui'
 
 /**
  * <ActivityOverview/>
  */
 
-function render ({props}) {
-  const {students, activity, activities} = props
-  const {value, loading, error} = activities
+export default summonChannels(
+  ({activity}) => `share!${activity._id}.instances`
+)(component({
+  render ({props}) {
+    const {students, activity, activities} = props
+    const {value, loading, error} = activities
 
-  if (loading) return <Loading show={true} />
-  if (error) return <FourOhFour />
+    if (loading) return <Loading show />
+    if (error) return <FourOhFour />
 
-  const instances = value.items
-  const data = getData(activity, students)
+    const instances = value.items
+    const data = getData(activity, students)
 
-  return (
-    <Block w='col_main' mx='auto'>
-      <Histogram data={data}/>
-      <QuestionOverview instances={instances} {...props} />
-    </Block>
-  )
-}
+    return (
+      <Block w='col_main' mx='auto'>
+        <Histogram data={data} />
+        <QuestionOverview instances={instances} {...props} />
+      </Block>
+    )
+  }
+}))
 
 /**
  * Helpers
@@ -47,19 +51,18 @@ function getData (activity, students) {
   let binMax = 0
   let bins = []
 
-  for(var i = 0; i < 10; i++) {
+  for (var i = 0; i < 10; i++) {
     bins[i] = []
   }
 
-  students.forEach(function(student) {
+  students.forEach(function (student) {
     const actor = actors && actors[student._id]
 
-    if(!actor) return
+    if (!actor) return
 
     const {pointsScaled = 0, status = 1} = actor
     const points = pointsScaled * total
     const percent = pointsScaled * 100
-
 
     const instance = {
       points: round(points),
@@ -67,7 +70,7 @@ function getData (activity, students) {
       displayName: student.displayName
     }
 
-    if(status >= 4) {
+    if (status >= 4) {
       numReturned++
       averagePoints += points
       averagePercent += percent
@@ -95,13 +98,3 @@ function percentToIndex (percent) {
 function round (num) {
   return Math.round(num * 10) / 10
 }
-
-/**
- * Exports
- */
-
-export default summonChannels(
-  ({activity}) => `share!${activity._id}.instances`
-)({
-  render
-})

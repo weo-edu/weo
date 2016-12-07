@@ -1,0 +1,49 @@
+@font-face {
+  font-family: Lato;
+  font-weight: 300;
+  font-style: normal;
+  src: url('Lato-Light.eot'),
+    url('Lato-Light.eot?#iefix') format('embedded-opentype'),
+    url('Lato-Light.woff2') format('woff2'),
+    url('Lato-Light.woff') format('woff'),
+    url('Lato-Light.ttf') format('truetype'),
+    url('Lato-Light.svg#Lato-Light') format('svg');
+}
+
+@font-face {
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'),
+    local('Lato-Regular'),
+    url(https://themes.googleusercontent.com/static/fonts/lato/v7/qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA.woff) format('woff');
+}
+
+@font-face {
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 700;
+  src: local('Lato Bold'),
+    local('Lato-Bold'),
+    url(https://themes.googleusercontent.com/static/fonts/lato/v7/qdgUG4U09HnJwhYI-uK18wLUuEpTyoUstqEm5AMlJo4.woff) format('woff');
+}
+
+@font-face {
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 900;
+  src: local('Lato Black'),
+    local('Lato-Black'),
+    url(https://themes.googleusercontent.com/static/fonts/lato/v7/G2uphNnNqGFMHLRsO_72ngLUuEpTyoUstqEm5AMlJo4.woff) format('woff');
+}
+
+@font-face {
+  font-family: weo-icons;
+  font-weight: normal;
+  font-style: normal;
+  src: url('weo-icons.eot'),
+    url('weo-icons.eot?#iefix') format('embedded-opentype'),
+    url('weo-icons.woff') format('woff'),
+    url('weo-icons.ttf') format('truetype'),
+    url('weo-icons.svg') format('svg');
+}

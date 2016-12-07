@@ -2,44 +2,18 @@
  * Imports
  */
 
-import summon, {invalidate} from 'vdux-summon'
+import {component, element} from 'vdux'
 import {Button} from 'vdux-containers'
-import {Block} from 'vdux-ui'
-import element from 'vdux/element'
+import summon from 'vdux-summon'
+
+/**
+ * Constants
+ */
+
+const highlight = {highlight: 0.03}
 
 /**
  * <FollowButton/>
- */
-
-function render ({props}) {
-  const {isFollowing, follow, unfollow, followResponse = {}, board, ...rest} = props
-  const {value, reload} = isFollowing
-  const loading = isFollowing.loading || followResponse.loading
-  const noun = board ? 'Board' : ''
-  const verb = loading && !reload
-    ? 'Follow '
-    : value ? 'Unfollow ' : 'Follow '
-
-  return (
-    <Button
-      darkSpinner
-      onClick={(value ? unfollow : follow)}
-      busy={loading}
-      color={value ? 'text' : 'blue'}
-      px={25}
-      rounded
-      bgColor='off_white'
-      hoverProps={{highlight: 0.03}}
-      focusProps={{highlight: 0.03}}
-      border='1px solid rgba(0,0,0,0.15)'
-      {...rest}>
-      {verb} {noun}
-    </Button>
-  )
-}
-
-/**
- * Exports
  */
 
 export default summon((props) => {
@@ -80,6 +54,31 @@ export default summon((props) => {
       }
     })
   }
-})({
-  render
-})
+})(component({
+  render ({props}) {
+    const {isFollowing, follow, unfollow, followResponse = {}, board, ...rest} = props
+    const {value, reload} = isFollowing
+    const loading = isFollowing.loading || followResponse.loading
+    const noun = board ? 'Board' : ''
+    const verb = loading && !reload
+      ? 'Follow '
+      : value ? 'Unfollow ' : 'Follow '
+
+    return (
+      <Button
+        darkSpinner
+        onClick={(value ? unfollow : follow)}
+        busy={loading}
+        color={value ? 'text' : 'blue'}
+        px={25}
+        rounded
+        bgColor='off_white'
+        hoverProps={highlight}
+        focusProps={highlight}
+        border='1px solid rgba(0,0,0,0.15)'
+        {...rest}>
+        {verb} {noun}
+      </Button>
+    )
+  }
+}))

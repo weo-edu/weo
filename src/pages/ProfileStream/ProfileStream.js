@@ -6,25 +6,19 @@ import StreamActivity from 'components/StreamActivity'
 import EmptyProfileStream from './EmptyProfileStream'
 import summonChannels from 'lib/summon-channels'
 import RowFeed from 'components/RowFeed'
-import element from 'vdux/element'
+import {component, element} from 'vdux'
 
 /**
  * <ProfileStream/>
  */
 
-function render ({props}) {
-  const {currentUser, user} = props
-  return (
-    <RowFeed {...props} search={false} item={StreamActivity} wide emptyState={<EmptyProfileStream me={currentUser} user={user} />} />
-  )
-}
-
-/**
- * Exports
- */
-
 export default summonChannels(
   ({user}) => `user!${user._id}.activities`
-)({
-  render
-})
+)(component({
+  render ({props}) {
+    const {currentUser, user} = props
+    return (
+      <RowFeed {...props} search={false} item={StreamActivity} wide emptyState={<EmptyProfileStream me={currentUser} user={user} />} />
+    )
+  }
+}))

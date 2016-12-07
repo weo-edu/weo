@@ -4,22 +4,31 @@
 
 import ActivityBadge from 'components/ActivityBadge'
 import ActivityRow from 'components/ActivityRow'
-import {Text} from 'vdux-ui'
-import element from 'vdux/element'
+import {t, component, element} from 'vdux'
 import getProp from '@f/get-prop'
-import reduce from '@f/reduce'
+import {Text} from 'vdux-ui'
 import moment from 'moment'
-
 
 /**
  * <ClassActivityRow/>
  */
 
-function render ({props}) {
-  return (
-    <ActivityRow badgeUi={StudentBadge} metaUi={StudentMeta} {...props} />
-  )
-}
+export default component({
+  propTypes: {
+    activity: t.Object,
+    currentUser: t.Object
+  },
+
+  render ({props}) {
+    return (
+      <ActivityRow badgeUi={StudentBadge} metaUi={StudentMeta} {...props} />
+    )
+  }
+})
+
+/**
+ * <StudentBadge/>
+ */
 
 function StudentBadge ({props}) {
   const {activity, currentUser} = props
@@ -31,22 +40,20 @@ function StudentBadge ({props}) {
   )
 }
 
+/**
+ * <StudentMeta/>
+ */
+
 function StudentMeta ({props}) {
-  const {activity} = props
-  const {publishedAt} = activity
+  const {activity, showClass} = props
+  const {publishedAt, contexts} = activity
+  const text = showClass
+    ? contexts[0].descriptor.displayName
+    : 'Assigned' + moment(publishedAt).fromNow()
 
   return (
     <Text fs='xxs' color='grey_medium'>
-      Assigned {moment(publishedAt).fromNow()}
+      {text}
     </Text>
   )
-}
-
-
-/**
- * Exports
- */
-
-export default {
-  render
 }

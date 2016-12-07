@@ -3,7 +3,6 @@
  */
 
 import test from 'tape'
-import weo from '../src'
 
 /**
  * Tests

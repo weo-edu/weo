@@ -3,20 +3,20 @@
  */
 
 import summon from 'vdux-summon'
+import live from 'lib/live'
 
 /**
  * Summon channels
  */
 
 function summonChannels (fn, extras = {}, sort) {
-  return summon(props => ({
+  return Component => summon(props => ({
     activities: {
       url: fn(props) && `/share?${
         normalizeChannels(fn(props))
           .map(ch => `channel=${ch}`)
           .join('&')
-      }&maxResults=30${sort ? '&sort=' + sort : ''}`,
-      subscribe: 'activity_feed'
+      }&maxResults=30${sort ? '&sort=' + sort : ''}`
     },
     more: pageToken => ({
       activities: {
@@ -34,7 +34,14 @@ function summonChannels (fn, extras = {}, sort) {
       }
     }),
     ...(typeof extras === 'function' ? extras(props) : extras)
-  }))
+  }))(live(props => ({
+    activities: {
+      url: '/share',
+      params: {
+        channel: fn(props)
+      }
+    }
+  }))(Component))
 }
 
 /**

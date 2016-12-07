@@ -4,43 +4,43 @@
 
 import ActivityDropdownMenu from 'components/ActivityDropdownMenu'
 import ActivityCardActions from 'components/ActivityCardActions'
-import {Flex, Block, Card, Text, Image} from 'vdux-ui'
+import {t, stopPropagation, component, element} from 'vdux'
 import {wrap, CSSContainer} from 'vdux-containers'
-import {setUrl} from 'redux-effects-location'
-import Figure from 'components/Figure'
-import resize from 'lib/resize-image'
+import {Flex, Block, Card} from 'vdux-ui'
 import BgImg from 'components/BgImg'
-import element from 'vdux/element'
 import Meta from './Meta'
 
 /**
  * <ActivityRow/>
  */
 
-function render ({props}) {
-  return (
-    <Activity {...props} hoverProps={{hover: true}} />
-  )
-}
+export default wrap(CSSContainer, {
+  hoverProps: {hover: true}
+})(component({
+  propTypes: {
+    activity: t.Object,
+    currentUser: t.Object,
+    options: t.maybe(t.Object),
+    showClass: t.maybe(t.Boolean)
+  },
 
-const Activity = wrap(CSSContainer)({
-  render ({props}) {
+  render ({props, context}) {
     const {
       hover, activity, metaUi: MetaUi = Meta, ddMenu,
-      badgeUi: BadgeUi = Badge, currentUser, actions
+      badgeUi: BadgeUi = Badge, currentUser, options, showClass
     } = props
     const {image, displayName, description, _id: id} = activity
 
     return (
-      <Card h={132} wide mt={0} borderBottom='rgba(52, 52, 52, 0.08)' cursor='pointer' onClick={() => setUrl(`/activity/${id}`)}>
+      <Card h={132} wide mt={0} borderBottom='rgba(52, 52, 52, 0.08)' cursor='pointer' onClick={context.setUrl(`/activity/${id}`)}>
         <Flex tall align='start start'>
-          <Flex p='m' tall column align='space-between' flex='50%'>
-            <Block fs='s' fw='200'>{displayName}</Block>
+          <Flex p='m' tall column align='space-between' flex='49%'>
+            <Block fs='s' fw='200' ellipsis>{displayName}</Block>
             <Block fs='xs' lh='20px' maxHeight='40px' overflow='hidden' fw='200' color='text'>{description}</Block>
-            <MetaUi activity={activity} currentUser={currentUser} />
+            <MetaUi activity={activity} currentUser={currentUser} showClass={showClass} />
           </Flex>
           <Block flex='22%' mr>
-          {
+            {
             image && image.url &&
               <BgImg
                 backgroundPosition='center center'
@@ -64,12 +64,12 @@ const Activity = wrap(CSSContainer)({
                 </Flex>
             }
             {
-              actions && hover &&
+              options && hover &&
                 <Flex align='end center'>
-                  <ActivityCardActions {...actions} align='end center' wide activity={activity} user={currentUser} />
+                  <ActivityCardActions {...options} align='end center' wide activity={activity} user={currentUser} />
                   {
                     ddMenu &&
-                      <Block mr ml='-6' onClick={e => e.stopPropagation()}>
+                      <Block mr ml='-6' onClick={stopPropagation}>
                         <ActivityDropdownMenu activity={activity} />
                       </Block>
                   }
@@ -80,14 +80,12 @@ const Activity = wrap(CSSContainer)({
       </Card>
     )
   }
-})
-
-function Badge () { return <span/> }
+}))
 
 /**
- * Exports
+ * <Badge/>
  */
 
-export default {
-  render
+function Badge () {
+  return <span />
 }

@@ -18,13 +18,13 @@ const excluded = ['maxResults', 'pageToken', 'sort']
  * Socket
  */
 
-function middleware ({dispatch, getState}) {
+function middleware ({dispatch, getContext}) {
   const subs = {}
-  let lastToken = getState().app.auth.token
+  let lastToken = getContext().authToken
   let socket = connect(lastToken)
 
   return next => action => {
-    const token = getState().app.auth.token
+    const token = getContext().authToken
 
     if (token !== lastToken) {
       lastToken = token
@@ -34,7 +34,7 @@ function middleware ({dispatch, getState}) {
 
     switch (action.type) {
       case subscribe.type: {
-        const {url, params = {}, cb, path} = action.payload
+        const {url, params = {}, path} = action.payload
         subs[path] = subs[path] || []
         subs[path].push(action.payload)
         return route(url, 'post', params)
@@ -72,7 +72,7 @@ function middleware ({dispatch, getState}) {
   }
 
   function connect (token) {
-    const socket = io.connect(process.env.API_SERVER + '?access_token=' + encodeURIComponent(token), {
+    const socket = window.io.connect(process.env.API_SERVER + '?access_token=' + encodeURIComponent(token), {
       forceNew: true,
       transports: ['polling', 'websocket']
     })

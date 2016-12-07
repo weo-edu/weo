@@ -4,11 +4,11 @@
 
 import PollChoiceOverview from './PollChoiceOverview'
 import {grey, blue, yellow, green, red} from 'lib/colors'
+import {decodeNode, component, element} from 'vdux'
 import TextToSpeech from 'components/TextToSpeech'
 import BlockInput from 'components/BlockInput'
 import {Button} from 'vdux-containers'
 import Avatar from 'components/Avatar'
-import element from 'vdux/element'
 import {Block} from 'vdux-ui'
 import Color from 'color'
 
@@ -28,73 +28,89 @@ const colors = [
  * <QuestionPollChoice/>
  */
 
-function render ({props}) {
-  const {
-    object, idx, editing, onEdit, remove,
-    answerable, overview, focusPrevious, submit,
-    answer = [], actor, numAtt,
-    setSpeaking, speechRate, speakingId, speechEnabled
-  } = props
-  const {content, originalContent} = object
-  const chosen = answer[0] === object._id
-  const hasAnswer = !!answer.length
-  const bgColor = hasAnswer
-    ? chosen ? colors[idx % colors.length] : 'grey_light'
-    : colors[idx % colors.length]
+export default component({
+  render ({props, actions}) {
+    const {
+      object, idx, editing, answerable, overview, submit,
+      answer = [], actor, numAtt, setSpeaking, speechRate,
+      speakingId, speechEnabled, remove
+    } = props
+    const {content, originalContent} = object
+    const chosen = answer[0] === object._id
+    const hasAnswer = !!answer.length
+    const bgColor = hasAnswer && !overview
+      ? chosen ? colors[idx % colors.length] : 'grey_light'
+      : colors[idx % colors.length]
 
-  if(overview) return <PollChoiceOverview bgColor={bgColor} {...props} />
+    if (overview) return <PollChoiceOverview bgColor={bgColor} {...props} />
 
-  return (
-    <Block
-      onClick={answerable && submitAnswer}
-      pointer={answerable}
-      bgColor={bgColor}
-      boxShadow='card'
-      maxWidth='140px'
-      flex='0 0 30%'
-      flexShrink='1'
-      rounded='4px'
-      relative
-      mx='1%'
-      tall
-      >
-      {
-        !editing && speechEnabled &&
-        <TextToSpeech
-          absolute={{top: 5, right: -5}}
-          z={3}
-          onStart={() => setSpeaking(object._id)}
-          onEnd={() => setSpeaking()}
-          rate={speechRate}
-          text={object.displayName}
-          current={speakingId === object._id}/>
-      }
-      <Button zIndex={2} color='text' absolute='top 4px right 4px' icon='close' onClick={remove} fs='s' tabindex='-1' hide={!editing || numAtt === 1} />
-      <Block pb='100%' wide relative>
-        <Block absolute wide tall top left align='center center'>
-          {
-            !editing
-              ? <Block p='s' class='markdown' fs='s' textAlign='center' innerHTML={content} />
-              : <BlockInput
-                  onInput={e => onEdit({...object, originalContent: e.target.value})}
+    return (
+      <Block
+        onClick={answerable && submit(chosen ? [] : [object._id])}
+        pointer={answerable}
+        bgColor={bgColor}
+        boxShadow='card'
+        maxWidth='140px'
+        flex='0 0 30%'
+        flexShrink='1'
+        rounded='4px'
+        relative
+        mx='1%'
+        tall
+        >
+        {
+          !editing && speechEnabled &&
+          <TextToSpeech
+            absolute={{top: 5, right: -5}}
+            z={3}
+            onStart={setSpeaking(object._id)}
+            onEnd={setSpeaking(null)}
+            rate={speechRate}
+            text={object.displayName}
+            current={speakingId === object._id} />
+        }
+        <Button zIndex={2} color='text' absolute='top 4px right 4px' icon='close' onClick={remove} fs='s' tabindex='-1' hide={!editing || numAtt === 1} />
+        <Block pb='100%' wide relative>
+          <Block absolute wide tall top left align='center center'>
+            {
+              !editing
+                ? <Block p='s' class='markdown' fs='s' textAlign='center' innerHTML={content} />
+                : <BlockInput
+                  onInput={actions.editOriginalContent}
                   defaultValue={originalContent}
                   mx={5}
                   fs='s'
-                  placeholder={`Choice #${idx+1}`}
-                  inputProps={{textAlign:'center', p: '6px 12px 5px', fs: 's', fw: 200}}
+                  placeholder={`Choice #${idx + 1}`}
+                  inputProps={{textAlign: 'center', p: '6px 12px 5px', fs: 's', fw: 200}}
                   autofocus={!content}
-                  onKeydown={{backspace: e => e.target.value === '' && numAtt > 1 && [remove(), focusPrevious(e.target)]}} />
-          }
+                  onKeydown={{backspace: decodeNode(actions.maybeRemove)}} />
+            }
+          </Block>
+          { chosen && <ChosenMarker actor={actor} /> }
         </Block>
-        { chosen && <ChosenMarker actor={actor} /> }
       </Block>
-    </Block>
-  )
+    )
+  },
 
-  function * submitAnswer () {
-    yield submit(chosen ? [] : [object._id])
+  controller: {
+    * editOriginalContent ({props}, originalContent) {
+      yield props.onEdit({...props.object, originalContent})
+    },
+
+    * maybeRemove ({props}, node) {
+      const {focusPrevious, numAtt, remove} = props
+
+      if (node.value === '' && numAtt > 1) {
+        yield remove()
+        yield focusPrevious(node)
+      }
+    }
   }
-}
+})
+
+/**
+ * <ChosenMarker/>
+ */
 
 function ChosenMarker ({props}) {
   const {actor} = props
@@ -107,14 +123,6 @@ function ChosenMarker ({props}) {
       boxShadow='z2'
       actor={actor}
       size='23%'
-      m='auto'/>
+      m='auto' />
   )
-}
-
-/**
- * Exports
- */
-
-export default {
-  render
 }

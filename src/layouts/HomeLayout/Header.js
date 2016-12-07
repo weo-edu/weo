@@ -2,9 +2,9 @@
  * Imports
  */
 
-import {Flex, Block, Text} from 'vdux-ui'
 import ActionButton from './ActionButton'
-import element from 'vdux/element'
+import {component, element} from 'vdux'
+import {Flex, Text} from 'vdux-ui'
 import Nav from './Nav'
 
 /**
@@ -17,28 +17,24 @@ const buttons = {
 }
 
 /**
- * Home Header
+ * <HomeHeader/>
  */
 
-function render ({props}) {
-  const {action} = props
-  const button = buttons[action]
+export default component({
+  render ({props}) {
+    const {action} = props
+    const button = buttons[action]
 
-  return (
-    <Flex tag='header' align='start center' wide py='4px' px='30px' z={1} flex absolute h='53px' bgColor='rgba(255, 255, 255, 0.2)'>
-      <Nav />
-      <Text tag='a' href='/' ml='m' color='white' fs='m' bold letterSpacing={1}>
-        WEO
-      </Text>
-      <Flex flex align='end center'>
-        {button}
+    return (
+      <Flex tag='header' align='start center' wide py='4px' px='30px' z={1} flex absolute h='53px' bgColor='rgba(255, 255, 255, 0.2)'>
+        <Nav />
+        <Text tag='a' href='/' ml='m' color='white' fs='m' bold letterSpacing={1}>
+          WEO
+        </Text>
+        <Flex flex align='end center'>
+          {button}
+        </Flex>
       </Flex>
-    </Flex>
-  )
-}
-
-/**
- * Exports
- */
-
-export default render
+    )
+  }
+})

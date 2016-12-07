@@ -2,19 +2,34 @@
  * Imports
  */
 
-import jss from './jss'
 import 'regenerator-runtime/runtime'
-import promise from 'es6-promise'
-import favicon from 'lib/favicon'
+import Boot from 'components/Boot'
+import {element} from 'vdux'
+import vdux from 'vdux/dom'
 
 /**
- * Polyfills
+ * Render loop
  */
 
-promise.polyfill()
+const {forceRerender} = vdux(() => <Boot />, {
+  prerendered: !!window.__initialState__,
+  initialState: window.__initialState__
+})
 
 /**
- * Boot app
+ * Hot module replacement
  */
 
-require('./main')
+if (module.hot) {
+  module.hot.decline()
+  module.hot.unaccepted(() => window.location.reload(true))
+  module.hot.accept(['components/Boot'], (...args) => {
+    try {
+      require('components/Boot')
+      forceRerender()
+    } catch (err) {
+      console.log('hot update err', err)
+      throw err
+    }
+  })
+}

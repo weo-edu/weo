@@ -3,8 +3,12 @@
  */
 
 import {Block, Image, Text, Flex} from 'vdux-ui'
-import element from 'vdux/element'
+import {component, element} from 'vdux'
 import map from '@f/map'
+
+/**
+ * Assets
+ */
 
 const cloudFS = require('cloud-fs')
 const speedGrades = cloudFS.url('./files/speed-grades.png')
@@ -17,32 +21,37 @@ const comp = cloudFS.url('./files/comp.png')
 const bolt = cloudFS.url('./files/bolt.png')
 const xray = cloudFS.url('./files/xray.png')
 
-
 /**
- * Render
+ * <InfoBlocks/>
  */
 
-function render () {
-  return (
-    <Block id='info' w='col_main' m='0 auto'>
-      <Flex column align='center center' py='50'>
-        <Image src={spark} w='150' my='12px'/>
-        <Text fs='l' my='l' fw='bold'>
-          We Believe Teachers are Superheroes
-        </Text>
-        <Text fs='m'>
-          Enhance your powers with Weo!
-        </Text>
-      </Flex>
-      { map(infoItem, info) }
-    </Block>
-  )
-}
+export default component({
+  render () {
+    return (
+      <Block id='info' w='col_main' m='0 auto'>
+        <Flex column align='center center' py='50'>
+          <Image src={spark} w='150' my='12px' />
+          <Text fs='l' my='l' fw='bold'>
+            We Believe Teachers are Superheroes
+          </Text>
+          <Text fs='m'>
+            Enhance your powers with Weo!
+          </Text>
+        </Flex>
+        { map(infoItem, info) }
+      </Block>
+    )
+  }
+})
+
+/**
+ * Info items
+ */
 
 function infoItem (info, i) {
   return (
     <Flex py='50'>
-      <Flex column align='center' flex='50%' px='l' order={i%2}>
+      <Flex column align='center' flex='50%' px='l' order={i % 2}>
         <Image src={info.image} m='0 auto' maxWidth='90%' display='block' />
       </Flex>
       <Flex column align='center center' flex='50%' px='l' textAlign='center'>
@@ -78,14 +87,5 @@ const info = [
     description: 'Peek inside the minds of your students. Use assignment overviews to quickly understand where your students are struggling so you can help them more effectively.',
     icon: xray,
     image: students
-  },
+  }
 ]
-
-
-/**
- * Exports
- */
-
-export default {
-  render
-}

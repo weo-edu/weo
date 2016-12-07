@@ -2,7 +2,6 @@
  * Imports
  */
 
-import Schema from '@weo-edu/schema'
 import user from './user'
 
 /**

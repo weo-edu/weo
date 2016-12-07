@@ -5,34 +5,35 @@
 import OutlineButton from 'components/OutlineButton'
 import AssignModal from 'modals/AssignModal'
 import SignUpModal from 'modals/SignUpModal'
-import {openModal} from 'reducer/modal'
-import element from 'vdux/element'
+import {component, element} from 'vdux'
 
 /**
  * <AssignButton/>
  */
 
-function render ({props}) {
-  const {text, user, activity, onClick = [], onAssign, ...rest} = props
-  const action = () => openModal(() =>
-    user
-      ? <AssignModal onAssign={onAssign} activity={activity} />
-      : <SignUpModal />)
-  return (
-    <OutlineButton
-      onClick={[].concat(onClick, action)}
-      color='green'
-      icon='send'
-      {...rest}>
-      {text}
-    </OutlineButton>
-  )
-}
+export default component({
+  render ({props, actions}) {
+    const {text, onClick = [], ...rest} = props
 
-/**
- * Exports
- */
+    return (
+      <OutlineButton
+        onClick={[].concat(onClick, actions.openModalAction)}
+        color='green'
+        icon='send'
+        {...rest}>
+        {text}
+      </OutlineButton>
+    )
+  },
 
-export default {
-  render
-}
+  controller: {
+    * openModalAction ({context, props}) {
+      const {onAssign, user, activity} = props
+
+      yield context.openModal(() => user
+        ? <AssignModal onAssign={onAssign} activity={activity} />
+        : <SignUpModal />
+      )
+    }
+  }
+})

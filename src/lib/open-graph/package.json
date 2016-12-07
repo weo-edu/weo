@@ -1,0 +1,5 @@
+{
+  "name": "open-graph",
+  "main": "open-graph.js",
+  "browser": "open-graph.js"
+}

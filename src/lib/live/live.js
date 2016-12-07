@@ -2,101 +2,114 @@
  * Imports
  */
 
-import {subscribe, unsubscribe} from 'middleware/socket'
-import handleActions from '@f/handle-actions'
-import createAction from '@f/create-action'
-import element from 'vdux/element'
-import equal from '@f/equal'
+import socket, {subscribe, unsubscribe} from 'middleware/socket'
+import {component, element} from 'vdux'
+import deepEqual from '@f/deep-equal'
 import map from '@f/map'
 import has from '@f/has'
 
 /**
- * Actions
+ * Live HOC
  */
 
-const update = createAction('live: update')
-const changeValue = createAction('live: change value')
+export default fn => Component => component({
+  initialState: ({props}) => map((val, key) => ({
+    history: [],
+    value: undefined
+  }), fn(props)),
 
-/**
- * Live
- */
+  * onCreate ({props, path, actions}) {
+    const descriptors = fn(props)
 
-function live (fn) {
-  return Component => ({
-    * onCreate ({props, path, local}) {
-      const descriptors = fn(props)
+    for (const key in descriptors) {
+      if (!descriptors[key]) continue
 
-      for (const key in descriptors) {
-        if (!descriptors[key]) continue
+      yield subscribe({
+        ...normalize(descriptors[key]),
+        path,
+        cb: msg => actions.update(key, msg)
+      })
+    }
+  },
+
+  middleware: typeof window !== 'undefined' && [
+    socket
+  ],
+
+  render ({props, state, children}) {
+    const newProps = map(
+      (val, key) => has(key, state)
+        ? {...val, value: val.value && state[key].value ? state[key].value : val.value}
+        : val,
+        props
+    )
+
+    return (
+      <Component {...newProps}>{children}</Component>
+    )
+  },
+
+  * onUpdate (prev, next) {
+    const pdescs = fn(prev.props)
+    const ndescs = fn(next.props)
+
+    for (const key in ndescs) {
+      const pdesc = normalize(pdescs[key])
+      const ndesc = normalize(ndescs[key])
+      if (!ndesc) continue
+
+      if (prev.props[key] && next.props[key] && prev.props[key].value !== next.props[key].value) {
+        yield next.actions.change(key, next.props[key].value)
+      }
+
+      if (!pdesc || pdesc.url !== ndesc.url || !deepEqual(pdesc.params, ndesc.params)) {
+        if (pdesc) {
+          yield next.actions.clearHistory(key)
+          yield unsubscribe({...pdesc, path: prev.path})
+        }
 
         yield subscribe({
-          ...normalize(descriptors[key]),
-          path,
-          cb: msg => local(update)({key, msg})
-        })
-      }
-    },
-
-    render ({props, state, children}) {
-      const newProps = map(
-        (val, key) => has(key, state)
-          ? {...val, value: val.value && state[key] ? state[key] : val.value}
-          : val,
-          props
-      )
-
-      return (
-        <Component {...newProps}>{children}</Component>
-      )
-    },
-
-    * onUpdate (prev, next) {
-      const pdescs = fn(prev.props)
-      const ndescs = fn(next.props)
-
-      for (const key in ndescs) {
-        const pdesc = normalize(pdescs[key])
-        const ndesc = normalize(ndescs[key])
-        if (!ndesc) continue
-
-        if (!pdesc || pdesc.url !== ndesc.url || !equal(pdesc.params, ndesc.params)) {
-          if (pdesc) yield unsubscribe({...pdesc, path: prev.path})
-          yield subscribe({
-            ...ndesc,
-            path: next.path,
-            cb: msg => next.local(update)({key, msg})
-          })
-        }
-
-        if (prev.props[key] && next.props[key] && prev.props[key].value !== next.props[key].value) {
-          yield next.local(changeValue)({key, value: next.props[key].value})
-        }
-      }
-    },
-
-    reducer: handleActions({
-      [changeValue]: (state, {key, value}) => state && ({
-        ...state,
-        [key]: value
-      }),
-      [update]: (state, {key, msg}) => state && (state[key] ? ({
-        ...state,
-        [key]: applyUpdate(state[key], msg)
-      }) : state)
-    }),
-
-    * onRemove ({props, path}) {
-      const descriptors = fn(props)
-
-      for (const key in descriptors) {
-        yield unsubscribe({
-          ...normalize(descriptors[key]),
-          path
+          ...ndesc,
+          path: next.path,
+          cb: msg => next.actions.update(key, msg)
         })
       }
     }
-  })
-}
+  },
+
+  reducer: {
+    clearHistory: (state, key) => ({
+      [key]: {
+        ...state[key],
+        history: []
+      }
+    }),
+    change: (state, key, value) => ({
+      [key]: {
+        ...state[key],
+        value: state[key].history.reduce(applyUpdate, value)
+      }
+    }),
+    update: (state, key, msg) => state[key] && ({
+      [key]: {
+        ...state[key],
+        history: state[key].history.concat(msg),
+        value: applyUpdate(state[key].value, msg)
+      }
+    })
+  },
+
+  * onRemove ({props, path}) {
+    const descriptors = fn(props)
+
+    for (const key in descriptors) {
+      yield unsubscribe({
+        ...normalize(descriptors[key]),
+        path
+      })
+    }
+  }
+})
 
 /**
  * Helpers
@@ -111,7 +124,7 @@ function normalize (descriptor) {
 function applyUpdate (prev, {data, verb}) {
   switch (verb) {
     case 'change': {
-      if (prev._id) return data
+      if (!prev || prev._id) return data
 
       return {
         ...prev,
@@ -119,7 +132,12 @@ function applyUpdate (prev, {data, verb}) {
       }
     }
     case 'add': {
-      if (prev._id) throw new Error('Cannot add to scalar value')
+      if (!prev || prev._id) throw new Error('Cannot add to scalar value')
+
+      // If it's already there, don't do anything
+      if (prev.items.some(item => item._id === data._id)) {
+        return prev
+      }
 
       return {
         ...prev,
@@ -127,7 +145,7 @@ function applyUpdate (prev, {data, verb}) {
       }
     }
     case 'remove': {
-      if (prev._id) throw new Error('Cannot remove from scalar value')
+      if (!prev || prev._id) throw new Error('Cannot remove from scalar value')
 
       return {
         ...prev,
@@ -139,9 +157,3 @@ function applyUpdate (prev, {data, verb}) {
     }
   }
 }
-
-/**
- * Exports
- */
-
-export default live

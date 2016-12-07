@@ -2,43 +2,30 @@
  * Imports
  */
 
-import {setUrl} from 'redux-effects-location'
-import element from 'vdux/element'
-
-/**
- * onCreate
- */
-
-function onCreate ({props}) {
-  return setUrl(props.to, true)
-}
+import {component, element} from 'vdux'
 
 /**
  * <Redirect/>
  */
 
-function render ({props}) {
-  return <span/>
-}
+export default component({
+  onCreate ({props, context}) {
+    return context.setUrl(props.to, true)
+  },
 
-/**
- * onUpdate
- *
- * Support multiple redirects (the original redirect may
- * not be destroyed in the diff if we've just swapped the
- * url)
- */
+  render ({props}) {
+    return <span />
+  },
 
-function onUpdate (prev, {props}) {
-  return setUrl(props.to, true)
-}
+  /**
+   * onUpdate
+   *
+   * Support multiple redirects (the original redirect may
+   * not be destroyed in the diff if we've just swapped the
+   * url)
+   */
 
-/**
- * Exports
- */
-
-export default {
-  onCreate,
-  onUpdate,
-  render
-}
+  onUpdate (prev, {context, props}) {
+    return context.setUrl(props.to, true)
+  }
+})

@@ -10,21 +10,23 @@ import index from '@f/index'
  */
 
 function questionIcon (question) {
-  if(typeof question === 'string')
+  if (typeof question === 'string') {
     return typeIcon(question)
-  else if(question.poll)
+  } else if (question.poll) {
     return typeIcon('poll')
-  else
+  } else {
     return typeIcon(question.attachments[0].objectType)
+  }
 }
 
 function questionDisplay (question) {
-  if(typeof question === 'string')
+  if (typeof question === 'string') {
     return typeDisplay(question)
-  else if (question.poll)
+  } else if (question.poll) {
     return typeDisplay('poll')
-  else
+  } else {
     return typeDisplay(question.attachments[0].objectType)
+  }
 }
 
 function typeIcon (type) {
@@ -95,7 +97,7 @@ function getOverviewQuestions (attachments, instances) {
   const questions = []
   const attList = [].concat(attachments)
   attList.forEach((attachment, i) => {
-    if(attachment.objectType === 'question') {
+    if (attachment.objectType === 'question') {
       const length = questions.push({
         total: 0,
         numAnswered: 0,
@@ -103,7 +105,7 @@ function getOverviewQuestions (attachments, instances) {
         ...attachment
       })
       instances.forEach(instance => {
-        if(instance.status >= 4 || attachment.poll) {
+        if (instance.status >= 4 || attachment.poll) {
           const {actor, _object} = instance
           const question = _object[0].attachments[i]
           const {points, response} = question
@@ -118,14 +120,13 @@ function getOverviewQuestions (attachments, instances) {
   return questions
 }
 
-
 function combineInstancesAndStudents (activity, students, instances) {
   const studentToInstance = index(inst => inst.actor.id, instances)
   const {instances: {total = []}} = activity
   const {actors} = total[0] || {}
   const totalPts = totalPoints(activity)
 
-  if(!actors) return []
+  if (!actors) return []
 
   return students.map(student => {
     const actor = actors[student._id]
@@ -155,7 +156,6 @@ const statusMap = {
   graded: 4,
   returned: 5
 }
-
 
 /**
  * Exports

@@ -2,7 +2,7 @@
  * Imports
  */
 
-import element from 'vdux/element'
+import {element} from 'vdux'
 import RoundedInput from '.'
 import vdux from 'vdux/dom'
 import test from 'tape'

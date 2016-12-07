@@ -7,39 +7,47 @@ import EmptyState from 'components/EmptyState'
 import summonSearch from 'lib/summon-search'
 import {Text, Block} from 'vdux-containers'
 import TileFeed from 'components/TileFeed'
-import {openModal} from 'reducer/modal'
-import element from 'vdux/element'
-import {Icon} from 'vdux-ui'
+import {component, element} from 'vdux'
 
 /**
- * SearchActivities
+ * <SearchActivities/>
  */
 
-function render({props}) {
-  const {query, currentUser} = props
-  return (
-    <TileFeed emptyState={<EmptySearch query={query} currentUser={currentUser} />} {...props} />
-  )
-}
+export default summonSearch('myShares', 'activities')(component({
+  render ({props}) {
+    const {query, currentUser} = props
 
-function EmptySearch({props}) {
-  const {query, currentUser} = props
-  return(
-    <EmptyState icon='assignment_ind' color='green'>
-      You haven't created any activities for <Text bold>{query}</Text>
-      <Block
-        onClick={() => openModal(() => <CreateActivityModal currentUser={currentUser} />)}
-        hoverProps={{underline: true}}
-        color='blue'
-        pointer>
-        Create one now!
-      </Block>
-    </EmptyState>
-  )
-}
+    return (
+      <TileFeed emptyState={<EmptySearch query={query} currentUser={currentUser} />} {...props} />
+    )
+  }
+}))
 
 /**
- * Exports
+ * <EmptySearch/>
  */
 
-export default summonSearch('myShares', 'activities')({render})
+const EmptySearch = component({
+  render ({props, actions}) {
+    const {query} = props
+
+    return (
+      <EmptyState icon='assignment_ind' color='green'>
+        You haven't created any activities for <Text bold>{query}</Text>
+        <Block
+          onClick={actions.createActivity}
+          hoverProps={{underline: true}}
+          color='blue'
+          pointer>
+          Create one now!
+        </Block>
+      </EmptyState>
+    )
+  },
+
+  controller: {
+    * createActivity ({props, context}) {
+      yield context.openModal(() => <CreateActivityModal currentUser={props.currentUser} />)
+    }
+  }
+})

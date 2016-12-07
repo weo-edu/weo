@@ -3,39 +3,55 @@
  */
 
 import {Modal, Block, Icon, Text} from 'vdux-ui'
-import {closeModal} from 'reducer/modal'
+import {component, element} from 'vdux'
 import {Button} from 'vdux-containers'
-import element from 'vdux/element'
+
+/**
+ * Constants
+ */
+
+const overlayPrint = {
+  overflow: 'visible',
+  w: '100%',
+  h: 'auto',
+  position: 'relative'
+}
 
 /**
  * <PrintLoginModal/>
  */
 
-function render ({props}) {
-  const {user} = props
-  const overlayPrint = {
-    overflow: 'visible',
-    w: '100%',
-    h: 'auto',
-    position: 'relative'
-  }
+export default component({
+  render ({props, actions, context}) {
+    const {user} = props
 
-  return (
-    <Modal mt='0' w='800px' onDismiss={closeModal} pb='s' overlayProps={{printProps: overlayPrint}} printProps={{w: '100%', h: 'auto'}} relative>
-      <Block p bg='grey' align='space-between' printProps={{display: 'none'}}>
-        <Button bgColor='off_white' color='text' onClick={closeModal}>
-          Cancel
-        </Button>
-        <Button onClick={() => window.print()}>
-          <Icon name='print' fs='s' mr='s'/> Print
-        </Button>
-      </Block>
+    return (
+      <Modal mt='0' w='800px' onDismiss={context.closeModal} pb='s' overlayProps={{printProps: overlayPrint}} printProps={{w: '100%', h: 'auto'}} relative>
+        <Block p bg='grey' align='space-between' printProps={{display: 'none'}}>
+          <Button bgColor='off_white' color='text' onClick={context.closeModal}>
+            Cancel
+          </Button>
+          <Button onClick={actions.print}>
+            <Icon name='print' fs='s' mr='s' /> Print
+          </Button>
+        </Block>
         {
-          user.map((u, i) => <InfoBlock last={user.length === i + 1} user={u}/>)
-        }
-    </Modal>
-  )
-}
+            user.map((u, i) => <InfoBlock last={user.length === i + 1} user={u} />)
+          }
+      </Modal>
+    )
+  },
+
+  controller: {
+    print () {
+      window.print()
+    }
+  }
+})
+
+/**
+ * <InfoBlock/>
+ */
 
 function InfoBlock ({props}) {
   const {user, last} = props
@@ -64,12 +80,4 @@ function InfoBlock ({props}) {
       </Block>
     </Block>
   )
-}
-
-/**
- * Exports
- */
-
-export default {
-  render
 }

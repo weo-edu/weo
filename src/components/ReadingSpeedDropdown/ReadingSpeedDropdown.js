@@ -2,54 +2,14 @@
  * Imports
  */
 
-import {Block, Flex} from 'vdux-ui'
 import {Dropdown, Button, MenuItem} from 'vdux-containers'
-import element from 'vdux/element'
+import {component, element} from 'vdux'
 import summon from 'vdux-summon'
+import {Block} from 'vdux-ui'
 
 /**
- * <ReadingSpeedDropdown/>
+ * Constants
  */
-
-function render ({props}) {
-  const {user, setSpeed} = props
-  const {preferences = {}} = user
-  const {speech_speed: speed = 1} = preferences
-
-  return (
-    <Block display='inline-block' fw='normal'>
-      <Dropdown mb='l' wide btn={
-          <Button
-            focusProps={{highlight: .01}}
-            hoverProps={{highlight: .01}}
-            border='1px solid text'
-            bgColor='white'
-            color='text'
-            px>
-            Reading Speed:
-            <Block fontFamily='monoSpace' ml='s'>
-              {speed.toFixed(1) || '1.0'}
-            </Block>
-          </Button>
-        }>
-        {
-          speeds.map(({displayName, val}) => <MenuItem
-            onClick={() => setSpeed(val)}
-            align='start space-between'
-            fs='xs'
-            py>
-              <Block flex>
-                {displayName}
-              </Block>
-              <Block fontFamily='monospace'>
-                {val.toFixed(1)}
-              </Block>
-            </MenuItem>)
-        }
-      </Dropdown>
-    </Block>
-  )
-}
 
 const speeds = [
   {
@@ -74,21 +34,60 @@ const speeds = [
   }
 ]
 
+const highlight = {highlight: 0.01}
+
 /**
- * Exports
+ * <ReadingSpeedDropdown/>
  */
 
 export default summon(({currentUser}) => ({
   setSpeed: (val) => ({
-    savingPreference:  {
+    savingPreference: {
       url: '/preference/speech_speed',
-      invalidates: '/user',
       method: 'PUT',
       body: {
         value: val
       }
     }
   })
-}))({
-  render
-})
+}))(component({
+  render ({props}) {
+    const {user, setSpeed} = props
+    const {preferences = {}} = user
+    const {speech_speed: speed = 1} = preferences
+
+    return (
+      <Block display='inline-block' fw='normal'>
+        <Dropdown mb='l' wide btn={
+          <Button
+            focusProps={highlight}
+            hoverProps={highlight}
+            border='1px solid text'
+            bgColor='white'
+            color='text'
+            px>
+              Reading Speed:
+            <Block fontFamily='monoSpace' ml='s'>
+              {speed.toFixed(1) || '1.0'}
+            </Block>
+          </Button>
+          }>
+          {
+            speeds.map(({displayName, val}) => <MenuItem
+              onClick={setSpeed(val)}
+              align='start space-between'
+              fs='xs'
+              py>
+              <Block flex>
+                {displayName}
+              </Block>
+              <Block fontFamily='monospace'>
+                {val.toFixed(1)}
+              </Block>
+            </MenuItem>)
+          }
+        </Dropdown>
+      </Block>
+    )
+  }
+}))

@@ -3,28 +3,29 @@
  */
 
 import {Flex, Block, Text} from 'vdux-ui'
+import {component, element} from 'vdux'
 import Link from 'components/Link'
-import element from 'vdux/element'
 import map from '@f/map'
 
 /**
  * Home Header
  */
 
-function render () {
+export default component({
+  render () {
+    return (
+      <Flex tag='footer' align='center center' bg='grey' color='white' p='l' relative>
+        <Text color='gray'>© 2015 WEO All rights reserved</Text>
+        { map(link, links) }
+        <Link href='https://mixpanel.com/f/partner' rel='nofollow' absolute right='12px' top bottom h='36' m='auto' target='_blank'>
+          <img src='https://cdn.mxpnl.com/site_media/images/partner/badge_light.png' alt='Mobile Analytics' />
+        </Link>
+      </Flex>
+    )
+  }
+})
 
-  return (
-    <Flex tag='footer' align='center center' bg='grey' color='white' p='l' relative>
-      <Text color='gray'>© 2015 WEO All rights reserved</Text>
-      { map(link, links) }
-      <Link href="https://mixpanel.com/f/partner" rel="nofollow" absolute right='12px' top bottom h='36' m='auto' target='_blank'>
-        <img src="https://cdn.mxpnl.com/site_media/images/partner/badge_light.png" alt="Mobile Analytics"/>
-      </Link>
-    </Flex>
-  )
-}
-
-function link(a) {
+function link (a) {
   return (
     <Block>
       <Text px='m'>|</Text>
@@ -45,11 +46,5 @@ const links = [
   {
     displayName: 'Terms of Service',
     url: 'http://about.weo.io/terms'
-  },
+  }
 ]
-
-/**
- * Exports
- */
-
-export default render

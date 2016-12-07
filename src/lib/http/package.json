@@ -1,5 +1,0 @@
-{
-  "name": "http",
-  "main": "http.js",
-  "browser": "http.js"
-}

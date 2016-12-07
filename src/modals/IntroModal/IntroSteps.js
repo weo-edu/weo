@@ -2,8 +2,12 @@
  * Imports
  */
 
-import {Block, Modal, Image, Text, Icon, Flex} from 'vdux-ui'
-import element from 'vdux/element'
+import {Block, Image, Text, Icon} from 'vdux-ui'
+import {component, element} from 'vdux'
+
+/**
+ * Assets
+ */
 
 const cloudFS = require('cloud-fs')
 const assign = cloudFS.url('./images/assign.gif')
@@ -14,41 +18,11 @@ const grades = cloudFS.url('./images/grades.gif')
 const invite = cloudFS.url('./images/invite.gif')
 
 /**
- * <IntroSteps/>
+ * Constants
  */
 
-function render ({props}) {
-  const {cur, counts} = props
-
-  return (
-    <Block bg='linear-gradient(#00a79d, #92bd9d)' wide tall color='white'>
-      <Block w='80%' m='0 auto' >
-        <Text pt='30' pb fs='23' fw='200' align='start center'>
-          <Icon name={steps[cur].icon} fs='70' mr='16' />
-          {steps[cur].text}
-        </Text>
-        {
-          steps.map((step, i) => stepItem(step, i, cur, counts))
-        }
-      </Block>
-    </Block>
-  )
-}
-
-function stepItem(step, i, cur, counts) {
-  const url =  step.image + '?v=' + (counts[i] || 0)
-
-  return (
-    <Block relative>
-      <Image src={url} wide my='l' absolute top right left bottom opacity={+(cur === i)} transition='opacity .35s'/>
-    </Block>
-  )
-}
-
-
-
-
-const steps = [{
+const steps = [
+  {
     icon: 'grade',
     image: feed,
     text: 'Welcome to Weo. Start creating and sharing activities with your colleagues and students.'
@@ -77,13 +51,49 @@ const steps = [{
     icon: 'local_play',
     image: invite,
     text: 'Invite friends to share and collaborate on activities to use in your classroom.'
-  }]
+  }
+]
+
+const numSteps = steps.length
 
 /**
- * Exports
+ * <IntroSteps/>
  */
 
-export default {
-  render,
-  numSteps: steps.length
+export default component({
+  render ({props}) {
+    const {cur, counts} = props
+
+    return (
+      <Block bg='linear-gradient(#00a79d, #92bd9d)' wide tall color='white'>
+        <Block w='80%' m='0 auto' >
+          <Text pt='30' pb fs='23' fw='200' align='start center'>
+            <Icon name={steps[cur].icon} fs='70' mr='16' />
+            {steps[cur].text}
+          </Text>
+          {
+            steps.map((step, i) => stepItem(step, i, cur, counts))
+          }
+        </Block>
+      </Block>
+    )
+  }
+})
+
+export {
+  numSteps
+}
+
+/**
+ * Helpers
+ */
+
+function stepItem (step, i, cur, counts) {
+  const url = step.image + '?v=' + (counts[i] || 0)
+
+  return (
+    <Block relative>
+      <Image src={url} wide my='l' absolute top right left bottom opacity={+(cur === i)} transition='opacity .35s' />
+    </Block>
+  )
 }

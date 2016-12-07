@@ -2,85 +2,15 @@
  * Imports
  */
 
-import {Modal, ModalBody, ModalFooter, ModalHeader, Flex, Block, Text} from 'vdux-ui'
+import {Modal, ModalBody, ModalFooter, ModalHeader, Flex, Text} from 'vdux-ui'
 import SubjectSelector from 'components/SubjectSelector'
-import handleActions from '@f/handle-actions'
-import createAction from '@f/create-action'
-import {closeModal} from 'reducer/modal'
+import {component, element} from 'vdux'
 import {Button} from 'vdux-containers'
-import element from 'vdux/element'
 import summon from 'vdux-summon'
 import Form from 'vdux-form'
 
 /**
- * initialState
- */
-
-function initialState ({props}) {
-  const {user} = props
-  const {subjects = []} = user
-
-  return {
-    subjects
-  }
-}
-
-/**
  * <SubjectPickerModal/>
- */
-
-function render ({props, state, local}) {
-  const {user, changeSubjects, changingSubjects = {}, onClose = () => {}} = props
-  const {loading} = changingSubjects
-  const {subjects} = state
-
-  return (
-    <Modal onDismiss={close}>
-      <Form onSubmit={() => changeSubjects(subjects)} onSuccess={close}>
-        <Flex ui={ModalBody} column align='center center' pb='l'>
-          <ModalHeader>
-            Subjects
-          </ModalHeader>
-          <SubjectSelector selected={subjects} toggle={local(toggle)} />
-        </Flex>
-        <ModalFooter bg='grey'>
-          <Text fs='xxs'>
-            <Text pointer underline onClick={close}>cancel</Text>
-            <Text mx>or</Text>
-          </Text>
-          <Button type='submit' busy={loading}>Update</Button>
-        </ModalFooter>
-      </Form>
-    </Modal>
-  )
-
-  function * close () {
-    yield closeModal()
-    yield onClose()
-  }
-}
-
-/**
- * Actions
- */
-
-const toggle = createAction('<SubjectPickerModal/>: toggle subject')
-
-/**
- * Reducer
- */
-
-const reducer = handleActions({
-  [toggle]: (state, subject) => ({
-    ...state,
-    subjects: state.subjects.indexOf(subject) === -1
-      ? [...state.subjects, subject]
-      : state.subjects.filter(s => s !== subject)
-  })
-})
-
-/**
- * Exports
  */
 
 export default summon(({user}) => ({
@@ -88,14 +18,54 @@ export default summon(({user}) => ({
     changingSubjects: {
       url: `/user/${user._id}/subjects`,
       method: 'PUT',
-      invalidates: '/user',
       body: {
         subjects
       }
     }
   })
-}))({
-  initialState,
-  render,
-  reducer
-})
+}))(component({
+  initialState: ({props}) => ({
+    subjects: props.user.subjects || []
+  }),
+
+  render ({props, state, actions}) {
+    const {changeSubjects, changingSubjects = {}} = props
+    const {loading} = changingSubjects
+    const {subjects} = state
+
+    return (
+      <Modal onDismiss={actions.close}>
+        <Form onSubmit={changeSubjects(subjects)} onSuccess={actions.close}>
+          <Flex ui={ModalBody} column align='center center' pb='l'>
+            <ModalHeader>
+              Subjects
+            </ModalHeader>
+            <SubjectSelector selected={subjects} toggle={actions.toggle} />
+          </Flex>
+          <ModalFooter bg='grey'>
+            <Text fs='xxs'>
+              <Text pointer underline onClick={actions.close}>cancel</Text>
+              <Text mx>or</Text>
+            </Text>
+            <Button type='submit' busy={loading}>Update</Button>
+          </ModalFooter>
+        </Form>
+      </Modal>
+    )
+  },
+
+  controller: {
+    * close ({context, props}) {
+      yield context.closeModal()
+      if (props.onClose) yield props.onClose()
+    }
+  },
+
+  reducer: {
+    toggle: (state, subject) => ({
+      subjects: state.subjects.indexOf(subject) === -1
+        ? [...state.subjects, subject]
+        : state.subjects.filter(s => s !== subject)
+    })
+  }
+}))

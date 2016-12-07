@@ -1,5 +1,0 @@
-{
-  "name": "log-level",
-  "main": "log-level.js",
-  "browser": "log-level.js"
-}

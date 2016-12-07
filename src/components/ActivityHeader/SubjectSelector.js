@@ -3,83 +3,109 @@
  */
 
 import {Button, Dropdown, MenuItem, Checkbox, Tooltip} from 'vdux-containers'
-import handleActions from '@f/handle-actions'
-import createAction from '@f/create-action'
+import {t, stopPropagation, component, element} from 'vdux'
 import subjects from '@weo-edu/subjects'
 import mapValues from '@f/map-values'
-import element from 'vdux/element'
 import {Block, Icon} from 'vdux-ui'
-import map from '@f/map'
 
 /**
- * Render
+ * <SubjectSelector/>
  */
 
+export default component({
+  propTypes: {
+    selected: t.Array,
+    toggle: t.Function,
+    max: t.maybe(t.Integer)
+  },
 
-function render ({props, local, state}) {
-  const current = state.category
-  const {selected, toggle, max} = props
-  const {error} = state
-  const sbjList = []
-  const counts = {}
+  render ({props, state, actions}) {
+    const current = state.category
+    const {selected} = props
+    const {error} = state
+    const sbjList = []
+    const counts = {}
 
-  const selectedList = mapValues(t => { return t.displayName }, selected)
+    const selectedList = mapValues(t => { return t.displayName }, selected)
 
-  mapValues((cat, key) =>
-    cat.forEach(({displayName}) => {
-      if(selectedList.indexOf(displayName) !== -1) {
-        sbjList.push(displayName)
-        counts[key] = counts[key] ? ++counts[key] : 1
-      }
-  }), subjects)
+    mapValues((cat, key) =>
+      cat.forEach(({displayName}) => {
+        if (selectedList.indexOf(displayName) !== -1) {
+          sbjList.push(displayName)
+          counts[key] = counts[key] ? ++counts[key] : 1
+        }
+      }), subjects)
 
-  const text = sbjList.length ? sbjList.join(', ') : 'Subject Selector'
-  const btnStyle = sbjList.length ? {'bold': true, color: 'blue'} : {}
+    const text = sbjList.length ? sbjList.join(', ') : 'Subject Selector'
+    const btnStyle = sbjList.length ? {'bold': true, color: 'blue'} : {}
 
-  return (
-    <Dropdown w={505} left btn={<DDBtn {...btnStyle} text={text}/>} onClick={e => e.stopPropagation()} onClose={local(setError, null)}>
-      <Block align='start' my={-6}>
-        <Block flex='35%' borderRight='1px solid grey_light' py={6}>
-          {
-            map(category =>
-              <Category
-                onClick={local(setCategory, category)}
-                category={category}
-                current={current}
-                count={counts[category]}/>,
-            Object.keys(subjects))
-          }
-        </Block>
-        <Block flex py={6}>
-          {
-            current
-              ? map(subject => <Item tag={subject} selected={sbjList} toggle={toggleSubject} error={error === subject.displayName} />, subjects[current])
-              : <Block p='8px 16px' fs='xs' color='grey_medium'>
-                  Select a Subject Area
+    return (
+      <Dropdown w={505} left btn={<DDBtn {...btnStyle} text={text} />} onClick={stopPropagation} onClose={actions.setError(null)}>
+        <Block align='start' my={-6}>
+          <Block flex='35%' borderRight='1px solid grey_light' py={6}>
+            {
+              Object
+                .keys(subjects)
+                .map(category => (
+                  <Category
+                    onClick={actions.setCategory(category)}
+                    category={category}
+                    current={current}
+                    count={counts[category]} />
+                ))
+            }
+          </Block>
+          <Block flex py={6}>
+            {
+              current
+                ? subjects[current].map(subject => <Item tag={subject} selected={sbjList} toggle={actions.toggleSubject(sbjList)} error={error === subject.displayName} />)
+                : <Block p='8px 16px' fs='xs' color='grey_medium'>
+                    Select a Subject Area
                 </Block>
 
-          }
+            }
+          </Block>
         </Block>
-      </Block>
-    </Dropdown>
-  )
+      </Dropdown>
+    )
+  },
 
-  function * toggleSubject (subject) {
-    if (sbjList.indexOf(subject.displayName) === -1 && sbjList.length + 1 > max) {
-      yield local(setError, subject.displayName)()
-    } else {
-      yield local(setError, null)()
-      yield toggle(subject)
+  controller: {
+    * toggleSubject ({props, actions}, sbjList, subject) {
+      const {toggle, max = Infinity} = props
+
+      if (sbjList.indexOf(subject.displayName) === -1 && sbjList.length + 1 > max) {
+        yield actions.setError(subject.displayName)
+      } else {
+        yield actions.setError(null)
+        yield toggle(subject)
+      }
     }
+  },
+
+  reducer: {
+    setError: (state, error) => ({error}),
+    setCategory: (state, category) => ({category})
   }
-}
+})
+
+/**
+ * Constants
+ */
+
+const highlight = {highlight: 0.02}
+
+/**
+ * <DDBtn/>
+ */
 
 function DDBtn ({props}) {
   const {text, ...rest} = props
+
   return (
     <Button
-      hoverProps={{highlight: 0.02}}
-      focusProps={{highlight: 0.02}}
+      hoverProps={highlight}
+      focusProps={highlight}
       bgColor='off_white'
       textAlign='left'
       color='text'
@@ -96,11 +122,16 @@ function DDBtn ({props}) {
   )
 }
 
+/**
+ * <Category/>
+ */
+
 function Category ({props}) {
   const {current, category, count, ...rest} = props
   const curProps = current === category
     ? {bgColor: 'blue', color: 'white'}
     : {}
+
   return (
     <MenuItem bold fs='xs' p='3px 6px 3px 12px' align='start center' capitalize {...rest} {...curProps}>
       <Block flex>
@@ -114,6 +145,10 @@ function Category ({props}) {
   )
 }
 
+/**
+ * <Item/>
+ */
+
 function Item ({props}) {
   const {tag, selected, toggle, error} = props
   const {displayName} = tag
@@ -124,43 +159,18 @@ function Item ({props}) {
 
   return (
     <MenuItem
-      onClick={() => toggle(tag)}
+      onClick={toggle(tag)}
       align='start center'
       {...errorProps}
       p='5px 8px'
       tag='label'
       capitalize
       fs='xs'>
-      <Checkbox mr='s' checkProps={{sq: 15}} checked={checked}/>
+      <Checkbox mr='s' checkProps={{sq: 15}} checked={checked} />
       <Block flex>
         {displayName}
       </Block>
       <Tooltip tooltipProps={{color: 'white', show: error, bgColor: 'red'}} placement='right' message='3 subjects max' />
     </MenuItem>
   )
-}
-
-/**
- * Actions
- */
-
-const setCategory = createAction('<SubjectSelector />: setCategory')
-const setError = createAction('<GradeSelector/>: set error')
-
-/**
- * Reducer
- */
-
-const reducer = handleActions({
-  [setCategory]: (state, category) => ({...state, category}),
-  [setError]: (state, error) => ({...state, error})
-})
-
-/**
- * Exports
- */
-
-export default {
-  render,
-  reducer
 }

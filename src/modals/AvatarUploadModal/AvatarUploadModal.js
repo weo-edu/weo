@@ -2,18 +2,13 @@
  * Imports
  */
 
-import {Modal, ModalBody, ModalFooter, ModalHeader, Text, Block, Flex, Icon, Base} from 'vdux-ui'
+import {Modal, ModalBody, ModalFooter, ModalHeader, Text, Block, Icon} from 'vdux-ui'
 import AvatarPickerModal from 'modals/AvatarPickerModal'
-import {closeModal, openModal} from 'reducer/modal'
-import {avatarDidUpdate} from 'reducer/avatarUpdates'
 import FileUpload from 'components/FileUpload'
-import handleActions from '@f/handle-actions'
-import {uploadFile} from 'middleware/upload'
-import createAction from '@f/create-action'
 import Cropper from 'components/Cropper'
+import {component, element} from 'vdux'
 import {Button} from 'vdux-containers'
 import cropImage from '@f/crop-image'
-import element from 'vdux/element'
 import summon from 'vdux-summon'
 
 /**
@@ -26,89 +21,94 @@ const tileWidth = 230
  * <AvatarUploadModal/>
  */
 
-function render ({props, local, state}) {
-  const {user, changeAvatar} = props
-  const {url, crop, loading} = state
+export default summon(props => ({
+  changeAvatar: avatar => ({
+    changingAvatar: {
+      url: '/avatar/',
+      method: 'PUT',
+      body: {
+        url: avatar
+      }
+    }
+  })
+}))(component({
+  render ({props, actions, context, state}) {
+    const {url, loading} = state
 
-  return (
-    <Modal onDismiss={closeModal}>
-      <ModalBody pb>
-        <ModalHeader>
-          Upload An Image
-        </ModalHeader>
-        <Block align='center center' h='360'>
-          {
-            url
-              ? <Cropper url={url} onCrop={local(setCrop)} />
-              : <FileUpload onUpload={local(setImage)} validate={validateFile} sq={300} />
-          }
-        </Block>
-      </ModalBody>
-      <ModalFooter bg='grey'>
-        <Block flex>
-          <Button bgColor='black' mr='s' fs='xs' h='30' px='25' onClick={() => openModal(() => <AvatarPickerModal user={user} />)}>
-            <Icon name='keyboard_arrow_left' fs='s' mr='s' />
-            Back
-          </Button>
-        </Block>
-        <Text fs='xxs'>
-          <Text pointer underline onClick={closeModal}>cancel</Text>
-           <Text mx>or</Text>
-        </Text>
-        <Button onClick={submit} busy={loading}>Update</Button>
-      </ModalFooter>
-    </Modal>
-  )
+    return (
+      <Modal onDismiss={context.closeModal}>
+        <ModalBody pb>
+          <ModalHeader>
+            Upload An Image
+          </ModalHeader>
+          <Block align='center center' h='360'>
+            {
+              url
+                ? <Cropper url={url} onCrop={actions.setCrop} />
+                : <FileUpload onUpload={actions.setImage} validate={validateFile} sq={300} />
+            }
+          </Block>
+        </ModalBody>
+        <ModalFooter bg='grey'>
+          <Block flex>
+            <Button bgColor='black' mr='s' fs='xs' h='30' px='25' onClick={actions.openPicker}>
+              <Icon name='keyboard_arrow_left' fs='s' mr='s' />
+              Back
+            </Button>
+          </Block>
+          <Text fs='xxs'>
+            <Text pointer underline onClick={context.closeModal}>cancel</Text>
+            <Text mx>or</Text>
+          </Text>
+          <Button onClick={actions.submit} busy={loading}>Update</Button>
+        </ModalFooter>
+      </Modal>
+    )
+  },
 
-  function * submit () {
-    let uploadUrl = url
+  controller: {
+    * openPicker ({context, props}) {
+      yield context.openModal(() => <AvatarPickerModal user={props.user} />)
+    },
 
-    yield local(beginLoading)()
+    * submit ({props, actions, context, state}) {
+      const {url, crop} = state
+      let uploadUrl = url
 
-    try {
-      if (crop) {
-        const {x, y, width, height} = crop.detail
-        const blob = cropImage(
-          crop.target,
-          x,
-          y,
-          width,
-          height,
-          tileWidth,
-          tileWidth)
+      yield actions.beginLoading()
 
-        uploadUrl = yield uploadFile(blob)
+      try {
+        if (crop) {
+          const {x, y, width, height} = crop.detail
+          const blob = cropImage(
+            crop.target,
+            x,
+            y,
+            width,
+            height,
+            tileWidth,
+            tileWidth)
+
+          uploadUrl = yield context.uploadFile(blob)
+        }
+
+        yield props.changeAvatar(uploadUrl)
+      } finally {
+        yield actions.endLoading
       }
 
-      yield changeAvatar(uploadUrl)
-    } finally {
-      yield local(endLoading)()
+      yield context.closeModal()
+      yield context.updateAvatar()
     }
+  },
 
-    yield closeModal()
-    yield avatarDidUpdate()
+  reducer: {
+    setImage: (state, {url}) => ({url}),
+    setCrop: (state, crop) => ({crop}),
+    beginLoading: () => ({loading: true}),
+    endLoading: () => ({loading: false})
   }
-}
-
-/**
- * Actions
- */
-
-const setImage = createAction('<AvatarUploadModal/>: set image')
-const setCrop = createAction('<AvatarUploadModal/>: set crop')
-const beginLoading = createAction('<AvatarUploadModal/>: begin loading')
-const endLoading = createAction('<AvatarUploadModal/>: end loading')
-
-/**
- * Reducer
- */
-
-const reducer = handleActions({
-  [setImage]: (state, {url}) => ({...state, url}),
-  [setCrop]: (state, crop) => ({...state, crop}),
-  [beginLoading]: state => ({...state, loading: true}),
-  [endLoading]: state => ({...state, loading: false})
-})
+}))
 
 /**
  * Helpers
@@ -135,22 +135,3 @@ function validateFile (file) {
 
   return {valid: true}
 }
-
-/**
- * Exports
- */
-
-export default summon(props => ({
-  changeAvatar: avatar => ({
-    changingAvatar: {
-      url: '/avatar/',
-      method: 'PUT',
-      body: {
-        url: avatar
-      }
-    }
-  })
-}))({
-  render,
-  reducer
-})

@@ -2,43 +2,49 @@
  * Imports
  */
 
-import Avatar from 'components/Avatar'
 import {Block, wrap, CSSContainer} from 'vdux-containers'
-import element from 'vdux/element'
+import {component, element} from 'vdux'
+import Avatar from 'components/Avatar'
 import map from '@f/map'
 
 /**
  * <ShortAnswerOverview/>
  */
 
-function render ({props}) {
-  const {responses = []} = props
+export default component({
+  render ({props}) {
+    const {responses = []} = props
 
-  if(!responses.length) {
+    if (!responses.length) {
+      return (
+        <Block
+          border='1px solid grey_light'
+          textAlign='center'
+          bgColor='off_white'
+          wide
+          p='l'>No Responses Yet</Block>
+      )
+    }
+
     return (
-      <Block
-        border='1px solid grey_light'
-        textAlign='center'
-        bgColor='off_white'
-        wide
-        p='l'>No Responses Yet</Block>
+      <Block wide>
+        { map(responder => <Response responder={responder} />, responses) }
+      </Block>
     )
   }
+})
 
-  return (
-    <Block wide>
-      { map(responder => <Response responder={responder} />, responses) }
-    </Block>
-  )
-}
+/**
+ * <Response/>
+ */
 
 const Response = wrap(CSSContainer, {
   focusProps: {focus: true},
   hoverProps: {hover: true}
 })({
   render ({props}) {
-  const {responder, focus, hover} = props
-  const {actor, response} = responder
+    const {responder, focus, hover} = props
+    const {actor, response} = responder
 
     return (
       <Block
@@ -63,11 +69,3 @@ const Response = wrap(CSSContainer, {
     )
   }
 })
-
-/**
- * Exports
- */
-
-export default {
-  render
-}

@@ -1,17 +1,4 @@
 /**
- * Imports
- */
-
-import app from 'client/main'
-import {mediaDidUpdate} from 'reducer/media'
-
-/**
- * Types
- */
-
-const type = mediaDidUpdate.toString()
-
-/**
  * Print Middleware
  *
  * This is moderately janks. Why is this necessary? Because when the print
@@ -23,28 +10,19 @@ const type = mediaDidUpdate.toString()
  * explicit rerender here on our own just to support this use case.
  */
 
-function middleware ({getState, dispatch}) {
-  const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1
-
-  // Correct for the fact that media query listeners do not work with printing
-  // in firefox, but these before/after print queries do
-  if (isFirefox) {
-    window.addEventListener('beforeprint', function () {
-      dispatch(mediaDidUpdate({key: 'print', matches: true}))
-    })
-
-    window.addEventListener('afterprint', function () {
-      dispatch(mediaDidUpdate({key: 'print', matches: false}))
-    })
+function middleware ({getState, dispatch, forceRerender}) {
+  // This middleware is a noop for non-browser environments
+  if (typeof window === 'undefined') {
+    return next => action => next(action)
   }
 
   return next => action => {
+    const prevState = getState()
     const result = next(action)
+    const nextState = getState()
 
-    if (action.type === type
-      && action.payload.key === 'print'
-      && action.payload.matches) {
-      app(getState())
+    if (prevState.media !== 'print' && nextState.media === 'print') {
+      forceRerender()
     }
 
     return result

@@ -3,4 +3,3 @@
 Class selector dropdown menu
 
 ## Usage
-
