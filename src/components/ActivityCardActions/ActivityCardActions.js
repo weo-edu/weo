@@ -44,39 +44,39 @@ export default component({
 
     return (
       <Block p align='center' {...rest}>
-        <AssignButton
+        {assign && <AssignButton
           onClick={stopPropagation}
           activity={activity}
           hide={!assign}
           text={assign}
-          user={user} />
+          user={user} />}
         <Block hide={!spread || !activity.published} flex />
-        <EditButton
+        {edit && <EditButton
           onClick={stopPropagation}
           activity={activity}
           hide={!edit}
-          text={edit} />
-        <LikeButton
+          text={edit} />}
+        {like && <LikeButton
           onClick={stopPropagation}
           localLike={localLike}
           activity={activity}
           liked={liked}
           hide={!like}
           text={like}
-          user={user} />
-        <PinButton
+          user={user} />}
+        {pin && <PinButton
           onClick={stopPropagation}
           activity={activity}
           user={user}
           hide={!pin}
           text={pin}
-          mr='0' />
-        <DeleteButton
+          mr={archive ? 's' : '0'} />}
+        {archive && <DeleteButton
           onClick={stopPropagation}
           activity={activity}
           hide={!archive}
           text={archive}
-          mr='0' />
+          mr='0' />}
       </Block>
     )
   }

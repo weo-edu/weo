@@ -168,7 +168,7 @@ const ScoreRow = summon(() => ({
 
     return (
       <Block
-        onFocus={isIos || selectObject(question._id)}
+        onFocus={isIos ? selectObject(question._id) : null}
         onClick={[
           isIos && selectObject(question._id),
           actions.scrollTo(question._id)

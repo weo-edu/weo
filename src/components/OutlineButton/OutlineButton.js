@@ -8,6 +8,12 @@ import {Button} from 'vdux-containers'
 import {Icon} from 'vdux-ui'
 
 /**
+ * Constants
+ */
+
+const highlight = {highlight: 0.02}
+
+/**
  * <OutlineButton/>
  */
 
@@ -20,8 +26,8 @@ export default component({
       <Button
         border={'1px solid ' + (bgColor ? 'rgba(0,0,0, .2)' : color)}
         color={bgColor ? 'white' : color}
-        hoverProps={{highlight: 0.02}}
-        focusProps={{highlight: 0.02}}
+        hoverProps={highlight}
+        focusProps={highlight}
         bgColor={bgColor || 'white'}
         h='32px'
         px='8px'

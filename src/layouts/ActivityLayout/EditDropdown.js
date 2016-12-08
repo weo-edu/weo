@@ -30,11 +30,13 @@ export default summon(({activity}) => ({
         <Button
           onClick={actions.openPinModal}
           borderRadius='99px 0 0 99px'
-          text='Save Activity'
           bgColor='green'
           pl={18}
           h={34}
-          pr />
+          pr>
+          <WeoIcon name='pin' fs='s' mr='xs' mt={1} ml={-6}/>
+          Save Activity
+        </Button>
         <Dropdown
           btn={
             <Button borderLeftWidth={0} borderRadius='0 99px 99px 0' px='s' h={34} bgColor='green'>

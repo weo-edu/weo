@@ -12,6 +12,18 @@ import {Button} from 'vdux-containers'
 import {Text, Block} from 'vdux-ui'
 
 /**
+ * Constants
+ */
+
+const itemProps = {
+  options: {
+    edit: true,
+    assign: 'Assign',
+    pin: true
+  }
+}
+
+/**
  * <ActivitiesBoard/> Page
  */
 
@@ -23,7 +35,7 @@ export default summonChannels(
     const isMe = currentUser.username === username
 
     return (
-      <RowFeed {...props} emptyState={<EmptyBoard isMe={isMe} currentUser={currentUser} />} item={ActivityRow} itemProps={{options: {edit: true, assign: 'Assign', pin: true}}} />
+      <RowFeed {...props} emptyState={<EmptyBoard isMe={isMe} currentUser={currentUser} />} item={ActivityRow} itemProps={itemProps} />
     )
   }
 }))

@@ -10,6 +10,17 @@ import {component, element} from 'vdux'
 import {Block, Flex} from 'vdux-ui'
 
 /**
+ * Constants
+ */
+
+const itemProps = {
+  options: {
+    pin: true,
+    archive: true
+  }
+}
+
+/**
  * <Drafts/> Page
  */
 
@@ -18,7 +29,7 @@ export default summonChannels(props =>
 )(component({
   render ({props}) {
     return (
-      <RowFeed {...props} item={ActivityRow} emptyState={<EmptyDrafts />} itemProps={{options: {edit: true, archive: true}}} />
+      <RowFeed {...props} item={ActivityRow} emptyState={<EmptyDrafts />} itemProps={itemProps} />
     )
   }
 }))
