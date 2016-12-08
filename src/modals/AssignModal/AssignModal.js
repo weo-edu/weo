@@ -46,14 +46,14 @@ export default summon(props => ({
     * onSubmit ({selected = [], ...rest}) {
       const chosen = classes.value.items.filter(cls => selected.indexOf(cls._id) !== -1)
 
-      yield chosen.map(function *({_id}, i) {
+      for (let i = 0; i < chosen.length; i++) {
         if (activity.published || i > 0) {
           const copy = yield copyActivity(activity._id)
-          yield assign(_id, copy._id, rest)
+          yield assign(chosen[i]._id, copy._id, rest)
         } else {
-          yield assign(_id, activity._id, rest)
+          yield assign(chosen[i]._id, activity._id, rest)
         }
-      })
+      }
 
       yield context.closeModal()
 
