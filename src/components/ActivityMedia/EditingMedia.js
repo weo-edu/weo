@@ -38,7 +38,7 @@ export default component({
             bgColor='grey'
             mr='l'
             px>
-            {object.objectType === 'rich' ? 'Media' : object.objectType}
+            Change {object.objectType === 'rich' ? 'Media' : object.objectType}
           </Button>
           {
               object.objectType === 'image' &&

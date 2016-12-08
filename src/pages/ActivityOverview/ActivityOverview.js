@@ -2,15 +2,20 @@
  * Imports
  */
 
+import {totalPoints, getOverviewQuestions} from 'lib/activity-helpers'
 import QuestionOverview from './QuestionOverview'
 import summonChannels from 'lib/summon-channels'
-import {totalPoints} from 'lib/activity-helpers'
+import datauriDownload from 'datauri-download'
 import FourOhFour from 'pages/FourOhFour'
 import {component, element} from 'vdux'
+import {Button} from 'vdux-containers'
 import Loading from 'pages/Loading'
 import Histogram from './Histogram'
+import {Block, Icon} from 'vdux-ui'
 import getProp from '@f/get-prop'
-import {Block} from 'vdux-ui'
+import toCsv from 'to-csv'
+import map from '@f/map'
+
 
 /**
  * <ActivityOverview/>
@@ -19,7 +24,7 @@ import {Block} from 'vdux-ui'
 export default summonChannels(
   ({activity}) => `share!${activity._id}.instances`
 )(component({
-  render ({props}) {
+  render ({props, actions}) {
     const {students, activity, activities} = props
     const {value, loading, error} = activities
 
@@ -31,10 +36,51 @@ export default summonChannels(
 
     return (
       <Block w='col_main' mx='auto'>
+        <Block align='end'>
+          <Button w={138} mb my='s' onClick={actions.exportOverview}>
+            Export Data
+            <Icon name='file_download' ml='s' fs='xs' />
+          </Button>
+        </Block>
         <Histogram data={data} />
         <QuestionOverview instances={instances} {...props} />
       </Block>
     )
+  },
+  controller: {
+    exportOverview ({props}) {
+      let scores = {}
+      const {activity, instances, students} = props
+      const questions = getOverviewQuestions(activity._object[0].attachments, instances)
+        .filter(q => !q.poll)
+      const actors = getProp('instances.total.0.actors', activity)
+
+      instances.forEach(inst => {
+        inst._object[0].attachments.forEach(q => {
+          let response = undefined
+          if(!scores[inst.actor.id]) {
+            scores[inst.actor.id] = {
+              percent: actors[inst.actor.id].pointsScaled * 100 + '%',
+              points: []
+            }
+          }
+
+          if(q.objectType === 'question' && !q.poll) {
+            const score = q.points.max * q.points.scaled
+            scores[inst.actor.id].points.push(isNaN(score) ? '' : score)
+          }
+        })
+      })
+
+      const csv = [
+        ['First Name', 'Last Name', 'Total Average', ...map(q => q.displayName, questions)],
+        [,,, ...map(toAverage, questions)],
+        [,,, ...map(q => q.points.max, questions)],
+        ...map(s => studentRow(s, scores[s._id]), students)
+      ]
+
+      downloadCsv(activity.displayName, csv)
+    }
   }
 }))
 
@@ -89,6 +135,25 @@ function getData (activity, students) {
     binMax,
     bins
   }
+}
+
+function toAverage(question) {
+  const {total, numAnswered, points, poll} = question
+  const average = (total / (numAnswered || 1))
+  return poll ? '-' : Math.round(average / points.max * 100) + '%'
+}
+
+function studentRow({name, _id}, scores) {
+  return [name.givenName, name.familyName, scores.percent, ...scores.points]
+}
+
+function downloadCsv (filename, data) {
+  datauriDownload(filename + '-' + today() + '.csv', 'text/csv;charset=utf-8', toCsv(data))
+}
+
+function today () {
+  var d = new Date()
+  return [d.getFullYear(), d.getMonth() + 1, d.getDate()].join('-')
 }
 
 function percentToIndex (percent) {

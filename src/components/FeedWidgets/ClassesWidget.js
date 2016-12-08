@@ -35,7 +35,7 @@ export default summon(() => ({
     const clsLength = loaded && value.items.length
     const {drafts: {canonicalTotal: {items}}, userType} = user
     const offset = userType === 'teacher'
-      ? items ? '440px' : '370px'
+      ? items ? '408px' : '360px'
       : '262px'
 
     return (

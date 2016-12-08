@@ -3,7 +3,7 @@
  */
 
 import {Modal, ModalBody, ModalFooter, ModalHeader, Block, Text, Icon} from 'vdux-ui'
-import {Button, Toggle, Tooltip} from 'vdux-containers'
+import {Button, Toggle, Tooltip, form} from 'vdux-containers'
 import {component, element} from 'vdux'
 
 /**
@@ -24,7 +24,14 @@ const ttProps = {
  * <ActivitySettingsModal/>
  */
 
-export default component({
+export default form(({activity}) => ({
+  fields: ['discussion', 'hideOnTurnIn', 'textToSpeech'],
+  defaults: {
+    discussion: activity.discussion,
+    hideOnTurnIn: activity.hideOnTurnIn,
+    textToSpeech: activity.textToSpeech
+  }
+}))(component({
   render ({props, actions, context}) {
     const {fields} = props
     const {discussion, hideOnTurnIn, textToSpeech} = fields
@@ -90,4 +97,4 @@ export default component({
       yield context.closeModal()
     }
   }
-})
+}))
