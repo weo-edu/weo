@@ -101,11 +101,11 @@ export default component({
     ],
 
     shared: [
+      query(isApiServer, 'access_token', ({getState}) => getState().authToken),
       fetchEncodeJSON,
       fetchMw,
       summonMw,
       uploadMw,
-      query(isApiServer, 'access_token', ({getState}) => getState().authToken),
       mediaMw,
       printMw
     ]

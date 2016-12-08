@@ -2,7 +2,7 @@
  * Imports
  */
 
-import fetch from 'redux-effects-fetch'
+import {fetch} from 'redux-effects-fetch'
 import mime from 'browserify-mime'
 import _upload from '@f/s3-upload'
 import noop from '@f/noop'
@@ -51,7 +51,8 @@ function middleware ({dispatch}) {
 function * doUploadFile ({file, progress = noop}, dispatch) {
   try {
     const {type} = file
-    const {value: S3} = yield fetch(`${apiServer}/s3/upload`, {method: 'POST'})
+    const res = yield fetch(`${apiServer}/s3/upload`, {method: 'POST'})
+    const {value: S3} = res
 
     return yield upload({
       file,

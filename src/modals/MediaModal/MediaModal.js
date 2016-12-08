@@ -64,7 +64,7 @@ export default summon(() => ({
         e.preventDefault()
 
         const url = e._rawEvent.dataTransfer.getData('text/uri-list')
-        yield actions.done(url)
+        yield actions.done({url})
       }
     }
   }
