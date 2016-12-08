@@ -57,16 +57,19 @@ export default summonChannels(
 
       instances.forEach(inst => {
         inst._object[0].attachments.forEach(q => {
+          const actor = actors[inst.actor.id]
           let response = undefined
           if(!scores[inst.actor.id]) {
             scores[inst.actor.id] = {
-              percent: actors[inst.actor.id].pointsScaled * 100 + '%',
+              percent: Math.round(actor.pointsScaled * 1000) / 10 + '%',
               points: []
             }
           }
 
           if(q.objectType === 'question' && !q.poll) {
-            const score = q.points.max * q.points.scaled
+            const score = actor.status >=4
+              ? q.points.max * q.points.scaled
+              : ''
             scores[inst.actor.id].points.push(isNaN(score) ? '' : score)
           }
         })
@@ -138,9 +141,9 @@ function getData (activity, students) {
 }
 
 function toAverage(question) {
-  const {total, numAnswered, points, poll} = question
+  const {total, numAnswered, points} = question
   const average = (total / (numAnswered || 1))
-  return poll ? '-' : Math.round(average / points.max * 100) + '%'
+  return Math.round(average / points.max * 100) + '%'
 }
 
 function studentRow({name, _id}, scores) {
