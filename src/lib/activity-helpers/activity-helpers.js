@@ -83,13 +83,15 @@ function activitySort (sort) {
   const normalize = prop === 'points' || prop === 'percent'
     ? val => parseFloat(val)
     : val => (val || '').toString().toUpperCase()
-
   return (a, b) => {
     if (!sort) return
     const prop1 = normalize(getProp(prop, a))
     const prop2 = normalize(getProp(prop, b).toString())
+    const bool = prop1 === prop2
+      ? a.displayName.toUpperCase() > b.displayName.toUpperCase()
+      : prop1 > prop2
 
-    return prop1 > prop2 ? 1 * sort.dir : -1 * sort.dir
+    return bool ? 1 * sort.dir : -1 * sort.dir
   }
 }
 

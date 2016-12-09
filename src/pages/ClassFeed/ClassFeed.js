@@ -32,7 +32,7 @@ export default summonChannels(({group}) => `group!${group._id}.board`)(
         : ClassActivityRow
 
       return (
-        <Block maxWidth='714px' my py mx='auto' relative>
+        <Block my py mx='auto' relative>
           <PageTitle title={`${group.displayName} | Feed`} />
           {
             <RowFeed {...props} item={Item} emptyState={<EmptyClassFeed currentUser={currentUser} />} />
