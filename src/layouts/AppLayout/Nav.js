@@ -22,7 +22,7 @@ export default component({
   render ({props, actions}) {
     const {currentUser, currentUrl, bgColor = 'grey', search, query} = props
     const isStudent = currentUser && currentUser.userType === 'student'
-    const stepsLeft = getSteps(currentUser)
+    const stepsLeft = currentUser && getSteps(currentUser)
 
     return (
       <Block>

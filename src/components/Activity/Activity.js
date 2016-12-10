@@ -41,7 +41,7 @@ export default component({
   },
 
   render ({props, state, context}) {
-    const {activity, instances, clickableTags, currentUser, selectObject, selectedObject, showAnswersOnPrint, ...rest} = props
+    const {activity, instances, clickableTags, currentUser, selectObject, selectedObject, showAnswersOnPrint, showAnswers, ...rest} = props
     const attachments = activity._object[0].attachments
     let i = 0
 
@@ -84,7 +84,7 @@ export default component({
               actor={activity.actor}
               object={object}
               idx={object.objectType === 'question' ? i++ : null}
-              showAnswers={context.uiMedia === 'print' && showAnswersOnPrint}
+              showAnswers={context.uiMedia === 'print' ? showAnswersOnPrint : showAnswers}
               {...rest} />, renderedAttachments)
           }
         </Block>

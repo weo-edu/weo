@@ -8,10 +8,7 @@
     "postversion": "git push && git push --tags && npm publish --access=public",
     "dev": "unv dev",
     "build": "export NODE_ENV=`git symbolic-ref --short -q HEAD` && unv build --production",
-    "sync": "gsutil rsync -x -m '.*\\.js$' -r assets gs://assets-weo-io; gsutil cp -Z assets/*.js gs://assets-weo-io;",
-    "deploy": "gcloud preview app deploy --project www-weo-io --no-promote",
-    "start": "unv serve",
-    "flow": "flow; test $? -eq 0 -o $? -eq 2"
+    "start": "unv serve"
   },
   "dependencies": {
     "@f/animate": "^1.0.1",
@@ -116,19 +113,20 @@
     "tcomb": "^3.2.15",
     "to-csv": "github:weo-edu/to-csv",
     "track-prep": "^0.2.0",
-    "unv": "^0.3.5",
+    "unv": "^0.3.9",
     "vdux": "^3.0.6",
     "vdux-containers": "^1.1.6",
     "vdux-css-transition": "^1.2.1",
     "vdux-delay": "^1.0.6",
     "vdux-form": "^1.2.0",
     "vdux-position": "^1.0.5",
-    "vdux-summon": "^0.2.2",
+    "vdux-summon": "^0.2.4",
     "vdux-transform-hmr": "^1.0.4",
     "vdux-transition": "^1.1.0",
     "vdux-ui": "^1.2.5",
     "virtex-dom": "^0.3.12",
     "virtex-element": "^0.3.6",
+    "weo-logger": "weo-edu/weo-logger",
     "weo-redux-logger": "^2.6.1"
   },
   "devDependencies": {

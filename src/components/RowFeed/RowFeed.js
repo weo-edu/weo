@@ -30,7 +30,7 @@ export default component({
             hide={!search || !hasLoaded || (!loading && !value.items.length && !searching)}
             onKeypress={{enter: decodeValue(search)}}
             placeholder='Search your activities...'
-            inputProps={{textAlign: 'left'}}
+            inputProps={{textAlign: 'left', appearance: 'none'}}
             key={props.boardId}
             type='search'
             icon='search'
