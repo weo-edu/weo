@@ -150,9 +150,19 @@ export default summon(({activityId, object}) => ({
   },
 
   reducer: {
-    setAnswer: (state, answer) => ({answer})
+    setAnswer: (state, answer) => ({
+      answer: [].concat(answer).filter(Boolean)
+    })
   }
 }))
+
+/**
+ * Constants
+ */
+
+const printProps = {bgColor: 'transparent', left: -25, boxShadow: '0 0 0', borderRadius: 0}
+const absolute = {left: -40, top: 8}
+const innerPrintProps = {fs: 'l', color: 'red'}
 
 /**
  * <IncorrectX/>
@@ -161,8 +171,8 @@ export default summon(({activityId, object}) => ({
 function IncorrectX () {
   return (
     <Block
-      printProps={{bgColor: 'transparent', left: -25, boxShadow: '0 0 0', borderRadius: 0}}
-      absolute={{left: -40, top: 8}}
+      printProps={printProps}
+      absolute={absolute}
       align='center center'
       bgColor='red'
       boxShadow='0 1px 3px 0 rgba(0,0,0,0.5)'
@@ -170,7 +180,7 @@ function IncorrectX () {
       circle={32}
       m='auto'>
       <Icon
-        printProps={{fs: 'l', color: 'red'}}
+        printProps={innerPrintProps}
         name='close'
         fs='s' />
     </Block>
