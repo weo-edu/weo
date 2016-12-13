@@ -28,7 +28,7 @@ const itemProps = {
  */
 
 export default summonChannels(
-  props => `group!${props.boardId}.board`, {}, 'updatedAt'
+  props => `group!${props.boardId}.board`, {}, 'createdAt'
 )(component({
   render ({props}) {
     const {currentUser, username} = props

@@ -14,7 +14,6 @@ import has from '@f/has'
 
 export default fn => Component => component({
   initialState: ({props}) => map((val, key) => ({
-    history: [],
     value: undefined
   }), fn(props)),
 
@@ -64,7 +63,6 @@ export default fn => Component => component({
 
       if (!pdesc || pdesc.url !== ndesc.url || !deepEqual(pdesc.params, ndesc.params)) {
         if (pdesc) {
-          yield next.actions.clearHistory(key)
           yield unsubscribe({...pdesc, path: prev.path})
         }
 
@@ -78,22 +76,15 @@ export default fn => Component => component({
   },
 
   reducer: {
-    clearHistory: (state, key) => ({
-      [key]: {
-        ...state[key],
-        history: []
-      }
-    }),
     change: (state, key, value) => ({
       [key]: {
         ...state[key],
-        value: state[key].history.reduce(applyUpdate, value)
+        value
       }
     }),
     update: (state, key, msg) => state[key] && ({
       [key]: {
         ...state[key],
-        history: state[key].history.concat(msg),
         value: applyUpdate(state[key].value, msg)
       }
     })
