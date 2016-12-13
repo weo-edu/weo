@@ -11,6 +11,12 @@ import reduce from '@f/reduce'
 import moment from 'moment'
 
 /**
+ * Constants
+ */
+
+const absolute = {top: 6, right: 6}
+
+/**
  * <RowFeed/>
  */
 
@@ -35,7 +41,7 @@ export default component({
             type='search'
             icon='search'
             py='8px'
-            absolute={{top: 6, right: 6}}
+            absolute={absolute}
             w='242px' />
         }
         {

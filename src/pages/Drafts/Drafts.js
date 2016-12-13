@@ -25,7 +25,7 @@ const itemProps = {
  */
 
 export default summonChannels(props =>
-  `user!${props.currentUser._id}.drafts`
+  `user!${props.currentUser._id}.drafts`, {}, 'updatedAt'
 )(component({
   render ({props}) {
     return (

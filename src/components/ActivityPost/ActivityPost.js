@@ -67,8 +67,8 @@ const EditablePost = component({
               autofocus
               fs='s'
               lighter
-              onInput={actions.editOriginalContent}
-              defaultValue={object.originalContent} />
+              defaultValue={object.originalContent}
+              onInput={actions.editOriginalContent} />
           </Block>
           <Block alignSelf='baseline'>
             <MarkdownHelper mt={8} menuProps={{mr: -12}} />

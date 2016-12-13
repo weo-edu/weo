@@ -24,7 +24,7 @@ const itemProps = {options: {edit: true, assign: 'Assign', pin: true}}
 export default summonChannels(({user}) =>
   user.groups
     .filter(group => group.groupType === 'board')
-    .map(board => `group!${board.id}.board`), {}, 'updatedAt'
+    .map(board => `group!${board.id}.board`), {}, 'createdAt'
 )(component({
   render ({props}) {
     return (
