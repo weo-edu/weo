@@ -21,7 +21,7 @@ export default summon(props => ({
 }))(component({
   render ({props, children}) {
     const {username, currentUser} = props
-    const isCurrentUser = username === currentUser && currentUser.username
+    const isCurrentUser = username === (currentUser && currentUser.username)
     const user = isCurrentUser
       ? {value: currentUser, loaded: true, loading: false}
       : props.user

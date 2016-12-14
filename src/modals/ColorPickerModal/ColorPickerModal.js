@@ -24,6 +24,7 @@ export default summon(({user}) => ({
     submitting: {
       url: '/user',
       method: 'PUT',
+      invalidates: false,
       body: {
         ...user,
         color
