@@ -62,8 +62,8 @@ export default summon(({id}) => ({
         shareType: 'share',
         contexts: [{
           allow: [
-            {id: `${type}:${classId}:teacher`},
-            {id: `${type}:${classId}:student`}
+            {id: `${type}:teacher:${classId}`},
+            {id: `${type}:student:${classId}`}
           ],
           descriptor: {
             displayName: classId,

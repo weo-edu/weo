@@ -13,15 +13,17 @@ import equal from '@f/equal'
  */
 
 const excluded = ['maxResults', 'pageToken', 'sort']
+const subs = {}
+let socket
+let lastToken
 
 /**
  * Socket
  */
 
 function middleware ({dispatch, getContext}) {
-  const subs = {}
-  let lastToken = getContext().authToken
-  let socket = connect(lastToken)
+  lastToken = lastToken || getContext().authToken
+  socket = socket || connect(lastToken)
 
   return next => action => {
     const token = getContext().authToken
@@ -76,6 +78,8 @@ function middleware ({dispatch, getContext}) {
       forceNew: true,
       transports: ['polling', 'websocket']
     })
+
+    window.socket = socket
 
     socket.once('connect', () => socket.on('message', msg => {
       for (const key in subs) {
