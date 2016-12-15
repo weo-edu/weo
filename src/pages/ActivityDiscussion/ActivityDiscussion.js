@@ -73,6 +73,12 @@ function Comment ({props}) {
 }
 
 /**
+ * Constants
+ */
+
+const absolute = {top: 9, right: '100%'}
+
+/**
  * <Arrow/>
  */
 
@@ -80,11 +86,11 @@ function Arrow () {
   return (
     <span>
       <Block
-        absolute={{top: 9, right: '100%'}}
+        absolute={absolute}
         border='10px solid transparent'
         borderRightColor='#CCC' />
       <Block
-        absolute={{top: 9, right: '100%'}}
+        absolute={absolute}
         border='10px solid transparent'
         borderRightColor='off_white'
         mr={-1} />
