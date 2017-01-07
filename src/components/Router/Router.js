@@ -207,10 +207,10 @@ const router = enroute({
     <ActivityLayout {...props} {...params}>
       {data => <ActivityOverview {...props} {...params} {...data} />}
     </ActivityLayout>),
-  '/activity/:activityId/preview': track('Activity Preview', (params, props) =>
+  '/activity/:activityId/preview': track('Activity Preview', auth('nonstudent', (params, props) =>
     <ActivityLayout {...props} {...params}>
       {data => <ActivityPreview {...props} {...params} {...data} />}
-    </ActivityLayout>),
+    </ActivityLayout>)),
   '/activity/:activityId/discussion': track('Activity Discussion', (params, props) =>
     <ActivityLayout {...props} {...params}>
       {data => <ActivityDiscussion {...props} {...params} {...data} />}
@@ -390,7 +390,11 @@ function activityRedirect ({published, contexts, _id}, {currentUser}) {
   }
 
   if (contexts[0].descriptor.id === 'public') {
-    return <Redirect to={`/activity/${_id}/preview`} />
+    if (currentUser.userType === 'teacher') {
+      return <Redirect to={`/activity/${_id}/preview`} />
+    } else {
+      return <Redirect to='/' />
+    }
   }
 
   if (currentUser.userType === 'student') {

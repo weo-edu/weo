@@ -44,9 +44,9 @@ export default summon(({userId, activityId}) => ({
   instances: activity.value
     ? `/share?channel=share!${activity.value._id}.instances`
     : null,
-  getInstance: userId => ({
+  getInstance: (userId, context) => ({
     gettingInstance: {
-      url: `/share/${activity.value._id}/instance/${userId}`
+      url: `/share/${activity.value._id}/instance/${userId}?context=${activity.value.contexts[0].descriptor.id}`
     }
   })
 }))(live(({activityId, activity, instance}) => ({
@@ -82,7 +82,12 @@ export default summon(({userId, activityId}) => ({
 
     if (!gettingInstance && instances.value && students.value) {
       const studentMap = index(student => student._id, students.value.items)
-      const insts = instances.value.items.filter(inst => studentMap[inst.actor.id])
+      const seen = {}
+      const insts = instances.value.items.filter(inst => {
+        if (seen[inst.actor.id]) return false
+        seen[inst.actor.id] = true
+        return studentMap[inst.actor.id]
+      })
 
       if (insts.length < students.value.items.length) {
         const filtered = students.value.items.filter(({_id}) => instances.value.items.every(inst => inst.actor.id !== _id))
@@ -149,8 +154,13 @@ function internal ({props, children, actions, context, state}) {
 
   // Make sure we're only looking at instances of students who are
   // currently enrolled in the class
+  const seen = {}
   const studentMap = index(student => student._id, students.value.items)
-  const filteredInstances = instances.value.items.filter(inst => studentMap[inst.actor.id])
+  const filteredInstances = instances.value.items.filter(inst => {
+    if (seen[inst.actor.id]) return false
+    seen[inst.actor.id] = true
+    return studentMap[inst.actor.id]
+  })
 
   if (filteredInstances.length < students.value.items.length) {
     return ''

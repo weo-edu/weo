@@ -72,8 +72,8 @@ export default summon(props => ({
     },
 
     * handleSuccess ({context, actions}, user) {
-      yield context.postLogin(user)
       yield actions.trackEvent(user)
+      yield context.postLogin(user)
     }
   }
 }))

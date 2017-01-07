@@ -116,7 +116,7 @@
     "vdux-containers": "^1.2.7",
     "vdux-form": "^1.2.3",
     "vdux-position": "^1.0.5",
-    "vdux-summon": "^0.2.5",
+    "vdux-summon": "^0.2.6",
     "vdux-transform-hmr": "^1.0.4",
     "vdux-transition": "^1.1.1",
     "vdux-ui": "^1.3.4",

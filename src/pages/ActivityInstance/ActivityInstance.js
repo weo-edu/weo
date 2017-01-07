@@ -77,6 +77,7 @@ export default summonChannels(
               activity={instance}
               currentUser={currentUser}
               clickableTags={isTeacher}
+              showAnswersOnPrint={isTeacher || instance.status === statusMap.returned}
               showIncorrect={instance.status === statusMap.returned || showIncorrect}
               showAnswers={isTeacher || instance.status === statusMap.returned}
               answerable={isStudent && instance.status <= statusMap.opened}
