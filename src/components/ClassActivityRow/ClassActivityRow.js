@@ -29,7 +29,7 @@ function ClassMeta ({props}) {
   const {publishedAt, contexts} = activity
   const text = showClass
     ? contexts[0].descriptor.displayName
-    : 'Assigned' + moment(publishedAt).fromNow()
+    : 'Assigned ' + moment(publishedAt).fromNow()
 
   return (
     <Text fs='xxs' color='grey_medium'>

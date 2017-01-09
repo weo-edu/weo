@@ -57,8 +57,8 @@ export default summon(props => ({
 
   controller: {
     * handleSuccess ({context}, user) {
-      yield context.postLogin(user)
       yield context.track({name: 'Student Created', traits: user})
+      yield context.postLogin(user)
     }
   }
 }))
