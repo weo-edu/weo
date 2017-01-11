@@ -42,6 +42,9 @@ function analytics () {
 
         config.integrations.Intercom = hasIntercom(user)
         window.analytics.identify(user._id, prep.user(user), config)
+        if (window.mixpanel) {
+          window.mixpanel.set_config({persistence: 'localStorage'})
+        }
         break
       }
       case track.type: {
