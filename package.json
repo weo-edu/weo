@@ -109,7 +109,7 @@
     "redux-timing": "^0.1.0",
     "regenerator-runtime": "^0.9.5",
     "tcomb": "^3.2.15",
-    "to-csv": "github:weo-edu/to-csv",
+    "to-csv": "weo-edu/to-csv",
     "track-prep": "^0.2.0",
     "unv": "^0.3.9",
     "vdux": "^3.0.6",
