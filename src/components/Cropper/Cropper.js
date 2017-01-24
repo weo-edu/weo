@@ -33,12 +33,12 @@ export default component({
     }
   },
 
-  render ({path, props}) {
+  render ({path, props, state}) {
     const {url} = props
 
     return (
       <Block>
-        <Base tag='img' sq='300' id={path} src={url} maxWidth='100%' crossorigin='anonymous' />
+        <Base tag='img' sq='300' id={path} src={url} maxWidth='100%' />
       </Block>
     )
   },

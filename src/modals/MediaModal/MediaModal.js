@@ -50,6 +50,7 @@ export default summon(() => ({
 
   controller: {
     * done ({props, context}, {name, url}) {
+      console.log('done', name, url)
       const object = yield props.scrapeMedia(url)
       yield context.closeModal()
       yield props.onAccept({
@@ -61,10 +62,16 @@ export default summon(() => ({
 
     * onDrop ({actions}, e) {
       if (e._rawEvent.dataTransfer.types.indexOf('text/uri-list') !== -1) {
-        e.preventDefault()
-
         const url = e._rawEvent.dataTransfer.getData('text/uri-list')
-        yield actions.done({url})
+
+        // Yes! It is in fact possible to get a falsy url. Safari likes to do this
+        // for some reason. When you drop a file into the dropzone, it likes to
+        // give it a text/uri-list media type for what i'm sure are very very sound
+        // reasons. Entirely purposeful, surely. Hence this check.
+        if (url) {
+          e.preventDefault()
+          yield actions.done({url})
+        }
       }
     }
   }
