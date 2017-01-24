@@ -8,6 +8,18 @@ import DropZone from 'components/DropZone'
 import noop from '@f/noop'
 
 /**
+ * Constants
+ */
+
+const dragonProps = {
+  bgColor: 'rgba(blue, .1)',
+  color: 'blue_medium',
+  message: 'Drop File',
+  border: '1px solid rgba(blue, .4)',
+  boxShadow: '0 0 1px rgba(blue, .7)'
+}
+
+/**
  * <FileUpload/>
  */
 
@@ -25,13 +37,7 @@ export default component({
       <DropZone
         relative
         accepts='Files'
-        dragonProps={{
-          bgColor: 'rgba(blue, .1)',
-          color: 'blue_medium',
-          message: 'Drop File',
-          border: '1px solid rgba(blue, .4)',
-          boxShadow: '0 0 1px rgba(blue, .7)'
-        }}
+        dragonProps={dragonProps}
         message='Drag File or Click Here'
         color='grey_medium'
         border='1px dashed grey_light'
@@ -49,7 +55,10 @@ export default component({
   },
 
   controller: {
-    * upload ({props, state, actions, context}, [file]) {
+    // Note: cannot use destructuring on FileLists because
+    // Safari doesn't like it
+    * upload ({props, state, actions, context}, fileList) {
+      const file = fileList[0]
       const {onUpload = noop, validate = () => ({valid: true})} = props
       const {valid, message} = validate(file)
 

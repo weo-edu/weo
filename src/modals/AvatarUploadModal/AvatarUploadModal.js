@@ -81,7 +81,7 @@ export default summon(props => ({
         if (crop) {
           const {x, y, width, height} = crop.detail
           const blob = cropImage(
-            crop.target,
+            yield createImage(crop.target.src),
             x,
             y,
             width,
@@ -134,4 +134,13 @@ function validateFile (file) {
   }
 
   return {valid: true}
+}
+
+function createImage (url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.src = url + (url.indexOf('?') === -1 ? '?' : '&') + 'ts=' + (+new Date())
+    img.onload = () => resolve(img)
+  })
 }
