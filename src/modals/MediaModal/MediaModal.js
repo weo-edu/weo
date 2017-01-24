@@ -50,7 +50,6 @@ export default summon(() => ({
 
   controller: {
     * done ({props, context}, {name, url}) {
-      console.log('done', name, url)
       const object = yield props.scrapeMedia(url)
       yield context.closeModal()
       yield props.onAccept({
