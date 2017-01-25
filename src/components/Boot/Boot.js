@@ -188,7 +188,7 @@ export default component({
 
   reducer: {
     updateAvatar: state => ({
-      avatarUpdates: state.avatarUpdates + 1
+      avatarUpdates: (state.avatarUpdates || 0) + 1
     }),
     updateMedia: (state, {key, matches}) => ({
       media: state.media === key
