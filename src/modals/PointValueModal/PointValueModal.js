@@ -3,9 +3,11 @@
  */
 
 import {Modal, ModalBody, ModalFooter, ModalHeader, Flex, Text} from 'vdux-ui'
+import {component, element, decodeNode} from 'vdux'
 import RoundedInput from 'components/RoundedInput'
-import {component, element} from 'vdux'
+import validate from '@weo-edu/validate'
 import {Button} from 'vdux-containers'
+import Schema from '@weo-edu/schema'
 import summon from 'vdux-summon'
 import Form from 'vdux-form'
 
@@ -30,12 +32,12 @@ export default summon(({user}) => ({
 
     return (
       <Modal onDismiss={context.closeModal}>
-        <Form onSubmit={setPointValue} onSuccess={context.closeModal}>
+        <Form onSubmit={setPointValue} validate={validator} cast={cast} onSuccess={context.closeModal}>
           <Flex ui={ModalBody} column align='center center' pb='l'>
             <ModalHeader>
               Point Value
             </ModalHeader>
-            <RoundedInput name='value' defaultValue={max_points} placeholder='Enter a number' w='150px' m autofocus inputProps={{type: 'number', min: '1'}} />
+            <RoundedInput name='value' onInput={decodeNode(normalize)} required defaultValue={max_points} placeholder='Enter a number' w='150px' m autofocus />
           </Flex>
           <ModalFooter bg='grey'>
             <Text fs='xxs'>
@@ -49,3 +51,23 @@ export default summon(({user}) => ({
     )
   }
 }))
+
+/**
+ * Helpers
+ */
+
+function normalize (node) {
+  node.value = (node.value || '').replace(/[^0-9\.]/g, '').replace(/\.+/g, '.')
+}
+
+function cast (model) {
+  return {
+    value: Number(model.value)
+  }
+}
+
+const schema = Schema()
+  .prop('value', Schema('number').min(0, 'Negative numbers not allowed'))
+  .required(['value'], 'Required')
+
+const validator = validate(schema)

@@ -7,6 +7,12 @@ import {component, element} from 'vdux'
 import {Block, Icon} from 'vdux-ui'
 
 /**
+ * Constants
+ */
+
+const ttProps = {whiteSpace: 'normal'}
+
+/**
  * <SettingsRow/>
  */
 
@@ -33,14 +39,14 @@ export default component({
           {name}
           {
             message &&
-            <Tooltip message={message} align='center center' tooltipProps={{whiteSpace: 'normal'}}>
+            <Tooltip message={message} align='center center' tooltipProps={ttProps}>
               <Icon name='info' fs='xs' ml='s' />
             </Tooltip>
           }
         </Block>
         <Block flex color={text ? 'text' : 'grey_medium'}>
           {
-            children.length ? children : text || placeholder
+            children.length ? children : ((text === undefined || text === '') ? placeholder : text)
           }
         </Block>
       </Flex>
