@@ -59,9 +59,17 @@
   dependencies:
     "@f/foreach" "^1.2.1"
 
-"@f/clone-shallow@^1.1.2", "@f/clone-shallow@^1.1.3":
+"@f/clone-shallow@^1.1.3":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@f/clone-shallow/-/clone-shallow-1.1.3.tgz#8009a886ae050e22d5446cba67a90609257a6f11"
+  dependencies:
+    "@f/clone-obj" "^1.1.0"
+    "@f/is-array" "^1.1.1"
+    "@f/slice" "^1.1.2"
+
+"@f/clone-shallow@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@f/clone-shallow/-/clone-shallow-1.1.4.tgz#8dc2faed6304125d3f5a8fbe559794ccdd45d6a4"
   dependencies:
     "@f/clone-obj" "^1.1.0"
     "@f/is-array" "^1.1.1"
@@ -691,11 +699,11 @@
   dependencies:
     "@f/svg-attribute-namespace" "^2.1.1"
 
-"@f/set-prop@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@f/set-prop/-/set-prop-1.0.0.tgz#c3a787ade53efd5cb6b5ba47f63d47627e93acd2"
+"@f/set-prop":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@f/set-prop/-/set-prop-1.0.1.tgz#7ca7bd7a5d3298c9acdb17a3c79777a09ea1ae53"
   dependencies:
-    "@f/clone-shallow" "^1.1.2"
+    "@f/clone-shallow" "^1.1.4"
     "@f/is-function" "^1.0.4"
     "@f/is-number" "^1.0.0"
     "@f/is-string" "^1.0.1"

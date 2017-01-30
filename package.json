@@ -50,7 +50,7 @@
     "@f/s3-upload": "^1.0.1",
     "@f/serialize-form": "^1.0.0",
     "@f/set-attribute": "^1.0.1",
-    "@f/set-prop": "^1.0.0",
+    "@f/set-prop": "^1.0.1",
     "@f/set-proto": "^1.0.1",
     "@f/set-value": "^1.0.0",
     "@f/sleep": "^1.0.0",

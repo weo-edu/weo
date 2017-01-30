@@ -5,6 +5,7 @@
 import socket, {subscribe, unsubscribe} from 'middleware/socket'
 import {component, element} from 'vdux'
 import deepEqual from '@f/deep-equal'
+import setProp from '@f/set-prop'
 import map from '@f/map'
 import has from '@f/has'
 
@@ -112,7 +113,7 @@ function normalize (descriptor) {
     : descriptor
 }
 
-function applyUpdate (prev, {data, verb}) {
+function applyUpdate (prev, {data, verb, params}) {
   switch (verb) {
     case 'change': {
       if (!prev || prev._id) return data
@@ -120,6 +121,15 @@ function applyUpdate (prev, {data, verb}) {
       return {
         ...prev,
         items: prev.items.map(item => item._id === data._id ? data : item)
+      }
+    }
+    case 'diff': {
+      if (!prev) throw new Error('Received diff for non-existent item', data, verb, params)
+      if (prev._id) return runDiff(prev, data)
+
+      return {
+        ...prev,
+        items: prev.items.map(item => item._id === params.id ? runDiff(item, data) : item)
       }
     }
     case 'add': {
@@ -147,4 +157,10 @@ function applyUpdate (prev, {data, verb}) {
       throw new Error('live: Unrecognized subscription verb (' + verb + ')')
     }
   }
+}
+
+function runDiff (prev, diff) {
+  return Object
+    .keys(diff)
+    .reduce((obj, key) => setProp(key, obj, diff[key]), prev)
 }
