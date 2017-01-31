@@ -7,6 +7,12 @@ import {component, element} from 'vdux'
 import {Block} from 'vdux-ui'
 
 /**
+ * Constants
+ */
+
+const ttProps = {whiteSpace: 'pre'}
+
+/**
  * <QuestionPollChoice/>
  */
 
@@ -14,7 +20,7 @@ export default component({
   render ({props}) {
     const {object, bgColor, responses, numAnswered, hidePollNames} = props
     const names = responses
-      .filter(r => r.response.indexOf(object._id) !== -1)
+      .filter(r => (r.response || []).indexOf(object._id) !== -1)
       .map(r => r.actor.displayName)
     const percent = Math.round((names.length / (numAnswered || 1)) * 100) + '%'
 
@@ -24,7 +30,7 @@ export default component({
     return (
       <Tt
         message={names.join('\n')}
-        tooltipProps={{whiteSpace: 'pre'}}
+        tooltipProps={ttProps}
         placement='right'
         immediate
         bgColor='grey_light'

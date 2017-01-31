@@ -49,7 +49,8 @@ export default component({
 
     const {descriptor} = activity.contexts[0]
     const classId = descriptor.id
-    const score = showScores ? totalScore(activity) : '-'
+    const max = totalPoints(activity)
+    const score = showScores ? activity.score * max : '-'
 
     return (
       <Block mt>
@@ -79,7 +80,7 @@ export default component({
         </Card>
         <Card hide={!questions.length}>
           <Block p fs='l' borderBottom='1px solid grey_light' fw='lighter' align='center center' ellipsis boxShadow='0 1px 1px rgba(75,82,87,0.08)' relative z='2'>
-            {score} / {totalPoints(activity)}
+            {score} / {max}
           </Block>
           <Block maxHeight={`calc(100vh - ${hasInstanceNav ? 420 : 326}px)`} overflow='auto' borderBottom='1px solid grey_light'>
             {

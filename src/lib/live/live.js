@@ -133,7 +133,10 @@ function applyUpdate (prev, {data, verb, params}) {
       }
     }
     case 'add': {
-      if (!prev || prev._id) throw new Error('Cannot add to scalar value')
+      if (!prev || prev._id) {
+        console.log('prev', prev)
+        throw new Error('Cannot add to scalar value')
+      }
 
       // If it's already there, don't do anything
       if (prev.items.some(item => item._id === data._id)) {

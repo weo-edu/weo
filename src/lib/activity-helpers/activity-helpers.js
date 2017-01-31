@@ -151,6 +151,30 @@ function combineInstancesAndStudents (activity, students, instances) {
   })
 }
 
+function constructInstance (activity, instance) {
+  const resps = instance.responses || {}
+
+  return {
+    ...instance,
+    max_score: activity._object[0].attachments.reduce((acc, obj) => obj.points && obj.points.max ? acc + obj.points.max : acc, 0),
+    _object: activity._object
+      .map(obj => {
+        return {
+          ...obj,
+          attachments: obj.attachments
+            .map(sub => sub.objectType !== 'question' ? sub : {
+              ...sub,
+              response: (resps[sub._id] || {}).response,
+              points: {
+                ...(sub.points || {}),
+                scaled: (resps[sub._id] || {}).score
+              }
+            })
+        }
+      })
+  }
+}
+
 const statusMap = {
   unopened: 1,
   opened: 2,
@@ -171,5 +195,6 @@ export {
   totalScore,
   statusMap,
   getOverviewQuestions,
-  combineInstancesAndStudents
+  combineInstancesAndStudents,
+  constructInstance
 }
