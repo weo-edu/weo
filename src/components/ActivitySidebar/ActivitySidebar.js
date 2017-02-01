@@ -50,7 +50,7 @@ export default component({
     const {descriptor} = activity.contexts[0]
     const classId = descriptor.id
     const max = totalPoints(activity)
-    const score = showScores ? activity.score * max : '-'
+    const score = showScores ? Math.round(activity.score * max * 10) / 10 : '-'
 
     return (
       <Block mt>
