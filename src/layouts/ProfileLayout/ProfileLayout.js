@@ -47,7 +47,7 @@ export default summon(props => ({
 
 function internal (currentUser, {value, loaded, loading, error}, children) {
   if (error) return <FourOhFour w='col_main' />
-  if (!loaded) return ''
+  if (loading) return ''
 
   return [
     <Header user={value} currentUser={currentUser} />,

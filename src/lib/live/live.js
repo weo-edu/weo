@@ -134,7 +134,6 @@ function applyUpdate (prev, {data, verb, params}) {
     }
     case 'add': {
       if (!prev || prev._id) {
-        console.log('prev', prev)
         throw new Error('Cannot add to scalar value')
       }
 
