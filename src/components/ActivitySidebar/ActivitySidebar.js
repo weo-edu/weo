@@ -98,7 +98,7 @@ export default component({
                 showScore={showScores} />)
             }
           </Block>
-          <Block p boxShadow='0 -2px 1px rgba(75,82,87,0.08)' relative z='2'>
+          <Block p boxShadow='0 -2px 1px rgba(grey,0.08)' relative z='2'>
             {
               isInstance &&
                 <SidebarActions

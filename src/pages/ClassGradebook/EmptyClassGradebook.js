@@ -16,7 +16,7 @@ export default component({
     const {group} = props
 
     return (
-      <EmptyState icon='book' color='green' wide>
+      <EmptyState icon='book' color='green' wide fill mt>
         <Block lh='30px' mt>
           You don't have any students in your class. Add students and assign them Activities.
         </Block>

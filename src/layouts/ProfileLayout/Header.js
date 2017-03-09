@@ -2,8 +2,8 @@
  * Imports
  */
 
+import {UserColorPickerModal} from 'modals/ColorPickerModal'
 import {Button, Tooltip, Text} from 'vdux-containers'
-import ColorPickerModal from 'modals/ColorPickerModal'
 import DescriptionModal from 'modals/DescriptionModal'
 import FollowButton from 'components/FollowButton'
 import {Block, Icon, Card, Flex} from 'vdux-ui'
@@ -83,7 +83,7 @@ export default component({
 
   controller: {
     * openColorPicker ({context, props}) {
-      yield context.openModal(() => <ColorPickerModal user={props.user} />)
+      yield context.openModal(() => <UserColorPickerModal user={props.user} selected={props.user.color} />)
     },
 
     * openDescriptionModal ({context, props}) {

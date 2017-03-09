@@ -1,6 +1,6 @@
-# <AddStudentModal/>
+# <Add Student Modal/>
 
-Manually add students to a class
+Modal for adding students to your class from the school
 
 ## Usage
 

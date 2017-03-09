@@ -67,7 +67,7 @@ export default summon(({activity}) => ({
       yield context.back(true)
 
       yield context.toast(
-        <Toast key='a'>
+        <Toast key='a' onDismiss={context.hideToast}>
           <Block align='space-between center'>
             <Block>
               Saved to <Link onClick={context.hideToast} href={`/${user.username}/boards/drafts`} color='blue'>Drafts</Link>

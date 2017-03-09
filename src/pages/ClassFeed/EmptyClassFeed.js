@@ -39,8 +39,7 @@ export default summon(props => ({
     }
 
     return (
-      <Block p textAlign='center'>
-        <Icon name='assignment' fs='xxl' color='green' />
+      <EmptyState wide fill icon='assignment' color='green'>
         <Block my fs='m' lighter>
           This is your class Activity Feed
         </Block>
@@ -58,7 +57,7 @@ export default summon(props => ({
         <Block fs='s' lighter mx='auto' mt='l' w='col_m'>
           Activities are interactive worksheets. Assign them to your class and they'll appear here for you and your students.
         </Block>
-      </Block>
+      </EmptyState>
     )
   },
 

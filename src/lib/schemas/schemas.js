@@ -7,6 +7,7 @@ import board from './board'
 import group from './group'
 import teacher from './teacher'
 import student from './student'
+import school from './school'
 
 /**
  * Schemas
@@ -17,7 +18,8 @@ const schemas = {
   board,
   group,
   student,
-  teacher
+  teacher,
+  school
 }
 
 /**

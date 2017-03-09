@@ -17,6 +17,7 @@ import {query} from 'redux-effects-credentials'
 import {component, element} from 'vdux'
 import modalMw from 'middleware/modal'
 import printMw from 'middleware/print'
+import flox, {fork} from '@flox/fork'
 import escapeRe from 'escape-regexp'
 import cookieParser from 'cookie'
 import App from 'components/App'
@@ -97,7 +98,8 @@ export default component({
       fastclickMw,
       analyticsMw,
       modalMw,
-      OAuthMw
+      OAuthMw,
+      flox
     ],
 
     shared: [
@@ -141,7 +143,9 @@ export default component({
     * postLogin ({actions}, user) {
       const token = user ? user.token : null
       yield actions.setAuthToken(token)
-      yield invalidate('/user')
+      yield fork(function * () {
+        yield [invalidate('/user'), invalidate('/school')]
+      })
       yield actions.setUrl('/')
     },
 
@@ -238,6 +242,31 @@ summon.configure({
     pattern: isApiServer,
     name: 'access_token',
     token: ({getContext}) => getContext().authToken
+  },
+
+  transformRequest (req) {
+    let clientId
+    let distinctId
+
+    if (typeof window !== 'undefined') {
+      window['ga'] && window['ga'](tracker => clientId = tracker.get('clientId'))
+      distinctId = window['mixpanel'] && mixpanel.get_distinct_id()
+    }
+
+    return {
+      ...req,
+      payload: {
+        ...req.payload,
+        params: {
+          ...(req.payload.params || {}),
+          headers: {
+            ...((req.payload.params || {}).headers || {}),
+            'X-Google-ClientId': clientId,
+            'X-Mixpanel-DistinctId': distinctId
+          }
+        }
+      }
+    }
   },
 
   transformError (err) {

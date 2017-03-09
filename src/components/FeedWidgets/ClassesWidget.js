@@ -2,13 +2,13 @@
  * Imports
  */
 
-import {MenuItem, Button, CSSContainer, wrap} from 'vdux-containers'
+import {Button, CSSContainer, wrap} from 'vdux-containers'
 import ClassSettingsModal from 'modals/ClassSettingsModal'
+import {Icon, Block, Card, Text, MenuItem} from 'vdux-ui'
 import {stopPropagation, component, element} from 'vdux'
 import CreateClassModal from 'modals/CreateClassModal'
 import JoinClassModal from 'modals/JoinClassModal'
 import RoundedInput from 'components/RoundedInput'
-import {Icon, Block, Card, Text} from 'vdux-ui'
 import Link from 'components/Link'
 import summon from 'vdux-summon'
 
@@ -16,7 +16,7 @@ import summon from 'vdux-summon'
  * Constants
  */
 
-const itemCurrentProps = {borderLeftColor: 'blue', highlight: 0.05, color: 'text'}
+const itemCurrentProps = {borderLeftColor: 'blue', highlight: 0.03, color: 'text'}
 const itemActiveProps = {opacity: 0.7}
 const itemHoverProps = {opacity: 1}
 const allClasses = {_id: 'all', displayName: 'All Classes'}
@@ -35,16 +35,16 @@ export default summon(() => ({
     const clsLength = loaded && value.items.length
     const {drafts: {canonicalTotal: {items}}, userType} = user
     const offset = userType === 'teacher'
-      ? items ? '408px' : '360px'
-      : '262px'
+      ? items ? '318px' : '270px'
+      : '150px'
 
     return (
       <Card {...props}>
-        <Block p uppercase boxShadow='0 2px 1px rgba(75,82,87,0.1)' z='1' relative align='space-between center'>
+        <Block p uppercase boxShadow='0 2px 1px rgba(grey,0.1)' z='1' relative align='space-between center'>
           <Block>Classes</Block>
           <RoundedInput type='search' onInput={actions.setFilter} placeholder='Filter…' py='s' px={10} m='-6px 0' bgColor='#FDFDFD' inputProps={alignLeft} w={120} hide={clsLength < 7} />
         </Block>
-        <Block maxHeight={`calc(100vh - ${offset})`} overflow='auto' border='1px solid rgba(75,82,87,0.05)' borderWidth='1px 0'>
+        <Block maxHeight={`calc(100vh - ${offset})`} overflow='auto' border='1px solid rgba(grey,0.05)' borderWidth='1px 0'>
           {[
             !state.filter && <Item cls={allClasses} />,
             loaded && value.items.filter(search(state.filter)).sort(cmp).map(item => <Item cls={item} hasSettings={userType === 'teacher'} />),
@@ -53,7 +53,7 @@ export default summon(() => ({
               : <AddClassItem Modal={CreateClassModal} text='New Class' />
           ]}
         </Block>
-        <Block boxShadow='0 -2px 1px rgba(75,82,87,0.1)' z='1' relative p />
+        <Block boxShadow='0 -2px 1px rgba(grey,0.1)' z='1' relative p />
       </Card>
     )
   },
@@ -81,9 +81,11 @@ const Item = wrap(CSSContainer, {
         href={`/class/${_id}`}
         align='start center'
         ui={MenuItem}
+        color='grey_medium'
+        hoverProps={{color: 'text'}}
         p>
         <Block circle='25px' lh='25px' mr textAlign='center' bg='green' color='white' uppercase>{displayName[0]}</Block>
-        <Text capitalize flex>{displayName}</Text>
+        <Text capitalize flex bolder>{displayName}</Text>
         <Block onClick={stopPropagation} align='end center'>
           <Button
             onClick={actions.classSettings}
@@ -115,10 +117,10 @@ const AddClassItem = component({
     const {text} = props
 
     return (
-      <MenuItem onClick={actions.openModal} py='m' color='text_color' display='flex' align='start center'>
-        <Icon name='add' fs='s' mr='m' sq='25' textAlign='center' />
+      <Link ui={MenuItem} hoverProps={{color: 'text'}} onClick={actions.openModal} py='m' color='grey_medium' bolder display='flex' align='start center'>
+        <Icon name='add' fs='s' mr='m' sq='25' textAlign='center' bolder />
         {text}
-      </MenuItem>
+      </Link>
     )
   },
 

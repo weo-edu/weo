@@ -31,7 +31,7 @@ export default component({
       const {user, onPin, activity} = props
 
       yield context.openModal(() =>
-            user
+            user && user._id
               ? <PinModal user={user} onPin={onPin} activity={activity} />
               : <SignUpModal />)
     }

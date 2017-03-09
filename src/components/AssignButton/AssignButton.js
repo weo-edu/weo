@@ -30,7 +30,7 @@ export default component({
     * openModalAction ({context, props}) {
       const {onAssign, user, activity} = props
 
-      yield context.openModal(() => user
+      yield context.openModal(() => user._id
         ? <AssignModal onAssign={onAssign} activity={activity} />
         : <SignUpModal />
       )

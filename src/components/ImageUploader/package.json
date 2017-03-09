@@ -1,0 +1,5 @@
+{
+  "name": "ImageUploader",
+  "main": "ImageUploader.js",
+  "browser": "ImageUploader.js"
+}

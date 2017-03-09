@@ -40,20 +40,22 @@ export default component({
             </Link>
           </Block>
         </Flex>
-        <Flex py='s' px color='blue' fw='bolder' hide={user.userType === 'student'}>
-          <Block flex='30%' pointer onClick={context.setUrl(`/${username}/boards`)} hoverProps={opacity}>
-            <Block>Pins</Block>
-            <Block>{pinCount}</Block>
-          </Block>
-          <Block flex='40%' pointer onClick={context.setUrl(`/${username}/following`)} hoverProps={opacity}>
-            <Block>Following</Block>
-            <Block>{following}</Block>
-          </Block>
-          <Block flex='40%' pointer onClick={context.setUrl(`/${username}/followers`)} hoverProps={opacity}>
-            <Block>Followers</Block>
-            <Block>{followers}</Block>
-          </Block>
-        </Flex>
+        {
+          // <Flex py='s' px color='blue' fw='bolder' hide={user.userType === 'student'}>
+          //   <Block flex='30%' pointer onClick={context.setUrl(`/${username}/boards`)} hoverProps={opacity}>
+          //     <Block>Pins</Block>
+          //     <Block>{pinCount}</Block>
+          //   </Block>
+          //   <Block flex='40%' pointer onClick={context.setUrl(`/${username}/following`)} hoverProps={opacity}>
+          //     <Block>Following</Block>
+          //     <Block>{following}</Block>
+          //   </Block>
+          //   <Block flex='40%' pointer onClick={context.setUrl(`/${username}/followers`)} hoverProps={opacity}>
+          //     <Block>Followers</Block>
+          //     <Block>{followers}</Block>
+          //   </Block>
+          // </Flex>
+        }
       </Card>
     )
   }

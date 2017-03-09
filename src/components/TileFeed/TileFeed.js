@@ -53,7 +53,8 @@ function renderItems (items, emptyState, children, user, skip, activityProps, co
   )
 
   function getOptions (activity) {
-    const isOwner = activity.actor.id === user._id
+    const isOwner = activity.actor.id === user && user._id
+
     return {
       edit: isOwner,
       like: !isOwner,

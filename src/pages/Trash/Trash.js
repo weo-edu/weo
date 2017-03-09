@@ -29,7 +29,7 @@ export default summonChannels(
 
 function EmptyTrash () {
   return (
-    <EmptyState ui={Flex} column align='center center' bg='#E4E5E7' border='1px solid #D8DADD' icon='delete' color='red' w='auto' minHeight='400px'>
+    <EmptyState ui={Flex} column align='center center' fill p={0} icon='delete' color='red' minHeight='400px'>
       <Block fs='m' my='l'>Your trash is empty.</Block>
     </EmptyState>
   )

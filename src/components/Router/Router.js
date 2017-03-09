@@ -7,6 +7,7 @@ import ActivityLayout from 'layouts/ActivityLayout'
 import SettingsLayout from 'layouts/SettingsLayout'
 import ProfileLayout from 'layouts/ProfileLayout'
 import SearchLayout from 'layouts/SearchLayout'
+import SchoolLayout from 'layouts/SchoolLayout'
 import ClassLayout from 'layouts/ClassLayout'
 import MainLayout from 'layouts/MainLayout'
 import HomeLayout from 'layouts/HomeLayout'
@@ -36,6 +37,12 @@ import ActivityOverview from 'pages/ActivityOverview'
 import ActivityInstance from 'pages/ActivityInstance'
 import ActivityPreview from 'pages/ActivityPreview'
 import ActivityEdit from 'pages/ActivityEdit'
+
+import SchoolDiscussion from 'pages/SchoolDiscussion'
+import SchoolTeachers from 'pages/SchoolTeachers'
+import SchoolStudents from 'pages/SchoolStudents'
+import SchoolSettings from 'pages/SchoolSettings'
+import SchoolStream from 'pages/SchoolStream'
 
 import ClassGradebook from 'pages/ClassGradebook'
 import ClassStudents from 'pages/ClassStudents'
@@ -82,6 +89,10 @@ const router = enroute({
     <HomeLayout action='signup'>
       <Login {...props} />
     </HomeLayout>),
+  '/teacher/:schoolId': track('Teacher Signup', (params, props) =>
+    <HomeLayout {...props}>
+      <TeacherSignup {...props} {...params} />
+    </HomeLayout>),
   '/teacher(\\?.*)?': track('Teacher Signup', (params, props) =>
     <HomeLayout action='login'>
       <TeacherSignup {...props} />
@@ -114,6 +125,31 @@ const router = enroute({
           : <Redirect to='/class/all' {...props} />
       }
     </MainLayout>)),
+
+  // School
+  '/school/': track('School Redirect', auth('teacher', (params, props) =>
+    <Redirect to='/school/discussion' />)),
+  '/school/discussion': track('School Discussion', auth('teacher', (params, props) =>
+    <SchoolLayout {...props} {...params}>
+      <SchoolDiscussion {...props} {...params} />
+    </SchoolLayout>)),
+  '/school/teachers': track('School Teachers', auth('teacher', (params, props) =>
+    <SchoolLayout {...props} {...params}>
+      <SchoolTeachers {...props} {...params} />
+    </SchoolLayout>)),
+  '/school/students': track('School Students', auth('teacher', (params, props) =>
+    <SchoolLayout {...props} {...params}>
+      <SchoolStudents {...props} {...params} />
+    </SchoolLayout>)),
+  '/school/stream': track('School Stream', auth('teacher', (params, props) =>
+    <SchoolLayout {...props} {...params}>
+      <SchoolStream {...props} {...params} />
+    </SchoolLayout>)),
+  '/school/settings': track('School Settings', auth('teacher', (params, props) =>
+    <SchoolLayout {...props} {...params}>
+        <SchoolSettings {...props} {...params} />
+    </SchoolLayout>)),
+
   // Class
   '/class/': track('Class Redirect', auth('user', (params, props) =>
     <Redirect to='/class/all' />)),
@@ -164,7 +200,7 @@ const router = enroute({
       <SearchPeople {...props} {...params} />
     </SearchLayout>)),
 
-  // Acount
+  // Account
   '/account/settings': track('Account Settings', auth('user', (params, props) =>
     <SettingsLayout {...props} {...params}>
       <AccountSettings {...props} />
@@ -359,7 +395,7 @@ function track (name, route) {
 function isAuthorized (type, {currentUser}) {
   switch (type) {
     case 'user':
-      return !!currentUser
+      return !!(currentUser && currentUser._id)
     case 'student':
       return currentUser.userType === 'student'
     case 'nonstudent':
@@ -370,7 +406,7 @@ function isAuthorized (type, {currentUser}) {
 }
 
 function isLoggedIn (state) {
-  return !!state.currentUser
+  return !!(state.currentUser && state.currentUser._id)
 }
 
 function profileRedirect (props, user) {
@@ -390,10 +426,10 @@ function activityRedirect ({published, contexts, _id}, {currentUser}) {
   }
 
   if (contexts[0].descriptor.id === 'public') {
-    if (currentUser.userType === 'teacher') {
-      return <Redirect to={`/activity/${_id}/preview`} />
-    } else {
+    if (currentUser.userType === 'student') {
       return <Redirect to='/' />
+    } else {
+      return <Redirect to={`/activity/${_id}/preview`} />
     }
   }
 

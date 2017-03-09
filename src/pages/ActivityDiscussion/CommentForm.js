@@ -25,9 +25,8 @@ export default summon(({id}) => ({
   })
 }))(component({
   render ({props, actions}) {
-    const {
-      currentUser, makingComment = {}
-    } = props
+    const {currentUser, makingComment = {}} = props
+
     return (
       <Form p='l' bg='off_white' borderTop='1px solid rgba(black, .05)' align='start start' onSubmit={actions.createShare} validate={validateComment}>
         <Avatar actor={currentUser} size='40px' />

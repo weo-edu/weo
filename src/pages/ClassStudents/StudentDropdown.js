@@ -21,11 +21,11 @@ export default component({
 
     return (
       <Dropdown z='2' {...rest} btn={({toggle}, open) => <DropButton showSettings={showSettings} open={open} toggle={toggle} />} whiteSpace='nowrap' minWidth='180px'>
-        <StudentItem icon='edit' modal={<UsernameModal group={group} user={student} />}>
-          Change Username
-        </StudentItem>
         <StudentItem icon='info' modal={<NameModal group={group} user={student} />}>
           Change Name
+        </StudentItem>
+        <StudentItem icon='edit' modal={<UsernameModal group={group} user={student} />}>
+          Change Username
         </StudentItem>
         <StudentItem icon='person' modal={<IdModal group={group} user={student} />}>
           Change ID

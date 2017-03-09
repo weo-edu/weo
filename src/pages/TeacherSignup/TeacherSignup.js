@@ -16,12 +16,14 @@ import Form from 'vdux-form'
  * Teacher signup page
  */
 
-export default summon(props => ({
+export default summon(({schoolId}) => ({
   createTeacher: body => ({
     creatingTeacher: {
       url: '/auth/user',
       method: 'POST',
-      body
+      body: schoolId
+        ? {...body, school: schoolId}
+        : body
     }
   })
 }))(component({

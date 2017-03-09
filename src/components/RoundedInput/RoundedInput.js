@@ -15,7 +15,7 @@ export default component({
       <Input
         cursor='text'
         fs='xs'
-        border='1px solid rgba(75, 82, 87, 0.15)'
+        border='1px solid rgba(grey, 0.15)'
         pill
         px='20'
         py='10'

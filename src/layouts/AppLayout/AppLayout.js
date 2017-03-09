@@ -7,7 +7,7 @@ import {Block} from 'vdux-ui'
 import Nav from './Nav'
 
 /**
- * App
+ * <AppLayout/>
  */
 
 export default component({

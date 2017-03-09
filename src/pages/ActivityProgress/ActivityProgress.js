@@ -3,11 +3,12 @@
  */
 
 import {combineInstancesAndStudents, activitySort} from 'lib/activity-helpers'
-import {Block, Table, TableHeader, TableRow, Icon, Text} from 'vdux-ui'
-import {Checkbox, wrap, CSSContainer, form, Button} from 'vdux-containers'
+import {Block, Table, TableHeader, TableRow, Icon} from 'vdux-ui'
 import ActivityProgressActions from './ActivityProgressActions'
 import ActivityProgressRow from './ActivityProgressRow'
+import {Checkbox, form, Button} from 'vdux-containers'
 import EmptyState from 'components/EmptyState'
+import SortHeader from 'components/SortHeader'
 import summonPrefs from 'lib/summon-prefs'
 import {component, element} from 'vdux'
 import index from '@f/index'
@@ -33,7 +34,7 @@ component({
 
     const headProps = {sort, setSort: actions.setSort, lighter: true, p: true}
 
-  // Multi Select Variables
+    // Multi Select Variables
     const instanceIds = index(({instanceId}) => instanceId, instanceList)
     const selected = (fields.selected.value || []).filter(id => instanceIds[id])
     const selMap = index(selected)
@@ -52,11 +53,11 @@ component({
             <TableHeader {...headProps}>
               <Checkbox pointer checked={allSelected} indeterminate={indeterminate} onChange={toggleAll('selected')} />
             </TableHeader>
-            <SortHead {...headProps} prop='givenName' text='First' />
-            <SortHead {...headProps} prop='familyName' text='Last' />
-            <SortHead {...headProps} prop='percent' text='Score' />
-            <SortHead {...headProps} prop='status' text='Status' />
-            <SortHead {...headProps} prop='turnedInAt' text='Turned In' />
+            <SortHeader {...headProps} prop='givenName' text='First' />
+            <SortHeader {...headProps} prop='familyName' text='Last' />
+            <SortHeader {...headProps} prop='percent' text='Score' />
+            <SortHeader {...headProps} prop='status' text='Status' />
+            <SortHeader {...headProps} prop='turnedInAt' text='Turned In' />
             <TableHeader {...headProps} />
           </TableRow>
           {
@@ -93,32 +94,3 @@ component({
     }
   }
 })))
-
-/**
- * <SortHead/>: Sortable table headers
- */
-
-const SortHead = wrap(CSSContainer, {
-  hoverProps: {
-    hover: true
-  }
-})({
-  render ({props}) {
-    const {hover, sort, prop, text, setSort, ...rest} = props
-
-    return (
-      <TableHeader pointer={sort} onClick={setSort(sort, prop)} {...rest} borderWidth={0}>
-        <Block align='start center'>
-          <Text underline={sort && hover}>
-            {text}
-          </Text>
-          <Icon
-            name={'arrow_drop_' + (sort.dir === 1 ? 'down' : 'up')}
-            hidden={sort.property !== prop}
-            ml='s'
-            fs='s' />
-        </Block>
-      </TableHeader>
-    )
-  }
-})

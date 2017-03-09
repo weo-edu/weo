@@ -35,7 +35,7 @@ export default summon(({activity: {_id}}) => ({
       ? false
       : liked === 1 || likers.some(liker => liker.id === user._id)
 
-    const click = user
+    const click = user && user._id
       ? [hasLiked ? unlikeActivity : likeActivity, localLike && localLike(hasLiked ? -1 : 1)]
       : actions.openSignupModal
 

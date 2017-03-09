@@ -4,6 +4,7 @@
 
 import CreateActivityModal from 'modals/CreateActivityModal'
 import CreateClassModal from 'modals/CreateClassModal'
+import PageTitle from 'components/PageTitle'
 import {Block, Card, Icon} from 'vdux-ui'
 import {component, element} from 'vdux'
 import {Button} from 'vdux-containers'
@@ -21,6 +22,7 @@ export default component({
 
     return (
       <Block w='col_xl' mx='auto' my='l' pb='l'>
+        <PageTitle title='Get Started' />
         <Block fs='l' lighter my>Welcome to Weo!</Block>
         <Block fs='s' lighter mb='xl'>Complete all the following steps to get started using Weo in your classroom today!</Block>
         {

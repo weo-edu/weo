@@ -22,7 +22,7 @@ export default component({
         {
           isMe
             ? <Block>
-                No one ha<Text bold>you </Text> yet.
+                No one has followed <Text bold> you </Text> yet.
               <Block fs='xs' mt lh='20px' fw='normal'>
                 <Link color='blue' href='/connect'>connect</Link> and start following people who pin and create things you like.
               </Block>

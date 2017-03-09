@@ -14,7 +14,7 @@ import {Block} from 'vdux-ui'
 export default component({
   render ({props, context}) {
     return (
-      <EmptyState icon='explore' wide mt={8} mx='auto' p='24px 12px 80px' bg='grey_light' border='1px solid #D4D4D4'>
+      <EmptyState icon='explore' fill mx='auto' mt={8}>
         <Block fs='m' m>Find People to Follow</Block>
         <Block fs='xs' my='l'>This is your home feed. Once you start following people, all their activities will show up here.</Block>
         <Button

@@ -32,8 +32,8 @@ export default wrap(CSSContainer, {
         fw='bold'
         display='flex'
         color='grey_medium'
-        ui={MenuItem}
         {...rest}
+        ui={MenuItem}
         py='m'
         borderLeft='3px solid transparent'
         hoverProps={hoverProps}
