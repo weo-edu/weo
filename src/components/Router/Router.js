@@ -86,27 +86,27 @@ const router = enroute({
       <Clever {...props} />
     </HomeLayout>),
   '/login(\\?.*)?': track('Login', (params, props) =>
-    <HomeLayout action='signup'>
+    <HomeLayout title='Login - Weo' action='signup'>
       <Login {...props} />
     </HomeLayout>),
   '/teacher/:schoolId': track('Teacher Signup', (params, props) =>
-    <HomeLayout {...props}>
+    <HomeLayout title='Teacher Signup - Weo' {...props}>
       <TeacherSignup {...props} {...params} />
     </HomeLayout>),
   '/teacher(\\?.*)?': track('Teacher Signup', (params, props) =>
-    <HomeLayout action='login'>
+    <HomeLayout title='Teacher Signup - Weo' action='login'>
       <TeacherSignup {...props} />
     </HomeLayout>),
   '/student(\\?.*)?': track('Student Signup', (params, props) =>
-    <HomeLayout action='login'>
+    <HomeLayout title='Student Signup - Weo' action='login'>
       <StudentSignup {...props} />
     </HomeLayout>),
   '/forgot(\\?.*)?': track('Forgot Password', (params, props) =>
-    <HomeLayout action='login'>
+    <HomeLayout title='Forgot Password - Weo' action='login'>
       <ForgotPassword {...props} />
     </HomeLayout>),
   '/reset/:token?': track('Reset Password', (params, props) =>
-    <HomeLayout action='login'>
+    <HomeLayout title='Reset Password - Weo' action='login'>
       <ResetPassword {...props} {...params} />
     </HomeLayout>),
 
