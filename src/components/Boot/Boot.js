@@ -204,7 +204,11 @@ export default component({
       modal: state.currentUrl === currentUrl ? state.modal : null
     }),
     updateToken: (state, authToken) => ({authToken}),
-    openModal: (state, modal) => ({modal}),
+    openModal: (state, modal) => ({
+      // Dont allow modal opening on the server, because it causes
+      // issues with server-side rendering
+      modal: typeof window === 'undefined' ? null : modal
+    }),
     closeModal: () => ({modal: null}),
     showToast: (state, toast) => ({toast}),
     hideToast: () => ({toast: null}),

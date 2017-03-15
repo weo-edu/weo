@@ -18,7 +18,6 @@ export default component({
     const {preferences = {}, userType} = currentUser
     const {slideshow = {}} = preferences
 
-
     if (!slideshow.done && userType === 'teacher') {
       yield context.openModal(() => <IntroModal currentUser={currentUser} school={school} />)
     }
