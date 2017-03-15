@@ -28,12 +28,13 @@ export default component({
     } = props
     const {value, hasLoaded, loaded, loading, params} = activities
     const searching = !!(params && params.query)
+    const items = value && value.items || []
 
     return (
       <InfiniteScroll loading={loading} more={value && more(value.nextPageToken)} {...rest}>
         {
           <RoundedInput
-            hide={!search || !hasLoaded || (!loading && !value.items.length && !searching)}
+            hide={!search || !hasLoaded || (!loading && !items.length && !searching)}
             onKeypress={{enter: decodeValue(search)}}
             placeholder='Search your activities...'
             inputProps={{textAlign: 'left', appearance: 'none', h: '17px', lh: '17px'}}
@@ -47,7 +48,7 @@ export default component({
         }
         {
           loaded && renderItems(
-            value.items,
+            items,
             Item,
             itemProps,
             loading
