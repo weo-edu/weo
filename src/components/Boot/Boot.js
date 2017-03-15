@@ -254,7 +254,7 @@ summon.configure({
 
     if (typeof window !== 'undefined') {
       window['ga'] && window['ga'](tracker => clientId = tracker.get('clientId'))
-      distinctId = window['mixpanel'] && mixpanel.get_distinct_id()
+      distinctId = window['mixpanel'] && window['mixpanel'].get_distinct_id && mixpanel.get_distinct_id()
     }
 
     return {
