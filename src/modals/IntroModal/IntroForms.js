@@ -144,7 +144,10 @@ export default summon(({currentUser}) => ({
               <Block w={350} h={200} align='center center' column>
                 <Block w='300' m='28px auto 24px'>
                   <LineInput autofocus name='name' placeholder='School Name' mb='l' />
-                  <LineInput name='location' placeholder='School Location' />
+                  <Block align='start center'>
+                    <LineInput name='city' placeholder='City' mr />
+                    <LineInput name='state' placeholder='State' w='100' maxlength='2' />
+                  </Block>
                 </Block>
                 <Text onClick={actions.setSchoolState('join')} {...textLinkProps} align='center center'>
                   <Icon name='keyboard_arrow_left' fs='xxs' mr='xs' textDecoration='none' />

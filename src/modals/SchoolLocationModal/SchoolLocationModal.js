@@ -35,7 +35,7 @@ export default summon(({school}) => ({
               </ModalHeader>
               <Block align='space-between' flex>
                 <LineInput name='city' value={school.city} placeholder='City' mb='l' w='70%' />
-                <LineInput name='state' value={school.state} placeholder='State' mb='l' w='23%' />
+                <LineInput name='state' value={school.state} placeholder='State' mb='l' w='23%' maxlength='2' />
               </Block>
             </Flex>
           </ModalBody>
