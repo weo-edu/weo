@@ -49,21 +49,17 @@ function middleware ({dispatch}) {
  */
 
 function * doUploadFile ({file, progress = noop}, dispatch) {
-  try {
-    const {type} = file
-    const res = yield fetch(`${apiServer}/s3/upload`, {method: 'POST'})
-    const {value: S3} = res
+  const {type} = file
+  const res = yield fetch(`${apiServer}/s3/upload`, {method: 'POST'})
+  const {value: S3} = res
 
-    return yield upload({
-      file,
-      S3,
-      type,
-      attachment: !isImage(type),
-      name: S3.name + ext(file)
-    }, percent => dispatch(progress(percent)))
-  } catch (err) {
-    console.log('err', err)
-  }
+  return yield upload({
+    file,
+    S3,
+    type,
+    attachment: !isImage(type),
+    name: S3.name + ext(file)
+  }, percent => dispatch(progress(percent)))
 }
 
 function upload (config, progress) {
