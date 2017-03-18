@@ -34,8 +34,9 @@ export default component({
   render ({props, context, actions}) {
     const {
       object, editing, showAnswers, remove, overview, submit, answerable, idx,
-      answer = [], actor, numAtt, setSpeaking, speechRate, speakingId, speechEnabled
+      actor, numAtt, setSpeaking, speechRate, speakingId, speechEnabled
     } = props
+    const answer = props.answer || []
     const {content, originalContent, correctAnswer = []} = object
     const isCorrect = correctAnswer.indexOf(object._id) !== -1
     const chosen = isChosen(object, answer)
