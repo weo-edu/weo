@@ -50,7 +50,7 @@ export default component({
               </Flex>
           }
           <Block bg='grey'>
-            <Flex wrap h={158} bgColor='off_white' borderColor='rgba(75,82,87,0.03)' borderBottom borderTop pointer onClick={context.setUrl(url)} hoverProps={opacity}>
+            <Flex wrap h={158} bgColor='off_white' borderColor='rgba(grey,0.03)' borderBottom borderTop pointer onClick={context.setUrl(url)} hoverProps={opacity}>
               {
                 !images.length && (
                   <Text p fs='xxs'>

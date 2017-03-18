@@ -2,6 +2,7 @@
  * Imports
  */
 
+import PageTitle from 'components/PageTitle'
 import FloatingArrow from './FloatingArrow'
 import Testimonials from './Testimonials'
 import CallToAction from './CallToAction'
@@ -24,10 +25,11 @@ const desk = cloudFS.url('./files/desk.jpg')
 
 export default component({
   render ({props, children}) {
-    const {action} = props
+    const {action, title} = props
 
     return (
       <Block bg='#FFF'>
+        <PageTitle title={title || 'Weo'} />
         <Header action={action} />
         <Flex wide align='center center' bg={`url(${desk}) center /cover`} h='100vh'>
           <Block absolute top='0' bottom='0' right='0' left='0' bg='rgba(32,26,22,0.5)' z='0' />

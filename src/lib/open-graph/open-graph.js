@@ -15,6 +15,8 @@ const image = cloudFS.url('./simple1200x620.png')
  */
 
 export default {
+  url: 'https://www.weo.io',
+  app_id: '1662916197276541',
   title: 'Your assignments Simplified | WEO',
   image,
   site_name: 'Weo',

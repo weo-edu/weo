@@ -58,7 +58,7 @@ function InfoBlock ({props}) {
   return (
     <Block borderBottom={!last && '1px dashed grey_medium'} p='l' pageBreakInside='avoid' relative>
       <Block border='1px solid grey_medium' align='start center' borderRadius='10'>
-        <Block fs='l' color='blue' flex='35%' textAlign='center'>
+        <Block fs='l' color='blue' flex='35%' maxWidth='35%' overflow='hidden' textAlign='center'>
           {user.displayName}
         </Block>
         <Block tag='ol' fs='s' flex='50%'>

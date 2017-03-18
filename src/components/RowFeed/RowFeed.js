@@ -28,25 +28,27 @@ export default component({
     } = props
     const {value, hasLoaded, loaded, loading, params} = activities
     const searching = !!(params && params.query)
+    const items = value && value.items || []
 
     return (
       <InfiniteScroll loading={loading} more={value && more(value.nextPageToken)} {...rest}>
         {
           <RoundedInput
-            hide={!search || !hasLoaded || (!loading && !value.items.length && !searching)}
+            hide={!search || !hasLoaded || (!loading && !items.length && !searching)}
             onKeypress={{enter: decodeValue(search)}}
             placeholder='Search your activities...'
-            inputProps={{textAlign: 'left', appearance: 'none'}}
+            inputProps={{textAlign: 'left', appearance: 'none', h: '17px', lh: '17px'}}
             key={props.boardId}
             type='search'
             icon='search'
             py='8px'
             absolute={absolute}
+            z='1'
             w='242px' />
         }
         {
           loaded && renderItems(
-            value.items,
+            items,
             Item,
             itemProps,
             loading
@@ -77,7 +79,7 @@ function renderItems (items, Item, itemProps, emptyState, currentUser) {
 
     if (!isSameDay(date, prevDate)) {
       list.push((
-        <Block p='m' mt={!i ? 0 : 'm'} fs='s' fw='lighter' color='blue' capitalize>
+        <Block p='m' mt={!i ? 0 : 'm'} fs='s' fw='lighter' color='blue' capitalize boxShadow='card' borderBottom='1px solid rgba(grey, .1)' bg='off_white'>
           {moment(startOfDay(date)).calendar()}
         </Block>
       ))

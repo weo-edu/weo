@@ -98,7 +98,7 @@ export default summon(() => ({
         if (onPin) yield onPin(board._id)
 
         yield context.toast(
-          <Toast key='a'>
+          <Toast key='a' onDismiss={context.hideToast}>
             <Block align='space-between center'>
               <Block ellipsis>
                 Pinned to <Link onClick={context.hideToast} href={url} color='blue'>{displayName}</Link>

@@ -19,7 +19,6 @@ export default wrap(CSSContainer, {
 })(component({
   propTypes: {
     activity: t.Object,
-    currentUser: t.Object,
     options: t.maybe(t.Object),
     showClass: t.maybe(t.Boolean)
   },
@@ -27,7 +26,7 @@ export default wrap(CSSContainer, {
   render ({props, context}) {
     const {
       hover, activity, metaUi: MetaUi = Meta, ddMenu,
-      badgeUi: BadgeUi = Badge, currentUser, options, showClass
+      badgeUi: BadgeUi = Badge, currentUser = {}, options, showClass
     } = props
     const {image, displayName, description, _id: id} = activity
 
@@ -66,7 +65,7 @@ export default wrap(CSSContainer, {
             {
               options && hover &&
                 <Flex align='end center'>
-                  <ActivityCardActions {...options} align='end center' wide activity={activity} user={currentUser} />
+                  <ActivityCardActions {...options} align='end center' wide activity={activity} user={currentUser || {}} />
                   {
                     ddMenu &&
                       <Block mr ml='-6' onClick={stopPropagation}>

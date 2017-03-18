@@ -33,7 +33,7 @@ export default component({
   },
 
   render ({props, state, actions, context}) {
-    const {currentUser} = props
+    const {currentUser, school} = props
     const {cur, counts} = state
 
     return (
@@ -42,7 +42,7 @@ export default component({
           (cur < numSteps) && <IntroSteps cur={cur} counts={counts} />
         }
         {
-          (cur >= numSteps) && <IntroForms cur={cur} currentUser={currentUser} />
+          (cur >= numSteps) && <IntroForms cur={cur} currentUser={currentUser} school={school} />
         }
         <Block hide={cur >= numSteps}>
           <Block absolute wide h={btnProps.circle} top bottom m='auto'>

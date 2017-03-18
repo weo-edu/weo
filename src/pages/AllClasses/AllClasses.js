@@ -59,7 +59,7 @@ const Join = component({
 
     return (
       isTeacher
-        ? <EmptyState icon='school' color='blue' wide mx='auto' p='24px 12px 80px' bg='grey_light' border='1px solid #D4D4D4'>
+        ? <EmptyState icon='school' color='blue' fill>
             <Block fs='m' m>Welcome to Weo!</Block>
             <Button
               onClick={actions.createClass}
@@ -78,7 +78,7 @@ const Join = component({
               <Text bold>Classes </Text> let you deliver engaging, interactive activities to your students. <Text bold>Click the button</Text> above to create your first class.
             </Block>
           </EmptyState>
-        : <EmptyState icon='school' color='blue' w='col_xl' mx='auto' p='24px 12px 80px' bg='grey_light' border='1px solid #D4D4D4'>
+        : <EmptyState icon='school' color='blue' fill>
             You're not in any classes yet!
             <Block fs='xs' my>
               Click the button below to join your first class:
@@ -115,7 +115,7 @@ const Join = component({
 
 function Empty ({props}) {
   return (
-    <EmptyState icon='assignment' color='green' w='col_xl' mx='auto' p='60px 12px' bg='grey_light' border='1px solid #D4D4D4'>
+    <EmptyState icon='assignment' color='green' fill py='60'>
       Nothing here yet.
       {
         props.isTeacher

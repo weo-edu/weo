@@ -44,7 +44,7 @@ const EmptyBoard = component({
     const isMine = user._id === currentUser._id
 
     return (
-      <EmptyState p='24px 12px 24px' bg='grey_light' border='1px solid #D4D4D4' icon='assignment' color='green' w='auto'>
+      <EmptyState fill py='24px' icon='assignment' color='green' w='auto'>
         {
           isMine
             ? <Block>

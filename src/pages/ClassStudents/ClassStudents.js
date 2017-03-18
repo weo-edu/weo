@@ -5,6 +5,7 @@
 import RemoveFromClassModal from 'modals/RemoveFromClassModal'
 import InviteStudentsModal from 'modals/InviteStudentsModal'
 import EmptyClassStudents from './EmptyClassStudents'
+import CreateStudentModal from 'modals/CreateStudentModal'
 import AddStudentModal from 'modals/AddStudentModal'
 import PrintLoginModal from 'modals/PrintLoginModal'
 import {Button, form, Tooltip} from 'vdux-containers'
@@ -46,7 +47,7 @@ export default summon(({group}) => ({
                   <StudentMenu students={studentList} group={group} selected={selected} currentUser={currentUser} />
                   <StudentGrid students={studentList} group={group} selected={selected} toggleAll={toggleAll} currentUser={currentUser} />
                 </Block>
-                : <EmptyClassStudents group={group} />
+              : <EmptyClassStudents group={group} />
           }
         </Block>
       )
@@ -78,11 +79,9 @@ const StudentMenu = component({
 
     return (
       <Flex align='space-between center' mb>
-        <Button bgColor='blue' {...btnProps} onClick={actions.addStudentModal}>
-          <Icon name='people' mr='s' fs='s' />Add Student
-        </Button>
-        <Button bgColor='green' {...btnProps} onClick={actions.inviteStudentModal}>
-          <Icon name='send' mr='s' fs='s' />Invite Students
+        <Button {...btnProps} onClick={actions.addStudentModal}>
+          <Icon name='group_add' mr='s' fs='s'/>
+          Add Students 
         </Button>
         <Tooltip message={!count && 'Select Students to Enable'}>
           <Button disabled={!count} bgColor='white' {...btnProps} hoverProps={highlightProps} focusProps={highlightProps} color='text' onClick={actions.passwordModal(users)}>
@@ -110,11 +109,7 @@ const StudentMenu = component({
 
   controller: {
     * addStudentModal ({props, context}) {
-      yield context.openModal(() => <AddStudentModal groupId={props.group._id} />)
-    },
-
-    * inviteStudentModal ({props, context}) {
-      yield context.openModal(() => <InviteStudentsModal group={props.group} />)
+      yield context.openModal(() => <AddStudentModal group={props.group} />)
     },
 
     * removeModal ({props, context}, users) {

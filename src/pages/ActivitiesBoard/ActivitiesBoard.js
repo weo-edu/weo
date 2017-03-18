@@ -49,7 +49,7 @@ const EmptyBoard = component({
     const {isMe, currentUser} = props
 
     return (
-      <EmptyState p='24px 12px 24px' bg='#E4E5E7' border='1px solid #D8DADD' icon='dashboard' color='green' w='auto'>
+      <EmptyState fill icon='dashboard' color='green' w='auto'>
         {
           isMe
             ? <Block>

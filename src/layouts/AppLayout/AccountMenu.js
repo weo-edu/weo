@@ -28,6 +28,9 @@ export default component({
     const {currentUser} = props
     const {username, userType} = currentUser
     const isStudent = userType === 'student'
+    const numDrafts = currentUser._id
+      ? currentUser.drafts.canonicalTotal.items
+      : 0
 
     return (
       <Dropdown w='180px' mr='s' btn={<DropdownToggle {...props} />}>
@@ -38,7 +41,7 @@ export default component({
         <Link {...itemProps} href={`/${username}/boards/drafts`} hide={isStudent}>
           <WeoIcon name='draft' {...iconProps} />
           My Drafts
-          <Text color='grey_medium' ml='s'>{currentUser.drafts.canonicalTotal.items}</Text>
+          <Text color='grey_medium' ml='s'>{numDrafts}</Text>
         </Link>
         <Divider />
         <Link {...itemProps} href='/connect' hide={isStudent}>

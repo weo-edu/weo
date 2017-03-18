@@ -25,6 +25,7 @@ export default component({
 
     return (
       <Card>
+        
         <Block fs='m' color='blue' pt='l' pb px>
           User Settings
         </Block>

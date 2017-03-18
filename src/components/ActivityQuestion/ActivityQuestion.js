@@ -11,6 +11,7 @@ import {component, element} from 'vdux'
 import {debounce} from 'redux-timing'
 import getProp from '@f/get-prop'
 import summon from 'vdux-summon'
+import srand from '@f/srand'
 import map from '@f/map'
 
 /**
@@ -118,7 +119,9 @@ export default summon(({activityId, object}) => ({
                     object={att}
                     poll={poll}
                     idx={i} />,
-                  attachments
+                  isStudent && object.randomize
+                    ? randomize(attachments, activityId)
+                    : attachments
                 )
               }
             </Block>
@@ -195,4 +198,18 @@ function getId (str) {
   if (typeof str !== 'string') return
   const arr = str.split('.')
   return arr[arr.length - 1]
+}
+
+function randomize (choices, seed) {
+  const rand = srand(seed)
+  const result = []
+  choices = choices.slice(0)
+
+  while (choices.length) {
+    const i = Math.floor(rand(choices.length, 0))
+    result.push(choices[i])
+    choices.splice(i, 1)
+  }
+
+  return result
 }

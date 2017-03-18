@@ -1,0 +1,5 @@
+{
+  "name": "SchoolSettings",
+  "main": "SchoolSettings.js",
+  "browser": "SchoolSettings.js"
+}

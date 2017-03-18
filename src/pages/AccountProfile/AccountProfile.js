@@ -2,9 +2,9 @@
  * Imports
  */
 
+import {UserColorPickerModal} from 'modals/ColorPickerModal'
 import SubjectPickerModal from 'modals/SubjectPickerModal'
 import AvatarPickerModal from 'modals/AvatarPickerModal'
-import ColorPickerModal from 'modals/ColorPickerModal'
 import GradePickerModal from 'modals/GradePickerModal'
 import DescriptionModal from 'modals/DescriptionModal'
 import LocationModal from 'modals/LocationModal'
@@ -38,7 +38,7 @@ export default component({
           <Avatar sq='40px' actor={currentUser} display='block' />
         </SettingsRow>
 
-        <SettingsRow name='Color' Modal={<ColorPickerModal user={currentUser} />} message='The color that appears in the top bar of your profile.'>
+        <SettingsRow name='Color' Modal={<UserColorPickerModal user={currentUser} selected={currentUser.color} />} message='The color that appears in the top bar of your profile.'>
           <Block circle='40px' bgColor={color || pickerColors[0]} />
         </SettingsRow>
 

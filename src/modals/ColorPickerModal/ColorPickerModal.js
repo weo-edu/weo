@@ -19,21 +19,9 @@ const {pickerColors, blue} = colors
  * <ColorPickerModal/>
  */
 
-export default summon(({user}) => ({
-  updateColor: color => ({
-    submitting: {
-      url: '/user',
-      method: 'PUT',
-      invalidates: false,
-      body: {
-        ...user,
-        color
-      }
-    }
-  })
-}))(component({
+const ColorPickerModal = component({
   initialState: ({props}) => ({
-    selected: props.user.color
+    selected: props.selected
   }),
 
   render ({props, state, actions, context}) {
@@ -70,7 +58,34 @@ export default summon(({user}) => ({
   reducer: {
     choose: (state, selected) => ({selected})
   }
-}))
+})
+
+export const UserColorPickerModal = summon(({user}) => ({
+  updateColor: color => ({
+    submitting: {
+      url: '/user',
+      method: 'PUT',
+      invalidates: false,
+      body: {
+        ...user,
+        color
+      }
+    }
+  })
+}))(ColorPickerModal)
+
+export const SchoolColorPickerModal = summon(({school}) => ({
+  updateColor: color => ({
+    submitting: {
+      url: `/school/${school._id}/color`,
+      invalidates: false,
+      method: 'PUT',
+      body: {
+        value: color
+      }
+    }
+  })
+}))(ColorPickerModal)
 
 /**
  * <ColorBlock/> component

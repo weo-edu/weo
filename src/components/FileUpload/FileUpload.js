@@ -49,7 +49,7 @@ export default component({
         {...props}>
         <ProgressBar w='50%' h='5' absolute top bottom right left m='auto' hide={!uploading} progress={progress} />
         <ErrorTip show={!!error} message={error} placement='right' />
-        <Base sq='100%' onChange={decodeFiles(actions.upload)} tag='input' type='file' opacity='0' absolute top left pointer />
+        <Base sq={uploading ? 0 : '100%'} onChange={decodeFiles(actions.upload)} tag='input' type='file' opacity='0' absolute top left pointer />
       </DropZone>
     )
   },
@@ -59,6 +59,11 @@ export default component({
     // Safari doesn't like it
     * upload ({props, state, actions, context}, fileList) {
       const file = fileList[0]
+      if (!file) {
+        yield actions.uploadError('')
+        return
+      }
+
       const {onUpload = noop, validate = () => ({valid: true})} = props
       const {valid, message} = validate(file)
 
@@ -70,7 +75,23 @@ export default component({
       const n = state.n + 1
       yield actions.uploadStart(n)
 
-      const url = yield context.uploadFile(file, progress => actions.uploadProgress({n, progress}))
+      let url
+      try {
+        url = yield context.uploadFile(file, progress => actions.uploadProgress({n, progress}))
+      } catch (err) {
+        if (err.message) {
+          const matches = /\<Message\>(.+)<\/Message\>/.exec(err.message)
+          if (matches) {
+            err = matches[1]
+          } else {
+            err = err.message
+          }
+        }
+
+        yield actions.uploadError(err)
+        yield actions.uploadEnd(n)
+        return
+      }
 
       yield actions.uploadEnd(n)
       yield onUpload({

@@ -19,8 +19,7 @@ import Meta from './Meta'
 export default component({
   propTypes: {
     activity: t.Object,
-    showFork: t.maybe(t.Boolean),
-    user: t.maybe(t.Object)
+    showFork: t.maybe(t.Boolean)
   },
 
   render ({props}) {

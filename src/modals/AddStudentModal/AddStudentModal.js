@@ -2,85 +2,62 @@
  * Imports
  */
 
-import {Modal, ModalBody, ModalFooter, ModalHeader, Block, Text} from 'vdux-ui'
-import LineInput from 'components/LineInput'
+import {Modal, ModalBody, ModalFooter, ModalHeader, Block, Text, Icon} from 'vdux-ui'
+import InviteStudentsModal from 'modals/InviteStudentsModal'
+import CreateStudentModal from 'modals/CreateStudentModal'
+import {Button, Tooltip} from 'vdux-containers'
+import BlockInput from 'components/BlockInput'
 import {component, element} from 'vdux'
-import {Button} from 'vdux-containers'
-import validate from 'lib/validate'
-import summon from 'vdux-summon'
-import Form from 'vdux-form'
 
 /**
- * <UsernameModal/>
+ * <Add Student Modal/>
  */
 
-export default summon(({groupId}) => ({
-  createStudent: body => ({
-    creatingStudent: {
-      url: '/auth/user',
-      method: 'POST',
-      body
-    }
-  }),
-  joinClass: userId => ({
-    joiningClass: {
-      url: `/group/${groupId}/members/${userId}`,
-      method: 'PUT',
-      invalidates: [`/group/students?group=${groupId}`]
-    }
-  })
-}))(component({
+export default component({
   render ({props, actions, context}) {
-    const {creatingStudent = {}, joiningClass = {}} = props
-    const loading = creatingStudent.loading || joiningClass.loading
-
+  	const btnProps = {py: 's', flex: true, px: 0}
     return (
-      <Modal onDismiss={context.closeModal}>
-        <Form onSubmit={actions.studentJoin} onSuccess={context.closeModal} validate={validateStudent}>
-          <ModalBody pb='l' w='col_m' mx='auto'>
-            <ModalHeader>
-              Add New Student
-            </ModalHeader>
-            <input type='hidden' name='userType' value='student' />
-            <Block align='start center'>
-              <LineInput autofocus name='name[givenName]' mr='l' placeholder='First Name' />
-              <LineInput name='name[familyName]' placeholder='Last Name' />
-            </Block>
-            <Block align='start center' my='l'>
-              <LineInput name='username' mr='l' placeholder='Username' />
-              <LineInput name='sisId' placeholder='ID (Optional)' />
-            </Block>
-            <Block>
-              <LineInput name='password' mr placeholder='Password' type='password' />
-            </Block>
-          </ModalBody>
-          <ModalFooter bg='grey'>
-            <Text fs='xxs'>
-              <Text pointer underline onClick={context.closeModal}>cancel</Text>
-              <Text mx>or</Text>
-            </Text>
-            <Button type='submit' busy={loading}>Add</Button>
-          </ModalFooter>
-        </Form>
-      </Modal>
+    	<Modal onDismiss={context.closeModal}>
+    		<ModalBody pb='l' w='col_m' mx='auto'>
+    			<ModalHeader>
+    				Add Students
+  				</ModalHeader>
+  				<BlockInput placeholder='Find students in your school…' autofocus />
+  				<Block align='center center' mt='l'>
+	  				<Button mr {...btnProps} onClick={actions.inviteStudentsModal}>
+	            <Icon name='mail' mr fs='s' />
+	            Invite
+	            <Tooltip message='Send an email to your students that will instruct them on how to join your class.' align='center center' tooltipProps={{whiteSpace: 'normal', w: '200'}}>
+	              <Icon name='info' ml='s' fs='xs' />
+	            </Tooltip>
+	          </Button>
+	          <Button {...btnProps} onClick={actions.createStudentModal}>
+	            <Icon name='edit' mr fs='s' />
+	            Create New
+	            <Tooltip message='Create a new account for students who have never used Weo before.' align='center center' tooltipProps={{whiteSpace: 'normal', w: '200'}}>
+	              <Icon name='info' ml='s' fs='xs' />
+	            </Tooltip>
+	          </Button>
+          </Block>
+    		</ModalBody>
+				<ModalFooter bg='grey'>
+					<Text fs='xxs'>
+            <Text pointer underline onClick={context.closeModal}>cancel</Text>
+            <Text mx>or</Text>
+          </Text>
+          <Button type='submit'>Add</Button>
+				</ModalFooter>
+    	</Modal>
     )
   },
 
   controller: {
-    * studentJoin ({props}, model) {
-      const user = yield props.createStudent(model)
-      yield props.joinClass(user.id)
+    * createStudentModal ({props, context}) {
+      yield context.openModal(() => <CreateStudentModal groupId={props.group._id} />)
+    },
+
+    * inviteStudentsModal ({props, context}) {
+      yield context.openModal(() => <InviteStudentsModal group={props.group} />)
     }
   }
-}))
-
-/**
- * validateStudent
- */
-
-function validateStudent (model) {
-  const result = validate.student(model)
-  model.tmpPassword = model.password
-
-  return result
-}
+})

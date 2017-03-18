@@ -6,7 +6,7 @@ import test from 'tape'
 import AddStudentModal from '.'
 
 /**
- * <AddStudentModal/> tests
+ * <Add Student Modal/> tests
  */
 
 test('<AddStudentModal/> should work', t => {

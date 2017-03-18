@@ -35,9 +35,9 @@ export default component({
     return (
       <Block printProps={{hide: true}}>
         <Fixed bgColor='white' wide top z={3} boxShadow='card' align='start center' h={53}>
-          <Flex align='start center' wide px flex>
+          <Flex align='start center' wide px flex ellipsis>
             <Button icon='arrow_back' fs='s' onClick={back} color='text' mr />
-            <Text fs='s' lighter>{displayName}</Text>
+            <Text fs='s' lighter ellipsis mr>{displayName}</Text>
           </Flex>
           <Flex align='center center' hide={isEdit}>
             <NavTile highlight='red' path={`${id}/students`} hide={!progress}>

@@ -22,7 +22,9 @@ function analytics () {
   const config = {
     integrations: {
       All: true,
-      Intercom: false
+      Intercom: {
+        hideDefaultLauncher: true
+      }
     }
   }
 
@@ -40,7 +42,7 @@ function analytics () {
           window.analytics._integrations.Intercom.booted = false
         }
 
-        config.integrations.Intercom = hasIntercom(user)
+        config.integrations.Intercom.hideDefaultLauncher = !hasIntercom(user)
         window.analytics.identify(user._id, prep.user(user), config)
         if (window.mixpanel) {
           window.mixpanel.set_config({persistence: 'localStorage'})

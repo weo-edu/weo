@@ -6,12 +6,12 @@ import {Fixed, Text, Icon, Flex, Block, Menu, Button} from 'vdux-containers'
 import NotificationsButton from 'components/NotificationsButton'
 import CreateActivityModal from 'modals/CreateActivityModal'
 import SignUpModal from 'modals/SignUpModal'
+import ClassNav from 'components/ClassNav'
 import HomeOwl from 'components/HomeOwl'
 import AccountMenu from './AccountMenu'
 import {component, element} from 'vdux'
-import ClassNav from 'components/ClassNav'
-import getProp from '@f/get-prop'
 import Link from 'components/Link'
+import getProp from '@f/get-prop'
 import Search from './Search'
 
 /**
@@ -21,8 +21,9 @@ import Search from './Search'
 export default component({
   render ({props, actions}) {
     const {currentUser, currentUrl, bgColor = 'grey', search, query} = props
-    const isStudent = currentUser && currentUser.userType === 'student'
-    const stepsLeft = currentUser && getSteps(currentUser)
+    const isLoggedIn = currentUser && currentUser._id
+    const isStudent = isLoggedIn && currentUser.userType === 'student'
+    const stepsLeft = isLoggedIn && getSteps(currentUser)
 
     return (
       <Block>
@@ -32,18 +33,17 @@ export default component({
               <Flex align='center center' mx='m'>
                 <HomeOwl />
                 {
-                  !currentUser &&
+                  !isLoggedIn &&
                   <Text fs='m' ml bold>WEO</Text>
                 }
               </Flex>
               {
-                currentUser && [
-                  <Item href='/class' icon='school' text='Classes' />,
+                isLoggedIn && [
+                  <Item href='/class' icon='assignment' text='Classes' />,
                   <Item href={`/${currentUser.username}`} icon='person' text={isStudent ? 'My Profile' : 'My Activities'} />,
+                  <Item href='/school' icon='school' text='School' hide={!currentUser.school || isStudent} />,
                   <Item href='/get-started' icon='stars' text='Get Started' relative hide={!stepsLeft || isStudent}>
-                    <Block circle={15} bg='red' absolute left={3} top={7} boxShadow='z2' fs='xxs' textAlign='center' lh='14px' textIndent='-2px'>
-                      {stepsLeft}
-                    </Block>
+                    <Block circle={15} bg='red' absolute left={3} top={7} boxShadow='z2' fs='10' textAlign='center' lh='14px' textIndent={-2}>{stepsLeft}</Block>
                   </Item>
                 ]
               }
@@ -51,7 +51,7 @@ export default component({
             <Menu flex align='end center'>
               <Search url={currentUrl} searching={search} query={query} hide={isStudent} mr='s' />
               {
-                currentUser && [
+                isLoggedIn && [
                   <NotificationsButton currentUser={currentUser} />,
                   <AccountMenu ml currentUser={currentUser} />
                 ]
@@ -68,7 +68,7 @@ export default component({
                 Create Activity
               </Button>
               {
-                !currentUser &&
+                !isLoggedIn &&
                   <Button
                     px='16'
                     mr
@@ -96,7 +96,7 @@ export default component({
 
     * createActivity ({context, props}) {
       yield context.openModal(() =>
-        props.currentUser
+        props.currentUser && props.currentUser._id
           ? <CreateActivityModal currentUser={props.currentUser} />
           : <SignUpModal />
       )

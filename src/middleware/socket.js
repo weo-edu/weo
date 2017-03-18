@@ -91,6 +91,16 @@ function middleware ({dispatch, getContext}) {
       }
     }))
 
+    socket.on('reconnect', () => {
+      Object
+        .keys(subs)
+        .forEach(key => {
+          subs[key].forEach(({url, params = {}}) => {
+            route(url, 'delete', params).then(() => route(url, 'post', params))
+          })
+        })
+    })
+
     return socket
   }
 

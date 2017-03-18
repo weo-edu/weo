@@ -38,6 +38,7 @@ function page ({html, state, title}) {
           <meta name='description' content='${og.description}' />
           <meta name='fragment' content='!' />
           <meta name='pinterest' content='nohover' />
+
           <link rel='apple-touch-icon' href='${touchIcons.iphone}'>
           <link rel='apple-touch-icon' sizes='76x76' href='${touchIcons.ipad}'>
           <link rel='apple-touch-icon' sizes='120x120' href='${touchIcons.iphoneRetina}'>
@@ -45,11 +46,13 @@ function page ({html, state, title}) {
 
 
           <!-- Open Graph -->
-          <meta property ='og:site_name' content='${og.site_name}' />
+          <meta property='fb:app_id' content='${og.app_id}' />
+          <meta property='og:site_name' content='${og.site_name}' />
           <meta property='og:description' content='${og.description}' />
           <meta property='og:image' content='${og.image}' />
           <meta property='og:title' content='${og.title}' />
           <meta property='og:type' content='${og.type}' />
+          <meta property='og:url' content='${og.url}' />
 
           <title>${title || 'Weo'}</title>
           ${

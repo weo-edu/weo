@@ -40,7 +40,7 @@ export default summonChannels(props =>
 
 function EmptyDrafts () {
   return (
-    <EmptyState ui={Flex} column align='center center' bg='#E4E5E7' border='1px solid #D8DADD' weoIcon='draft' color='yellow' w='auto' minHeight='400px'>
+    <EmptyState ui={Flex} column fill align='center center' weoIcon='draft' color='yellow' p={0} minHeight='400px'>
       <Block fs='m' my='l'>You have no drafts.</Block>
     </EmptyState>
   )

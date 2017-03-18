@@ -2,11 +2,11 @@
  * Imports
  */
 
-import InviteStudentsModal from 'modals/InviteStudentsModal'
 import AddStudentModal from 'modals/AddStudentModal'
+import {Button, Tooltip} from 'vdux-containers'
+import EmptyState from 'components/EmptyState'
 import {Icon, Block, Text} from 'vdux-ui'
 import {component, element} from 'vdux'
-import {Button} from 'vdux-containers'
 
 /**
  * <EmptyClassStudents/>
@@ -15,20 +15,15 @@ import {Button} from 'vdux-containers'
 export default component({
   render ({props, actions}) {
     const {group} = props
-
+    const btnProps = {py: '12px', boxShadow: 'z2'}
     return (
-      <Block p textAlign='center'>
-        <Icon name='people' fs='xxl' color='green' />
+      <EmptyState wide fill icon='people' color='green' mt='-12'>
         <Block my fs='m' lighter>
           Your class has no students
         </Block>
         <Block align='center center' my='l'>
-          <Button fs='s' lighter py boxShadow='z2' bgColor='green' mr onClick={actions.inviteStudentsModal}>
-            <Icon name='send' mr='s' fs='s' />
-            Invite Students
-          </Button>
-          <Button fs='s' lighter py boxShadow='z2' onClick={actions.addStudentModal}>
-            <Icon name='person_add' mr='s' fs='s' />
+          <Button {...btnProps} onClick={actions.addStudentModal}>
+            <Icon name='group_add' bolder mr fs='s' />
             Add Students
           </Button>
         </Block>
@@ -39,17 +34,14 @@ export default component({
             {group.code}
           </Text>
         </Block>
-      </Block>
+      </EmptyState>
     )
   },
 
   controller: {
     * addStudentModal ({props, context}) {
-      yield context.openModal(() => <AddStudentModal groupId={props.group._id} />)
-    },
-
-    * inviteStudentsModal ({props, context}) {
-      yield context.openModal(() => <InviteStudentsModal group={props.group} />)
+      yield context.openModal(() => <AddStudentModal group={props.group} />)
     }
+    
   }
 })

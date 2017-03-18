@@ -12,9 +12,16 @@ import {Block, Icon} from 'vdux-ui'
 
 export default component({
   render ({props, children}) {
-    const {icon, weoIcon, color, ...rest} = props
+    const {icon, weoIcon, color, fill, ...rest} = props
+    const style = fill ? {
+      p: '24px 12px 80px',
+      bg: 'grey_light',
+      border: '1px solid #D8DADD',
+      w: 'col_xl'
+    } : {}
+
     return (
-      <Block p textAlign='center' w='col_main' {...rest}>
+      <Block p textAlign='center' w='col_main' {...style} {...rest}>
         {
           weoIcon
             ? <WeoIcon fs='xxl' color={color} name={weoIcon} />

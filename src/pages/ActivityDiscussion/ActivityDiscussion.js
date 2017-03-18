@@ -58,7 +58,7 @@ function Comment ({props}) {
     <Block px='l' pt={i ? 0 : 'l'} pb='l' align='start start' relative>
       <Block w={4} absolute left={38} tall top bgColor='#EEE' />
       <Avatar boxSizing='content-box' border={`${width}px solid white`} mr actor={actor} relative ml={width * -1} />
-      <Block flex px='l' py rounded bgColor='off_white' border='1px solid #E0E0E0' relative>
+      <Block flex px='l' py rounded='5px' bgColor='off_white' border='1px solid #E0E0E0' relative>
         <Block bold mb>{actor.displayName}</Block>
         <Block lighter>
           {content}

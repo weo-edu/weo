@@ -3,6 +3,7 @@
  */
 
 import DiscardDraftModal from 'modals/DiscardDraftModal'
+import {constructInstance} from 'lib/activity-helpers'
 import PageTitle from 'components/PageTitle'
 import Redirect from 'components/Redirect'
 import FourOhFour from 'pages/FourOhFour'
@@ -39,8 +40,8 @@ export default summon(({userId, activityId}) => ({
     }
   }),
   students: activity.value
-    ? `/group/students?group=${activity.value.contexts[0].descriptor.id}`
-    : null,
+      ? `/group/students?group=${activity.value.contexts[0].descriptor.id}`
+      : null,
   instances: activity.value
     ? `/share?channel=share!${activity.value._id}.instances`
     : null,
@@ -170,8 +171,9 @@ function internal ({props, children, actions, context, state}) {
     return <Redirect to={`/activity/${activityId}`} />
   }
 
+  const constructedInstances = filteredInstances.map(inst => constructInstance(value, inst))
   const instance = userId
-    ? find(filteredInstances, inst => inst.actor.id === userId)
+    ? find(constructedInstances, inst => inst.actor.id === userId)
     : null
 
   const classId = value.contexts[0].descriptor.id
@@ -197,7 +199,7 @@ function internal ({props, children, actions, context, state}) {
       activity: value,
       students: students.value.items,
       classId,
-      instances: filteredInstances,
+      instances: constructedInstances,
       savingIndicator: state.savingIndicator,
       setIndicator: actions.setIndicator,
       selectObject: actions.selectObject,
