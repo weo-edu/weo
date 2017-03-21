@@ -22,28 +22,54 @@ function analytics () {
   const config = {
     integrations: {
       All: true,
-      Intercom: {
-        hideDefaultLauncher: true
+      Intercom: false
+    }
+  }
+
+  let hasIntercom = false
+  let analyticsReady = false
+  const readyQueue = []
+
+  function getConfig (user) {
+    return {
+      integrations: {
+        All: true,
+        Intercom: hasIntercom
       }
     }
   }
 
-  function hasIntercom (user) {
-    return !!(user._id && user.userType === 'teacher')
-  }
+  window.analytics.ready(() => {
+    analyticsReady = true
+    readyQueue.forEach(fn => fn())
+    readyQueue.length = 0
+  })
 
   return next => action => {
+    if (action.type === identify.type || action.type === track.type || action.type === page.type) {
+      if (analyticsReady) {
+        return process(action)
+      } else {
+        readyQueue.push(() => process(action))
+      }
+    } else {
+      return next(action)
+    }
+  }
+
+  function process (action) {
     switch (action.type) {
       case identify.type: {
         const user = action.payload || {}
 
-        if (typeof Intercom !== 'undefined' && !hasIntercom(user)) {
+        hasIntercom = !!(user._id && user.userType === 'teacher')
+
+        if (typeof Intercom !== 'undefined' && !hasIntercom) {
           window.Intercom('shutdown')
           window.analytics._integrations.Intercom.booted = false
         }
 
-        config.integrations.Intercom.hideDefaultLauncher = !hasIntercom(user)
-        window.analytics.identify(user._id, prep.user(user), config)
+        window.analytics.identify(user._id, prep.user(user), getConfig(user))
         if (window.mixpanel) {
           window.mixpanel.set_config({persistence: 'localStorage'})
         }
@@ -51,16 +77,13 @@ function analytics () {
       }
       case track.type: {
         const {name, traits} = action.payload
-        window.analytics.track(name, traits)
+        window.analytics.track(name, traits, getConfig())
         break
       }
       case page.type: {
         const {name, params} = action.payload
-        window.analytics.page(name, params)
+        window.analytics.page(name, params, getConfig())
         break
-      }
-      default: {
-        return next(action)
       }
     }
   }
