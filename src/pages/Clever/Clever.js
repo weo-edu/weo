@@ -30,8 +30,8 @@ export default summon(() => ({
     if (typeof window !== 'undefined') {
       params.redirectUri = window.location.origin + '/clever'
 
-      const {token} = yield login('clever', params)
-      yield context.postLogin(token)
+      const user = yield login('clever', params)
+      yield context.postLogin(user)
     }
   },
 
