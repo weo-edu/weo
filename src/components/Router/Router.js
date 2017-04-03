@@ -83,7 +83,11 @@ const router = enroute({
         </HomeLayout>),
   '/clever(\\?.*)?': track('Clever', (params, props) =>
     <HomeLayout action='signup'>
-      <Clever {...props} />
+      <Clever {...props} {...params} />
+    </HomeLayout>),
+  '/clever/(\\?.*)?': track('Clever', (params, props) =>
+    <HomeLayout action='signup'>
+      <Clever {...props} {...params} />
     </HomeLayout>),
   '/login(\\?.*)?': track('Login', (params, props) =>
     <HomeLayout title='Login - Weo' action='signup'>
