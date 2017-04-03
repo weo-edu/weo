@@ -23,7 +23,7 @@ export default summon(() => ({
 }))(component({
   * onCreate ({context, props}) {
     const {url, login} = props
-    const [, str] = url.split('?')
+    const [, str] = context.currentUrl.split('?')
     const params = qs.parse(str)
 
     // XXX Slight hack to avoid doing this on the server
