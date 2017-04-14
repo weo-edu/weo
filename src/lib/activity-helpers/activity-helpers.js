@@ -157,6 +157,10 @@ function constructInstance (activity, instance) {
   return {
     ...instance,
     max_score: activity._object[0].attachments.reduce((acc, obj) => obj.points && obj.points.max ? acc + obj.points.max : acc, 0),
+    hideOnTurnIn: activity.hideOnTurnIn,
+    discussion: activity.discussion,
+    textToSpeech: activity.textToSpeech,
+    displayName: activity.displayName,
     _object: activity._object
       .map(obj => {
         return {
