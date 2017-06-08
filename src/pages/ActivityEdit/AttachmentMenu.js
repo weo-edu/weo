@@ -66,6 +66,7 @@ export default component({
       yield attach({
         _id: id1,
         objectType: 'question',
+        spellCheck: true,
         points: {
           max: defaultPoints
         },

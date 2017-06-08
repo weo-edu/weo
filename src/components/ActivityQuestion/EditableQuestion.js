@@ -8,7 +8,7 @@ import MarkdownHelper from 'components/MarkdownHelper'
 import {t, decodeNode, component, element} from 'vdux'
 import LineTextarea from 'components/LineTextarea'
 import QuestionTypeMenu from './QuestionTypeMenu'
-import {Button, Toggle} from 'vdux-containers'
+import {Button, Toggle, Tooltip} from 'vdux-containers'
 import {Block, Badge, Icon} from 'vdux-ui'
 import sleep from '@f/sleep'
 import map from '@f/map'
@@ -116,7 +116,14 @@ export default component({
             isMultipleChoice &&
               <Toggle
                 onChange={actions.setRandomize}
-                label='Shuffle Choice Order'
+                label={<Block align='start center'>
+                    Shuffle Choice Order
+                    <Tooltip
+                      tooltipProps={{w: 200, whiteSpace: 'normal', fs: 'xs'}}
+                      message='When enabled, each student will receive their options in a different randomized order.'>
+                      <Icon fs='s' ml='s' name='help_outline'/>
+                    </Tooltip>
+                  </Block>}
                 checked={randomize}
                 w={350}
                 ml />
@@ -125,10 +132,34 @@ export default component({
             type === 'shortAnswer' &&
               <Toggle
                 onChange={actions.setCaseSensitivity}
-                label='Case Sensitive'
+                label={<Block align='start center'>
+                    Case Sensitive
+                    <Tooltip
+                      tooltipProps={{w: 200, whiteSpace: 'normal', fs: 'xs'}}
+                      message={'When enabled, students\' answers will need to match the same case as the provided answers.'}>
+                      <Icon fs='s' ml='s' name='help_outline'/>
+                    </Tooltip>
+                  </Block>}
                 checked={object.attachments[0].caseSensitive}
-                w={350}
+                w={180}
                 ml />
+          }
+          {
+
+            (type === 'shortAnswer' || type === 'text') &&
+              <Toggle
+                label={<Block align='start center'>
+                    Spell Check
+                    <Tooltip
+                      tooltipProps={{w: 200, whiteSpace: 'normal', fs: 'xs'}}
+                      message={'When enabled, students will see spell check information as they type their solutions.'}>
+                      <Icon fs='s' ml='s' name='help_outline'/>
+                    </Tooltip>
+                  </Block>}
+                onChange={actions.setSpelling}
+                checked={object.spellCheck}
+                w={180}
+                />
           }
         </ObjectControls>
       </Block>
@@ -172,23 +203,32 @@ export default component({
       })
     },
 
-    * setRandomize ({props}, randomize) {
+    * setRandomize ({props}) {
       const {onEdit, object} = props
 
       yield onEdit({
         ...object,
-        randomize
+        randomize: !object.randomize
       })
     },
 
-    * setCaseSensitivity ({props}, caseSensitive) {
+    * setSpelling ({props}) {
+      const {onEdit, object} = props
+
+      yield onEdit({
+        ...object,
+        spellCheck: !object.spellCheck
+      })
+    },
+
+    * setCaseSensitivity ({props}) {
       const {onEdit, object} = props
 
       yield onEdit({
         ...object,
         attachments: [{
           ...object.attachments[0],
-          caseSensitive
+          caseSensitive: !object.attachments[0].caseSensitive
         }]
       })
     },
