@@ -17,7 +17,7 @@ export default component({
   render ({props}) {
     const {
       answerable, showAnswers, answer = [], object,
-      overview, editing, editable, submit
+      overview, editing, editable, submit, spellCheck
     } = props
 
     if (overview) return <ShortAnswerOverview {...props} />
@@ -33,6 +33,7 @@ export default component({
               ? <Block align='start center'>
                   <LineInput
                     onInput={submit}
+                    spellcheck={spellCheck.toString()}
                     placeholder='Enter your answer...'
                     defaultValue={answer[0] || ''}
                     borderColor='grey_light'

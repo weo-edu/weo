@@ -13,8 +13,7 @@ import {Block} from 'vdux-ui'
 
 export default component({
   render ({props}) {
-    const {answerable, answer = [], submit, overview} = props
-
+    const {answerable, answer = [], submit, overview, spellCheck} = props
     if (overview) return <FreeResponseOverview {...props} />
 
     return (
@@ -26,6 +25,7 @@ export default component({
               defaultValue={answer[0] || ''}
               placeholder='Free response...'
               fs='s'
+              spellcheck={spellCheck.toString()}
               lh='normal'
               minHeight='40px'
               verticalAlign='top'
@@ -37,6 +37,7 @@ export default component({
                 border='1px dotted grey_light'
                 borderWidth='0 0 1px 0'
                 p='7px 0 8px'
+                whiteSpace='pre'
                 color={answer[0] ? 'text' : 'grey_medium'}
                 fs='s'>
                 {answer[0] || 'Free Response...'}
