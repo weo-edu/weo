@@ -74,9 +74,10 @@ const Row = fire(({ref, savedRef}) => ({
 
 		const {value} = game
 		const {value: savedValue} = saved
-		const imgUrl = value.imageUrl.indexOf('/animalImages') === -1
-			? value.imageUrl
-			: 'https://www.pixelbots.io/' + value.imageUrl
+		const img = value.imageUrl || '/animalImages/teacherBot.png'
+		const imgUrl = img.indexOf('/animalImages') === -1
+				? img
+				: 'https://www.pixelbots.io/' + img
 
 		const stretchType = (value.stretch || {}).type
 	  const count = getProp(`badges.${stretchType}`, savedValue) || 0
