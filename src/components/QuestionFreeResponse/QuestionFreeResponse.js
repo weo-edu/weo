@@ -13,7 +13,7 @@ import {Block} from 'vdux-ui'
 
 export default component({
   render ({props}) {
-    const {answerable, answer = [], submit, overview, spellCheck} = props
+    const {answerable, answer = [], submit, overview, spellCheck = ''} = props
     if (overview) return <FreeResponseOverview {...props} />
 
     return (
