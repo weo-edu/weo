@@ -17,7 +17,7 @@ export default component({
   render ({props}) {
     const {
       answerable, showAnswers, answer = [], object,
-      overview, editing, editable, submit, spellCheck
+      overview, editing, editable, submit, spellCheck = ''
     } = props
 
     if (overview) return <ShortAnswerOverview {...props} />
