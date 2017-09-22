@@ -37,7 +37,7 @@ export default component({
                 border='1px dotted grey_light'
                 borderWidth='0 0 1px 0'
                 p='7px 0 8px'
-                whiteSpace='pre'
+                whiteSpace='pre-line'
                 color={answer[0] ? 'text' : 'grey_medium'}
                 fs='s'>
                 {answer[0] || 'Free Response...'}
