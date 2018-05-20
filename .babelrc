@@ -1,11 +1,14 @@
 {
   "comments": false,
+  "sourceType": "module",
   "env": {
     "production": {
-      "presets": ["es2015", "stage-2"]
+      "presets": ["es2015", "stage-2"],
+      "sourceType": "module"
     },
     "staging": {
-      "presets": ["es2015", "stage-2"]
+      "presets": ["es2015", "stage-2"],
+      "sourceType": "module"      
     },
     "development": {
       "presets": ["es2015", "stage-2"],
@@ -18,9 +21,11 @@
             }
           ]
         }]
-      ]
+      ],
+      "sourceType": "module"      
     },
     "development-minimal": {
+      "sourceType": "module",    
       "plugins": [
         "transform-es2015-destructuring",
         "transform-object-rest-spread",

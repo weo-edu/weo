@@ -2,11 +2,11 @@ FROM node:carbon
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 RUN yarn global add node-gyp
-RUN yarn global add vdux vdux-ui vdux-containers unv babel-preset-es2015 babel-preset-stage-2
+RUN yarn global add vdux vdux-ui vdux-containers weo-edu/unv babel-preset-es2015 babel-preset-stage-2
 RUN node -v
 COPY package.json /usr/src/app
 COPY yarn.lock /usr/src/app
 RUN yarn install
 COPY . /usr/src/app
-RUN npm run build
+RUN export NODE_ENV=`git symbolic-ref --short -q HEAD` && unv build --production
 CMD ["npm", "start"]
