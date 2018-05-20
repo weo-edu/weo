@@ -148,7 +148,7 @@
     "staging": {
       "PORT": 3000,
       "API_SERVER": "//staging-api.weo.io",
-      "API_STATIC": "//staging-api.global.ssl.fastly.net",
+      "API_STATIC": "//staging-api.weo.io",
       "CLOUD_FS_URL": "//staging-weo.global.ssl.fastly.net/assets/",
       "AVATAR_SERVER": "//staging-avatars.global.ssl.fastly.net",
       "CLEVER_CLIENT_ID": "9e85d73ee95c90414fbd",
@@ -194,7 +194,7 @@
     }
   },
   "engines": {
-    "node": "~6.3.0"
+    "node": "6.14.2"
   },
   "license": "UNLICENSED"
 }
