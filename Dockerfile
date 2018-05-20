@@ -8,5 +8,5 @@ COPY package.json /usr/src/app
 COPY yarn.lock /usr/src/app
 RUN yarn install
 COPY . /usr/src/app
-RUN export NODE_ENV=`git symbolic-ref --short -q HEAD` && unv build --production
+RUN export NODE_ENV=production && unv build --production
 CMD ["npm", "start"]
