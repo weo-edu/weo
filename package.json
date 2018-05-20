@@ -193,8 +193,5 @@
       "FACEBOOK_APP_ID": "1768047533430073"
     }
   },
-  "engines": {
-    "node": "7.4.0"
-  },
   "license": "UNLICENSED"
 }
