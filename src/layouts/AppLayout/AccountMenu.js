@@ -29,7 +29,7 @@ export default component({
     const {username, userType} = currentUser
     const isStudent = userType === 'student'
     const numDrafts = currentUser._id
-      ? currentUser.drafts.canonicalTotal.items
+      ? (currentUser.drafts.canonicalTotal || {}).items || 0
       : 0
 
     return (
