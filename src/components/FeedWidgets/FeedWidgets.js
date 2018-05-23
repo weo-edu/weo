@@ -34,9 +34,7 @@ export default component({
     const {user, ...rest} = props
     const cardMargin = '8px 6px 12px 0'
     const isTeacher = user.userType === 'teacher'
-    console.log('a', user.drafts)
     const draftCount = (user.drafts.canonicalTotal || {}).items || 0
-    console.log('b')
     const joinedSchool = user.school || (props.school && props.school._id)
 
     return (
