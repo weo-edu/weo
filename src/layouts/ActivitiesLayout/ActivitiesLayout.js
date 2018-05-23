@@ -27,7 +27,7 @@ export default summon(({user, currentUser}) => ({
     const {boards, user, currentUser = {}} = props
     const isMe = currentUser._id === user._id
     const {username} = user
-    const drafts = currentUser.drafts ? currentUser.drafts.canonicalTotal.items : 0
+    const drafts = currentUser.drafts && currentUser.drafts.canonicalTotal ? currentUser.drafts.canonicalTotal.items || 0 : 0
     const iconSize = '25px'
     const {value = [], loaded} = boards
 
