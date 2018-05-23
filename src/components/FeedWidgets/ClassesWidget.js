@@ -33,6 +33,8 @@ export default summon(() => ({
     const {classes, user} = props
     const {value, loaded} = classes
     const clsLength = loaded && value.items.length
+    const {userType, drafts = {}} = user
+    const items = drafts.canonicalTotal || {}
     const {drafts: {canonicalTotal: {items}}, userType} = user
     const offset = userType === 'teacher'
       ? items ? '318px' : '270px'
